@@ -12335,6 +12335,8 @@ export namespace Prisma {
     cost: Decimal | null
     stock: Decimal | null
     minStock: Decimal | null
+    version: number | null
+    criticalStock: Decimal | null
     pricePerUnit: Decimal | null
     tareWeight: Decimal | null
   }
@@ -12344,6 +12346,8 @@ export namespace Prisma {
     cost: Decimal | null
     stock: Decimal | null
     minStock: Decimal | null
+    version: number | null
+    criticalStock: Decimal | null
     pricePerUnit: Decimal | null
     tareWeight: Decimal | null
   }
@@ -12363,6 +12367,8 @@ export namespace Prisma {
     isSeafood: boolean | null
     image: string | null
     isActive: boolean | null
+    version: number | null
+    criticalStock: Decimal | null
     isWeighable: boolean | null
     pricePerUnit: Decimal | null
     tareWeight: Decimal | null
@@ -12385,6 +12391,8 @@ export namespace Prisma {
     isSeafood: boolean | null
     image: string | null
     isActive: boolean | null
+    version: number | null
+    criticalStock: Decimal | null
     isWeighable: boolean | null
     pricePerUnit: Decimal | null
     tareWeight: Decimal | null
@@ -12407,6 +12415,8 @@ export namespace Prisma {
     isSeafood: number
     image: number
     isActive: number
+    version: number
+    criticalStock: number
     isWeighable: number
     pricePerUnit: number
     tareWeight: number
@@ -12421,6 +12431,8 @@ export namespace Prisma {
     cost?: true
     stock?: true
     minStock?: true
+    version?: true
+    criticalStock?: true
     pricePerUnit?: true
     tareWeight?: true
   }
@@ -12430,6 +12442,8 @@ export namespace Prisma {
     cost?: true
     stock?: true
     minStock?: true
+    version?: true
+    criticalStock?: true
     pricePerUnit?: true
     tareWeight?: true
   }
@@ -12449,6 +12463,8 @@ export namespace Prisma {
     isSeafood?: true
     image?: true
     isActive?: true
+    version?: true
+    criticalStock?: true
     isWeighable?: true
     pricePerUnit?: true
     tareWeight?: true
@@ -12471,6 +12487,8 @@ export namespace Prisma {
     isSeafood?: true
     image?: true
     isActive?: true
+    version?: true
+    criticalStock?: true
     isWeighable?: true
     pricePerUnit?: true
     tareWeight?: true
@@ -12493,6 +12511,8 @@ export namespace Prisma {
     isSeafood?: true
     image?: true
     isActive?: true
+    version?: true
+    criticalStock?: true
     isWeighable?: true
     pricePerUnit?: true
     tareWeight?: true
@@ -12602,6 +12622,8 @@ export namespace Prisma {
     isSeafood: boolean
     image: string | null
     isActive: boolean
+    version: number | null
+    criticalStock: Decimal
     isWeighable: boolean
     pricePerUnit: Decimal | null
     tareWeight: Decimal | null
@@ -12643,6 +12665,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: boolean
     isActive?: boolean
+    version?: boolean
+    criticalStock?: boolean
     isWeighable?: boolean
     pricePerUnit?: boolean
     tareWeight?: boolean
@@ -12673,6 +12697,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: boolean
     isActive?: boolean
+    version?: boolean
+    criticalStock?: boolean
     isWeighable?: boolean
     pricePerUnit?: boolean
     tareWeight?: boolean
@@ -12696,6 +12722,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: boolean
     isActive?: boolean
+    version?: boolean
+    criticalStock?: boolean
     isWeighable?: boolean
     pricePerUnit?: boolean
     tareWeight?: boolean
@@ -12719,6 +12747,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: boolean
     isActive?: boolean
+    version?: boolean
+    criticalStock?: boolean
     isWeighable?: boolean
     pricePerUnit?: boolean
     tareWeight?: boolean
@@ -12726,7 +12756,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "name" | "description" | "price" | "cost" | "stock" | "minStock" | "categoryId" | "unit" | "isFresh" | "isSeafood" | "image" | "isActive" | "isWeighable" | "pricePerUnit" | "tareWeight" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "name" | "description" | "price" | "cost" | "stock" | "minStock" | "categoryId" | "unit" | "isFresh" | "isSeafood" | "image" | "isActive" | "version" | "criticalStock" | "isWeighable" | "pricePerUnit" | "tareWeight" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     saleItems?: boolean | Product$saleItemsArgs<ExtArgs>
@@ -12770,6 +12800,8 @@ export namespace Prisma {
       isSeafood: boolean
       image: string | null
       isActive: boolean
+      version: number | null
+      criticalStock: Prisma.Decimal
       isWeighable: boolean
       pricePerUnit: Prisma.Decimal | null
       tareWeight: Prisma.Decimal | null
@@ -13219,6 +13251,8 @@ export namespace Prisma {
     readonly isSeafood: FieldRef<"Product", 'Boolean'>
     readonly image: FieldRef<"Product", 'String'>
     readonly isActive: FieldRef<"Product", 'Boolean'>
+    readonly version: FieldRef<"Product", 'Int'>
+    readonly criticalStock: FieldRef<"Product", 'Decimal'>
     readonly isWeighable: FieldRef<"Product", 'Boolean'>
     readonly pricePerUnit: FieldRef<"Product", 'Decimal'>
     readonly tareWeight: FieldRef<"Product", 'Decimal'>
@@ -38381,6 +38415,8 @@ export namespace Prisma {
     isSeafood: 'isSeafood',
     image: 'image',
     isActive: 'isActive',
+    version: 'version',
+    criticalStock: 'criticalStock',
     isWeighable: 'isWeighable',
     pricePerUnit: 'pricePerUnit',
     tareWeight: 'tareWeight',
@@ -39621,6 +39657,8 @@ export namespace Prisma {
     isSeafood?: BoolFilter<"Product"> | boolean
     image?: StringNullableFilter<"Product"> | string | null
     isActive?: BoolFilter<"Product"> | boolean
+    version?: IntNullableFilter<"Product"> | number | null
+    criticalStock?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFilter<"Product"> | boolean
     pricePerUnit?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     tareWeight?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
@@ -39650,6 +39688,8 @@ export namespace Prisma {
     isSeafood?: SortOrder
     image?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    version?: SortOrderInput | SortOrder
+    criticalStock?: SortOrder
     isWeighable?: SortOrder
     pricePerUnit?: SortOrderInput | SortOrder
     tareWeight?: SortOrderInput | SortOrder
@@ -39682,6 +39722,8 @@ export namespace Prisma {
     isSeafood?: BoolFilter<"Product"> | boolean
     image?: StringNullableFilter<"Product"> | string | null
     isActive?: BoolFilter<"Product"> | boolean
+    version?: IntNullableFilter<"Product"> | number | null
+    criticalStock?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFilter<"Product"> | boolean
     pricePerUnit?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     tareWeight?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
@@ -39711,6 +39753,8 @@ export namespace Prisma {
     isSeafood?: SortOrder
     image?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    version?: SortOrderInput | SortOrder
+    criticalStock?: SortOrder
     isWeighable?: SortOrder
     pricePerUnit?: SortOrderInput | SortOrder
     tareWeight?: SortOrderInput | SortOrder
@@ -39741,6 +39785,8 @@ export namespace Prisma {
     isSeafood?: BoolWithAggregatesFilter<"Product"> | boolean
     image?: StringNullableWithAggregatesFilter<"Product"> | string | null
     isActive?: BoolWithAggregatesFilter<"Product"> | boolean
+    version?: IntNullableWithAggregatesFilter<"Product"> | number | null
+    criticalStock?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolWithAggregatesFilter<"Product"> | boolean
     pricePerUnit?: DecimalNullableWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     tareWeight?: DecimalNullableWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
@@ -42056,6 +42102,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -42085,6 +42133,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -42112,6 +42162,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -42141,6 +42193,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -42169,6 +42223,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -42190,6 +42246,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -42212,6 +42270,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -44790,6 +44850,8 @@ export namespace Prisma {
     isSeafood?: SortOrder
     image?: SortOrder
     isActive?: SortOrder
+    version?: SortOrder
+    criticalStock?: SortOrder
     isWeighable?: SortOrder
     pricePerUnit?: SortOrder
     tareWeight?: SortOrder
@@ -44802,6 +44864,8 @@ export namespace Prisma {
     cost?: SortOrder
     stock?: SortOrder
     minStock?: SortOrder
+    version?: SortOrder
+    criticalStock?: SortOrder
     pricePerUnit?: SortOrder
     tareWeight?: SortOrder
   }
@@ -44821,6 +44885,8 @@ export namespace Prisma {
     isSeafood?: SortOrder
     image?: SortOrder
     isActive?: SortOrder
+    version?: SortOrder
+    criticalStock?: SortOrder
     isWeighable?: SortOrder
     pricePerUnit?: SortOrder
     tareWeight?: SortOrder
@@ -44843,6 +44909,8 @@ export namespace Prisma {
     isSeafood?: SortOrder
     image?: SortOrder
     isActive?: SortOrder
+    version?: SortOrder
+    criticalStock?: SortOrder
     isWeighable?: SortOrder
     pricePerUnit?: SortOrder
     tareWeight?: SortOrder
@@ -44855,6 +44923,8 @@ export namespace Prisma {
     cost?: SortOrder
     stock?: SortOrder
     minStock?: SortOrder
+    version?: SortOrder
+    criticalStock?: SortOrder
     pricePerUnit?: SortOrder
     tareWeight?: SortOrder
   }
@@ -50341,6 +50411,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -50368,6 +50440,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -50515,6 +50589,8 @@ export namespace Prisma {
     isSeafood?: BoolFilter<"Product"> | boolean
     image?: StringNullableFilter<"Product"> | string | null
     isActive?: BoolFilter<"Product"> | boolean
+    version?: IntNullableFilter<"Product"> | number | null
+    criticalStock?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFilter<"Product"> | boolean
     pricePerUnit?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
     tareWeight?: DecimalNullableFilter<"Product"> | Decimal | DecimalJsLike | number | string | null
@@ -51995,6 +52071,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -52023,6 +52101,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -52138,6 +52218,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -52166,6 +52248,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -52345,6 +52429,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -52373,6 +52459,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -52464,6 +52552,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -52492,6 +52582,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -53030,6 +53122,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -53058,6 +53152,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -53155,6 +53251,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -53183,6 +53281,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -53270,6 +53370,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -53298,6 +53400,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -53395,6 +53499,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -53423,6 +53529,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -54395,6 +54503,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -54423,6 +54533,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -54498,6 +54610,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -54526,6 +54640,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -55113,6 +55229,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -55141,6 +55259,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -55224,6 +55344,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -55252,6 +55374,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -55935,6 +56059,8 @@ export namespace Prisma {
     isSeafood?: boolean
     image?: string | null
     isActive?: boolean
+    version?: number | null
+    criticalStock?: Decimal | DecimalJsLike | number | string
     isWeighable?: boolean
     pricePerUnit?: Decimal | DecimalJsLike | number | string | null
     tareWeight?: Decimal | DecimalJsLike | number | string | null
@@ -56000,6 +56126,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -56027,6 +56155,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -56054,6 +56184,8 @@ export namespace Prisma {
     isSeafood?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    version?: NullableIntFieldUpdateOperationsInput | number | null
+    criticalStock?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isWeighable?: BoolFieldUpdateOperationsInput | boolean
     pricePerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tareWeight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null

@@ -2,60 +2,76 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { signOut } from 'next-auth/react';
-import { LayoutDashboard, ShoppingCart, Package, Users, FileBarChart, LogOut } from 'lucide-react';
-import { clsx } from 'clsx';
+import {
+    LayoutDashboard,
+    ShoppingCart,
+    Package,
+    Users,
+    BarChart3,
+    Settings,
+    Fish
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const navItems = [
-    { name: 'POS', href: '/pos', icon: LayoutDashboard }, // Assuming /pos is the main dash/sale
-    { name: 'Sales', href: '/pos/sales', icon: ShoppingCart }, // History
-    { name: 'Products', href: '/pos/products', icon: Package },
-    { name: 'Customers', href: '/pos/customers', icon: Users },
-    { name: 'Reports', href: '/pos/reports', icon: FileBarChart },
+    { name: 'Terminal POS', icon: ShoppingCart, href: '/pos' },
+    { name: 'Inventario', icon: Package, href: '/inventory' },
+    { name: 'Productos', icon: Fish, href: '/products' },
+    { name: 'Clientes', icon: Users, href: '/customers' },
+    { name: 'Reportes', icon: BarChart3, href: '/reports' },
+    { name: 'Configuración', icon: Settings, href: '/settings' },
 ];
 
-export default function Sidebar() {
+export function Sidebar() {
     const pathname = usePathname();
 
     return (
-        <aside className="w-64 bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 hidden md:flex flex-col">
-            <div className="p-6">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                    POS System
-                </h1>
+        <div className="w-64 bg-slate-900 text-slate-300 flex flex-col h-screen border-r border-slate-800">
+            <div className="p-6 flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
+                    <Fish className="text-white w-6 h-6" />
+                </div>
+                <div>
+                    <h2 className="text-white font-bold text-lg leading-tight">Marisquería</h2>
+                    <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">POS System</span>
+                </div>
             </div>
 
-            <nav className="flex-1 px-4 space-y-2">
+            <nav className="flex-1 px-4 py-4 space-y-1">
                 {navItems.map((item) => {
-                    const Icon = item.icon;
                     const isActive = pathname === item.href;
                     return (
                         <Link
-                            key={item.href}
+                            key={item.name}
                             href={item.href}
-                            className={clsx(
-                                'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+                            className={cn(
+                                "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group",
                                 isActive
-                                    ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400'
-                                    : 'text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-900/50'
+                                    ? "bg-blue-600 text-white shadow-lg shadow-blue-600/10"
+                                    : "hover:bg-slate-800 hover:text-white"
                             )}
                         >
-                            <Icon className="w-5 h-5" />
-                            {item.name}
+                            <item.icon className={cn(
+                                "w-5 h-5 transition-colors",
+                                isActive ? "text-white" : "text-slate-500 group-hover:text-slate-300"
+                            )} />
+                            <span className="font-medium">{item.name}</span>
                         </Link>
-                    );
+                    )
                 })}
             </nav>
 
-            <div className="p-4 border-t border-slate-200 dark:border-slate-800">
-                <button
-                    onClick={() => signOut({ callbackUrl: '/auth/login' })}
-                    className="flex items-center gap-3 px-4 py-3 w-full text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors dark:hover:bg-red-900/20"
-                >
-                    <LogOut className="w-5 h-5" />
-                    Sign Out
-                </button>
+            <div className="p-4 mt-auto border-t border-slate-800">
+                <div className="bg-slate-800/50 rounded-lg p-4 flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-white">
+                        AD
+                    </div>
+                    <div>
+                        <p className="text-sm font-semibold text-white">Admin Principal</p>
+                        <p className="text-xs text-slate-500">marisqueria@sia.com</p>
+                    </div>
+                </div>
             </div>
-        </aside>
+        </div>
     );
 }

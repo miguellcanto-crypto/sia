@@ -13,9 +13,9 @@ export function useEnterprisePOS() {
 
     const fetchProducts = useCallback(async () => {
         try {
-            const res = await fetch('/api/products');
+            const res = await fetch('/api/products', { cache: 'no-store' });
             const data = await res.json();
-            setProducts(data);
+            setProducts(Array.isArray(data.products) ? data.products : []);
         } catch (error) {
             console.error('Error fetching products:', error);
         }
@@ -24,8 +24,12 @@ export function useEnterprisePOS() {
     const fetchCurrentSession = useCallback(async () => {
         try {
             const res = await fetch('/api/cash/session');
-            const data = await res.json();
-            setCashSession(data);
+            if (res.ok) {
+                const data = await res.json();
+                setCashSession(data);
+            } else {
+                setCashSession(null);
+            }
         } catch (error) {
             console.error('Error fetching cash session:', error);
         } finally {

@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma, MovementType } from '../src/generated/client/client'
+import { PrismaClient, Prisma, MovementType } from '../src/generated/client'
 import * as dotenv from 'dotenv'
 import bcrypt from 'bcryptjs'
 dotenv.config()
@@ -12,114 +12,166 @@ const prisma = new PrismaClient({
 })
 
 async function main() {
-    console.log('--- STARTING FULL SEED ---')
+    console.log('--- STARTING COMPREHENSIVE SEED ---')
     try {
-        // Cleanup
-        await prisma.saleItem.deleteMany()
+        // 1. Cleanup in correct order
+        console.log('Cleaning up database...')
         await prisma.salePromotion.deleteMany()
-        await prisma.sale.deleteMany()
+        await prisma.saleItem.deleteMany()
+        await prisma.refundItem.deleteMany()
+        await prisma.orderItem.deleteMany()
         await prisma.promotionProduct.deleteMany()
         await prisma.promotionCategory.deleteMany()
-        await prisma.promotion.deleteMany()
+
+        await prisma.saleDiscount.deleteMany()
+        await prisma.sale.deleteMany()
+        await prisma.refund.deleteMany()
+        await prisma.order.deleteMany()
+        await prisma.parkedSale.deleteMany()
+
         await prisma.stockMovement.deleteMany()
         await prisma.priceHistory.deleteMany()
         await prisma.auditLog.deleteMany()
         await prisma.errorLog.deleteMany()
+        await prisma.cashMovement.deleteMany()
+        await prisma.cashSession.deleteMany()
+        await prisma.cashRegister.deleteMany()
+
         await prisma.product.deleteMany()
+        await prisma.promotion.deleteMany()
         await prisma.category.deleteMany()
+
+        await prisma.account.deleteMany()
+        await prisma.session.deleteMany()
+        await prisma.passwordResetToken.deleteMany()
         await prisma.user.deleteMany()
         await prisma.role.deleteMany()
         await prisma.customer.deleteMany()
 
-        // 1. Role
+        // 2. Roles
+        console.log('Creating Roles...')
         const adminRole = await prisma.role.create({
             data: {
                 name: 'ADMIN',
-                description: 'Administrador',
-                permissions: ['CREATE_SALE', 'VIEW_SALES', 'MANAGE_SETTINGS', 'MANAGE_PRODUCTS']
+                description: 'Administrador total',
+                permissions: [
+                    'CREATE_SALE', 'VIEW_SALES', 'CANCEL_SALE', 'REFUND_SALE',
+                    'CREATE_PRODUCT', 'EDIT_PRODUCT', 'DELETE_PRODUCT', 'VIEW_PRODUCT', 'ADJUST_STOCK', 'EDIT_PRICE',
+                    'MANAGE_PRODUCTS', 'MANAGE_CATEGORIES', 'VIEW_AUDIT_LOG', 'VIEW_REPORTS'
+                ]
             }
         })
 
-        // 2. User
+        const cashierRole = await prisma.role.create({
+            data: {
+                name: 'CASHIER',
+                description: 'Personal de ventas',
+                permissions: ['CREATE_SALE', 'VIEW_SALES', 'VIEW_PRODUCT']
+            }
+        })
+
+        // 3. User
+        console.log('Creating Admin User...')
         const hashedPassword = await bcrypt.hash('admin123', 10)
         const adminUser = await prisma.user.create({
             data: {
-                name: 'Admin',
+                name: 'Admin SIA',
                 email: 'admin@marisqueria.com',
                 passwordHash: hashedPassword,
-                roleId: adminRole.id,
-                status: 'ACTIVE'
+                roleId: adminRole.id
             }
         })
 
-        // 3. Categories
-        const catPescados = await prisma.category.create({
-            data: { name: 'Pescados Frescos' }
-        })
-        const catMariscos = await prisma.category.create({
-            data: { name: 'Mariscos' }
+        // 4. Cash Registers
+        console.log('Creating Cash Registers...')
+        await prisma.cashRegister.createMany({
+            data: [
+                { name: 'Caja Principal', code: 'CAJA-01', isActive: true },
+                { name: 'Caja Secundaria', code: 'CAJA-02', isActive: true },
+            ]
         })
 
-        // 4. Products
-        const products = [
+        // 5. Categories (Hierarchy)
+        console.log('Creating CategoriesTree...')
+        const catPescados = await prisma.category.create({
+            data: { name: 'Pescados Frescos', order: 1 }
+        })
+
+        const catMariscos = await prisma.category.create({
+            data: { name: 'Mariscos', order: 2 }
+        })
+
+        const subcatEnteros = await prisma.category.create({
+            data: { name: 'Pescados Enteros', parentId: catPescados.id, order: 1 }
+        })
+
+        const subcatFiletes = await prisma.category.create({
+            data: { name: 'Filetes y Lonjas', parentId: catPescados.id, order: 2 }
+        })
+
+        // 5. Products
+        console.log('Creating Products...')
+        const sampleProducts = [
             {
-                code: 'HU-001',
+                code: 'PES-HUA-E',
                 name: 'Huachinango Entero',
-                price: new Prisma.Decimal(280.0),
-                cost: new Prisma.Decimal(200.0),
-                stock: new Prisma.Decimal(15.5),
+                price: new Prisma.Decimal(285.0),
+                cost: new Prisma.Decimal(190.0),
+                stock: new Prisma.Decimal(25.500),
+                criticalStock: new Prisma.Decimal(5.0),
                 unit: 'kg',
-                categoryId: catPescados.id,
+                categoryId: subcatEnteros.id,
                 isFresh: true,
-                isSeafood: false
+                isSeafood: false,
+                isWeighable: true,
+                version: 1
             },
             {
-                code: 'CAM-01',
+                code: 'PES-TIL-F',
+                name: 'Filete de Tilapia',
+                price: new Prisma.Decimal(145.0),
+                cost: new Prisma.Decimal(95.0),
+                stock: new Prisma.Decimal(12.000),
+                criticalStock: new Prisma.Decimal(3.0),
+                unit: 'kg',
+                categoryId: subcatFiletes.id,
+                isFresh: true,
+                isSeafood: false,
+                isWeighable: true,
+                version: 1
+            },
+            {
+                code: 'MAR-CAM-P',
                 name: 'Camarón Pacotilla',
-                price: new Prisma.Decimal(350.0),
+                price: new Prisma.Decimal(360.0),
                 cost: new Prisma.Decimal(240.0),
-                stock: new Prisma.Decimal(10.0),
+                stock: new Prisma.Decimal(1.500), // Below critical
+                criticalStock: new Prisma.Decimal(2.0),
                 unit: 'kg',
                 categoryId: catMariscos.id,
                 isFresh: true,
-                isSeafood: true
-            },
-            {
-                code: 'MOJ-01',
-                name: 'Mojarra Tilapia',
-                price: new Prisma.Decimal(115.0),
-                cost: new Prisma.Decimal(80.0),
-                stock: new Prisma.Decimal(25.0),
-                unit: 'kg',
-                categoryId: catPescados.id,
-                isFresh: true,
-                isSeafood: false
+                isSeafood: true,
+                isWeighable: true,
+                version: 1
             }
         ]
 
-        for (const p of products) {
-            const product = await prisma.product.create({ data: p })
-            // Initial movement
+        for (const pData of sampleProducts) {
+            const p = await prisma.product.create({ data: pData })
+
+            // Initial Stock Movement
             await prisma.stockMovement.create({
                 data: {
-                    productId: product.id,
-                    type: 'INITIAL',
-                    quantity: p.stock,
+                    productId: p.id,
+                    type: MovementType.INITIAL,
+                    quantity: pData.stock,
                     previousStock: new Prisma.Decimal(0),
-                    newStock: p.stock,
-                    userId: adminUser.id,
-                    reason: 'Carga inicial'
+                    newStock: pData.stock,
+                    reason: 'Carga inicial de sistema',
+                    userId: adminUser.id
                 }
             })
         }
-
-        // 5. Cash Registers
-        await prisma.cashRegister.createMany({
-            data: [
-                { name: 'Caja Principal', code: 'CAJA-01', location: 'Mostrador' },
-                { name: 'Caja Secundaria', code: 'CAJA-02', location: 'Entrada' }
-            ]
-        })
 
         console.log('--- SEED COMPLETED SUCCESSFULLY ---')
     } catch (e) {

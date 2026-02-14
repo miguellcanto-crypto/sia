@@ -209,6 +209,8 @@ exports.Prisma.ProductScalarFieldEnum = {
   isSeafood: 'isSeafood',
   image: 'image',
   isActive: 'isActive',
+  version: 'version',
+  criticalStock: 'criticalStock',
   isWeighable: 'isWeighable',
   pricePerUnit: 'pricePerUnit',
   tareWeight: 'tareWeight',
