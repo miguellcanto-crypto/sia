@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { AuditService } from '@/services/AuditService';
+import { NotificationService } from '@/services/NotificationService';
+import { NotificationType } from '@/generated/client';
 
 export async function PATCH(
     request: Request,
@@ -26,6 +28,14 @@ export async function PATCH(
         await AuditService.log('UPDATE', 'Product', id, {
             newValues: product,
             metadata: { userId: (session.user as any).id }
+        });
+
+        await NotificationService.notify({
+            type: NotificationType.INFO,
+            title: 'Producto Actualizado',
+            message: `El producto ${product.name} ha sido modificado.`,
+            entityType: 'Product',
+            entityId: id
         });
 
         return NextResponse.json(product);

@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { AuditService } from './AuditService';
-import { MovementType, Prisma } from '@/generated/client';
+import { MovementType, Prisma, NotificationType } from '@/generated/client';
+import { NotificationService } from './NotificationService';
 
 export class ProductService {
     static async create(data: any, userId: string) {
@@ -25,6 +26,18 @@ export class ProductService {
                         userId,
                         reason: 'Initial load',
                     },
+                });
+            }
+
+            // Check if initial stock is already critical
+            const criticalStock = product.criticalStock ? new Prisma.Decimal(product.criticalStock) : new Prisma.Decimal(0);
+            if (stockValue.gt(0) && stockValue.lte(criticalStock)) {
+                await NotificationService.notify({
+                    type: NotificationType.WARNING,
+                    title: 'Stock Crítico Inicial',
+                    message: `El producto ${product.name} ha sido creado con stock crítico (${stockValue.toString()} ${product.unit}).`,
+                    entityType: 'Product',
+                    entityId: product.id
                 });
             }
 
@@ -88,6 +101,18 @@ export class ProductService {
             newValues: { stock: newStock },
             metadata: { userId },
         });
+
+        // Check for critical stock after adjustment
+        const criticalThreshold = product.criticalStock ? new Prisma.Decimal(product.criticalStock) : new Prisma.Decimal(0);
+        if (newStock.lte(criticalThreshold)) {
+            await NotificationService.notify({
+                type: NotificationType.WARNING,
+                title: 'Alerta de Stock Crítico',
+                message: `El stock de ${updatedProduct.name} ha bajado a ${newStock.toString()} ${updatedProduct.unit}.`,
+                entityType: 'Product',
+                entityId: id
+            });
+        }
 
         return updatedProduct;
     }

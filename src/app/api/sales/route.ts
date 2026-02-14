@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { prisma } from '@/lib/prisma';
 import { authOptions } from '@/lib/auth';
+import { NotificationService } from '@/services/NotificationService';
+import { NotificationType, Prisma } from '@/generated/client';
 
 export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
@@ -69,6 +71,18 @@ export async function POST(request: Request) {
                         userId: (session.user as any).id
                     }
                 });
+
+                // Check critical stock
+                const criticalStock = product.criticalStock ? new Prisma.Decimal(product.criticalStock) : new Prisma.Decimal(0);
+                if (new Prisma.Decimal(newStock).lte(criticalStock)) {
+                    await NotificationService.notify({
+                        type: NotificationType.WARNING,
+                        title: 'Stock Crítico',
+                        message: `El stock de ${product.name} ha bajado a ${newStock} ${product.unit} tras la venta.`,
+                        entityType: 'Product',
+                        entityId: product.id
+                    }, tx);
+                }
             }
 
             const totalDiscount = Number(discount || 0);
@@ -101,6 +115,15 @@ export async function POST(request: Request) {
                     }
                 }
             });
+
+            // 5. Global Notification for Sale
+            await NotificationService.notify({
+                type: NotificationType.SUCCESS,
+                title: 'Venta Realizada',
+                message: `Se ha procesado una venta por un total de $${total.toFixed(2)}.`,
+                entityType: 'Sale',
+                entityId: sale.id
+            }, tx);
 
             return sale;
         });

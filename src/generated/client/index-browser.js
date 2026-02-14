@@ -479,6 +479,19 @@ exports.Prisma.ParkedSaleScalarFieldEnum = {
   expiresAt: 'expiresAt'
 };
 
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  isRead: 'isRead',
+  userId: 'userId',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -655,6 +668,13 @@ exports.OrderType = exports.$Enums.OrderType = {
   PRE_ORDER: 'PRE_ORDER'
 };
 
+exports.NotificationType = exports.$Enums.NotificationType = {
+  INFO: 'INFO',
+  WARNING: 'WARNING',
+  ERROR: 'ERROR',
+  SUCCESS: 'SUCCESS'
+};
+
 exports.Prisma.ModelName = {
   Role: 'Role',
   User: 'User',
@@ -684,7 +704,8 @@ exports.Prisma.ModelName = {
   SaleDiscount: 'SaleDiscount',
   Order: 'Order',
   OrderItem: 'OrderItem',
-  ParkedSale: 'ParkedSale'
+  ParkedSale: 'ParkedSale',
+  Notification: 'Notification'
 };
 
 /**
