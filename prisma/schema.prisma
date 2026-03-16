@@ -20,31 +20,32 @@ model Role {
 }
 
 model User {
-  id             String               @id @default(cuid())
-  name           String
-  email          String               @unique
-  passwordHash   String
-  emailVerified  DateTime?
-  status         AccountStatus        @default(ACTIVE)
-  failedAttempts Int                  @default(0)
-  lockoutUntil   DateTime?
-  roleId         String
-  lastLogin      DateTime?
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
-  accounts       Account[]
-  auditLogs      AuditLog[]
-  cashMovements  CashMovement[]
-  cashSessions   CashSession[]
-  notifications  Notification[]
-  orders         Order[]
-  resetTokens    PasswordResetToken[]
-  priceHistory   PriceHistory[]
-  refunds        Refund[]             @relation("ProcessedBy")
-  sales          Sale[]
-  sessions       Session[]
-  stockMovements StockMovement[]
-  role           Role                 @relation(fields: [roleId], references: [id])
+  id               String                 @id @default(cuid())
+  name             String
+  email            String                 @unique
+  passwordHash     String
+  emailVerified    DateTime?
+  status           AccountStatus          @default(ACTIVE)
+  failedAttempts   Int                    @default(0)
+  lockoutUntil     DateTime?
+  roleId           String
+  lastLogin        DateTime?
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  accounts         Account[]
+  auditLogs        AuditLog[]
+  cashMovements    CashMovement[]
+  cashSessions     CashSession[]
+  notifications    Notification[]
+  orders           Order[]
+  resetTokens      PasswordResetToken[]
+  priceHistory     PriceHistory[]
+  refunds          Refund[]               @relation("ProcessedBy")
+  sales            Sale[]
+  sessions         Session[]
+  stockMovements   StockMovement[]
+  pointAdjustments CustomerPointHistory[]
+  role             Role                   @relation(fields: [roleId], references: [id])
 }
 
 model Account {
@@ -146,60 +147,82 @@ model Product {
 }
 
 model Customer {
-  id        String   @id @default(cuid())
-  code      String   @unique
-  name      String
-  email     String?  @unique
-  phone     String?
-  address   String?
-  points    Int      @default(0)
-  tier      String?
-  taxId     String?  @unique
-  company   String?
-  isActive  Boolean  @default(true)
-  notes     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders    Order[]
-  sales     Sale[]
+  id           String                 @id @default(cuid())
+  code         String                 @unique
+  name         String
+  email        String?                @unique
+  phone        String?
+  address      String?
+  points       Int                    @default(0)
+  tier         String?
+  taxId        String?                @unique
+  company      String?
+  creditLimit  Decimal                @default(0) @db.Decimal(10, 2)
+  balance      Decimal                @default(0) @db.Decimal(10, 2)
+  isActive     Boolean                @default(true)
+  notes        String?
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+  orders       Order[]
+  sales        Sale[]
+  pointHistory CustomerPointHistory[]
 
   @@index([code])
 }
 
+model CustomerPointHistory {
+  id         String            @id @default(cuid())
+  customerId String
+  points     Int // Positivo (ganados) o Negativo (usados/ajustados)
+  type       PointMovementType
+  reason     String
+  saleId     String?
+  userId     String? // Si fue un ajuste manual, qué empleado lo hizo
+  createdAt  DateTime          @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  user     User?    @relation(fields: [userId], references: [id])
+  sale     Sale?    @relation(fields: [saleId], references: [id])
+
+  @@index([customerId])
+  @@index([createdAt])
+}
+
 model Sale {
-  id             String          @id @default(cuid())
-  saleNumber     String          @unique
-  subtotal       Decimal         @db.Decimal(10, 2)
-  discount       Decimal         @default(0) @db.Decimal(10, 2)
-  tax            Decimal         @default(0) @db.Decimal(10, 2)
-  total          Decimal         @db.Decimal(10, 2)
-  status         SaleStatus      @default(COMPLETED)
-  paymentMethod  PaymentMethod   @default(CASH)
-  amountPaid     Decimal?        @db.Decimal(10, 2)
-  change         Decimal?        @db.Decimal(10, 2)
-  tip            Decimal?        @default(0) @db.Decimal(10, 2)
-  tipPercent     Decimal?        @db.Decimal(5, 2)
-  notes          String?
-  invoiceNumber  String?         @unique
-  date           DateTime        @default(now())
-  userId         String
-  customerId     String?
-  refundedSaleId String?         @unique
-  authorizedBy   String?
-  authReason     String?
-  cashSessionId  String?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  order          Order?
-  refundRecords  Refund[]
-  cashSession    CashSession?    @relation(fields: [cashSessionId], references: [id])
-  customer       Customer?       @relation(fields: [customerId], references: [id])
-  refundedSale   Sale?           @relation("SaleRefund", fields: [refundedSaleId], references: [id])
-  refund         Sale?           @relation("SaleRefund")
-  user           User            @relation(fields: [userId], references: [id])
-  discounts      SaleDiscount[]
-  items          SaleItem[]
-  promotions     SalePromotion[]
+  id                   String                 @id @default(cuid())
+  saleNumber           String                 @unique
+  subtotal             Decimal                @db.Decimal(10, 2)
+  discount             Decimal                @default(0) @db.Decimal(10, 2)
+  tax                  Decimal                @default(0) @db.Decimal(10, 2)
+  total                Decimal                @db.Decimal(10, 2)
+  status               SaleStatus             @default(COMPLETED)
+  paymentMethod        PaymentMethod          @default(CASH)
+  amountPaid           Decimal?               @db.Decimal(10, 2)
+  change               Decimal?               @db.Decimal(10, 2)
+  tip                  Decimal?               @default(0) @db.Decimal(10, 2)
+  tipPercent           Decimal?               @db.Decimal(5, 2)
+  notes                String?
+  invoiceNumber        String?                @unique
+  date                 DateTime               @default(now())
+  userId               String
+  customerId           String?
+  refundedSaleId       String?                @unique
+  authorizedBy         String?
+  authReason           String?
+  cashSessionId        String?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  order                Order?
+  refundRecords        Refund[]
+  cashSession          CashSession?           @relation(fields: [cashSessionId], references: [id])
+  customer             Customer?              @relation(fields: [customerId], references: [id])
+  refundedSale         Sale?                  @relation("SaleRefund", fields: [refundedSaleId], references: [id])
+  refund               Sale?                  @relation("SaleRefund")
+  user                 User                   @relation(fields: [userId], references: [id])
+  discounts            SaleDiscount[]
+  items                SaleItem[]
+  promotions           SalePromotion[]
+  customerPointHistory CustomerPointHistory[]
 
   @@index([saleNumber])
   @@index([date])
@@ -267,21 +290,26 @@ model SalePromotion {
 }
 
 model AuditLog {
-  id         String      @id @default(cuid())
-  action     AuditAction
-  entityType String
-  entityId   String
-  oldValues  Json?
-  newValues  Json?
-  ipAddress  String?
-  userAgent  String?
-  userId     String?
-  createdAt  DateTime    @default(now())
-  user       User?       @relation(fields: [userId], references: [id])
+  id           String      @id @default(cuid())
+  action       AuditAction
+  entityType   String
+  entityId     String
+  entityName   String?
+  oldValues    Json?
+  newValues    Json?
+  ipAddress    String?
+  userAgent    String?
+  sessionId    String?
+  resultStatus String      @default("SUCCESS") // SUCCESS, FAILED, WARNING
+  userId       String?
+  createdAt    DateTime    @default(now())
+  user         User?       @relation(fields: [userId], references: [id])
 
   @@index([entityType, entityId])
   @@index([userId])
   @@index([createdAt])
+  @@index([action])
+  @@index([sessionId])
 }
 
 model ErrorLog {
@@ -576,7 +604,10 @@ enum AuditAction {
   UPDATE
   DELETE
   LOGIN
+  LOGIN_FAILED
   LOGOUT
+  ACCESS_DENIED
+  VALIDATION_FAILED
   SALE_CREATED
   SALE_CANCELLED
   PRICE_CHANGED
@@ -656,4 +687,10 @@ enum OrderType {
   TAKEAWAY
   DELIVERY
   PRE_ORDER
+}
+
+enum PointMovementType {
+  EARNED
+  REDEEMED
+  MANUAL_ADJUSTMENT
 }

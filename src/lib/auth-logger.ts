@@ -1,5 +1,5 @@
-import { prisma } from './prisma';
-import { AuditAction } from '../generated/client/client';
+import { AuditAction } from '@/generated/client';
+import { AuditService } from '@/services/AuditService';
 
 export async function logAuthEvent(
     userId: string | null,
@@ -8,22 +8,15 @@ export async function logAuthEvent(
     ip?: string,
     userAgent?: string
 ) {
-    try {
-        await prisma.auditLog.create({
-            data: {
-                userId,
-                action,
-                entityType: 'User',
-                entityId: userId || 'unknown',
-                newValues: {
-                    info: details,
-                    timestamp: new Date().toISOString()
-                },
-                ipAddress: ip,
-                userAgent: userAgent,
-            },
-        });
-    } catch (error) {
-        console.error('Failed to log auth event:', error);
-    }
+    const isSuccess = details.toLowerCase().includes('exitoso') || details.toLowerCase().includes('success');
+
+    await AuditService.log(action, 'User', userId || 'unknown', {
+        newValues: { details },
+        metadata: {
+            userId: userId || undefined,
+            ipAddress: ip,
+            userAgent: userAgent,
+            resultStatus: isSuccess ? 'SUCCESS' : 'FAILED'
+        }
+    });
 }

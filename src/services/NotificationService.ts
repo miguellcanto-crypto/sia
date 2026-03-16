@@ -49,7 +49,7 @@ export class NotificationService {
     /**
      * Gets unread notifications for a user.
      */
-    static async getUnread(userId?: string) {
+    static async getUnread(userId?: string, limit?: number) {
         try {
             if (!(prisma as any).notification) {
                 console.error('[NotificationService] prisma.notification is undefined in getUnread');
@@ -70,9 +70,35 @@ export class NotificationService {
                 orderBy: {
                     createdAt: 'desc',
                 },
+                take: limit,
             });
         } catch (error) {
             console.error('[NotificationService] Error in getUnread:', error);
+            return [];
+        }
+    }
+
+    /**
+     * Gets all notifications (read and unread) for a user.
+     */
+    static async getAll(userId: string, limit: number = 50) {
+        try {
+            if (!(prisma as any).notification) return [];
+
+            return await prisma.notification.findMany({
+                where: {
+                    OR: [
+                        { userId: userId },
+                        { userId: null }
+                    ]
+                },
+                orderBy: {
+                    createdAt: 'desc',
+                },
+                take: limit,
+            });
+        } catch (error) {
+            console.error('[NotificationService] Error in getAll:', error);
             return [];
         }
     }

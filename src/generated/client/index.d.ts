@@ -59,6 +59,11 @@ export type Product = $Result.DefaultSelection<Prisma.$ProductPayload>
  */
 export type Customer = $Result.DefaultSelection<Prisma.$CustomerPayload>
 /**
+ * Model CustomerPointHistory
+ * 
+ */
+export type CustomerPointHistory = $Result.DefaultSelection<Prisma.$CustomerPointHistoryPayload>
+/**
  * Model Sale
  * 
  */
@@ -258,7 +263,10 @@ export const AuditAction: {
   UPDATE: 'UPDATE',
   DELETE: 'DELETE',
   LOGIN: 'LOGIN',
+  LOGIN_FAILED: 'LOGIN_FAILED',
   LOGOUT: 'LOGOUT',
+  ACCESS_DENIED: 'ACCESS_DENIED',
+  VALIDATION_FAILED: 'VALIDATION_FAILED',
   SALE_CREATED: 'SALE_CREATED',
   SALE_CANCELLED: 'SALE_CANCELLED',
   PRICE_CHANGED: 'PRICE_CHANGED',
@@ -372,6 +380,15 @@ export const OrderType: {
 
 export type OrderType = (typeof OrderType)[keyof typeof OrderType]
 
+
+export const PointMovementType: {
+  EARNED: 'EARNED',
+  REDEEMED: 'REDEEMED',
+  MANUAL_ADJUSTMENT: 'MANUAL_ADJUSTMENT'
+};
+
+export type PointMovementType = (typeof PointMovementType)[keyof typeof PointMovementType]
+
 }
 
 export type NotificationType = $Enums.NotificationType
@@ -441,6 +458,10 @@ export const OrderStatus: typeof $Enums.OrderStatus
 export type OrderType = $Enums.OrderType
 
 export const OrderType: typeof $Enums.OrderType
+
+export type PointMovementType = $Enums.PointMovementType
+
+export const PointMovementType: typeof $Enums.PointMovementType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -649,6 +670,16 @@ export class PrismaClient<
     * ```
     */
   get customer(): Prisma.CustomerDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.customerPointHistory`: Exposes CRUD operations for the **CustomerPointHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CustomerPointHistories
+    * const customerPointHistories = await prisma.customerPointHistory.findMany()
+    * ```
+    */
+  get customerPointHistory(): Prisma.CustomerPointHistoryDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.sale`: Exposes CRUD operations for the **Sale** model.
@@ -1309,6 +1340,7 @@ export namespace Prisma {
     Category: 'Category',
     Product: 'Product',
     Customer: 'Customer',
+    CustomerPointHistory: 'CustomerPointHistory',
     Sale: 'Sale',
     SaleItem: 'SaleItem',
     Promotion: 'Promotion',
@@ -1348,7 +1380,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "role" | "user" | "account" | "session" | "verificationToken" | "passwordResetToken" | "category" | "product" | "customer" | "sale" | "saleItem" | "promotion" | "promotionProduct" | "promotionCategory" | "salePromotion" | "auditLog" | "errorLog" | "stockMovement" | "priceHistory" | "systemConfig" | "cashRegister" | "cashSession" | "cashMovement" | "refund" | "refundItem" | "saleDiscount" | "order" | "orderItem" | "parkedSale" | "notification"
+      modelProps: "role" | "user" | "account" | "session" | "verificationToken" | "passwordResetToken" | "category" | "product" | "customer" | "customerPointHistory" | "sale" | "saleItem" | "promotion" | "promotionProduct" | "promotionCategory" | "salePromotion" | "auditLog" | "errorLog" | "stockMovement" | "priceHistory" | "systemConfig" | "cashRegister" | "cashSession" | "cashMovement" | "refund" | "refundItem" | "saleDiscount" | "order" | "orderItem" | "parkedSale" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2015,6 +2047,80 @@ export namespace Prisma {
           count: {
             args: Prisma.CustomerCountArgs<ExtArgs>
             result: $Utils.Optional<CustomerCountAggregateOutputType> | number
+          }
+        }
+      }
+      CustomerPointHistory: {
+        payload: Prisma.$CustomerPointHistoryPayload<ExtArgs>
+        fields: Prisma.CustomerPointHistoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CustomerPointHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPointHistoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CustomerPointHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPointHistoryPayload>
+          }
+          findFirst: {
+            args: Prisma.CustomerPointHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPointHistoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CustomerPointHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPointHistoryPayload>
+          }
+          findMany: {
+            args: Prisma.CustomerPointHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPointHistoryPayload>[]
+          }
+          create: {
+            args: Prisma.CustomerPointHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPointHistoryPayload>
+          }
+          createMany: {
+            args: Prisma.CustomerPointHistoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CustomerPointHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPointHistoryPayload>[]
+          }
+          delete: {
+            args: Prisma.CustomerPointHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPointHistoryPayload>
+          }
+          update: {
+            args: Prisma.CustomerPointHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPointHistoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.CustomerPointHistoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CustomerPointHistoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CustomerPointHistoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPointHistoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.CustomerPointHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomerPointHistoryPayload>
+          }
+          aggregate: {
+            args: Prisma.CustomerPointHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCustomerPointHistory>
+          }
+          groupBy: {
+            args: Prisma.CustomerPointHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CustomerPointHistoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CustomerPointHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<CustomerPointHistoryCountAggregateOutputType> | number
           }
         }
       }
@@ -3677,6 +3783,7 @@ export namespace Prisma {
     category?: CategoryOmit
     product?: ProductOmit
     customer?: CustomerOmit
+    customerPointHistory?: CustomerPointHistoryOmit
     sale?: SaleOmit
     saleItem?: SaleItemOmit
     promotion?: PromotionOmit
@@ -3821,6 +3928,7 @@ export namespace Prisma {
     sales: number
     sessions: number
     stockMovements: number
+    pointAdjustments: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3836,6 +3944,7 @@ export namespace Prisma {
     sales?: boolean | UserCountOutputTypeCountSalesArgs
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     stockMovements?: boolean | UserCountOutputTypeCountStockMovementsArgs
+    pointAdjustments?: boolean | UserCountOutputTypeCountPointAdjustmentsArgs
   }
 
   // Custom InputTypes
@@ -3931,6 +4040,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountStockMovementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: StockMovementWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPointAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerPointHistoryWhereInput
   }
 
 
@@ -4066,11 +4182,13 @@ export namespace Prisma {
   export type CustomerCountOutputType = {
     orders: number
     sales: number
+    pointHistory: number
   }
 
   export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | CustomerCountOutputTypeCountOrdersArgs
     sales?: boolean | CustomerCountOutputTypeCountSalesArgs
+    pointHistory?: boolean | CustomerCountOutputTypeCountPointHistoryArgs
   }
 
   // Custom InputTypes
@@ -4098,6 +4216,13 @@ export namespace Prisma {
     where?: SaleWhereInput
   }
 
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountPointHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerPointHistoryWhereInput
+  }
+
 
   /**
    * Count Type SaleCountOutputType
@@ -4108,6 +4233,7 @@ export namespace Prisma {
     discounts: number
     items: number
     promotions: number
+    customerPointHistory: number
   }
 
   export type SaleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4115,6 +4241,7 @@ export namespace Prisma {
     discounts?: boolean | SaleCountOutputTypeCountDiscountsArgs
     items?: boolean | SaleCountOutputTypeCountItemsArgs
     promotions?: boolean | SaleCountOutputTypeCountPromotionsArgs
+    customerPointHistory?: boolean | SaleCountOutputTypeCountCustomerPointHistoryArgs
   }
 
   // Custom InputTypes
@@ -4154,6 +4281,13 @@ export namespace Prisma {
    */
   export type SaleCountOutputTypeCountPromotionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SalePromotionWhereInput
+  }
+
+  /**
+   * SaleCountOutputType without action
+   */
+  export type SaleCountOutputTypeCountCustomerPointHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerPointHistoryWhereInput
   }
 
 
@@ -5688,6 +5822,7 @@ export namespace Prisma {
     sales?: boolean | User$salesArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
+    pointAdjustments?: boolean | User$pointAdjustmentsArgs<ExtArgs>
     role?: boolean | RoleDefaultArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -5753,6 +5888,7 @@ export namespace Prisma {
     sales?: boolean | User$salesArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     stockMovements?: boolean | User$stockMovementsArgs<ExtArgs>
+    pointAdjustments?: boolean | User$pointAdjustmentsArgs<ExtArgs>
     role?: boolean | RoleDefaultArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -5778,6 +5914,7 @@ export namespace Prisma {
       sales: Prisma.$SalePayload<ExtArgs>[]
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
+      pointAdjustments: Prisma.$CustomerPointHistoryPayload<ExtArgs>[]
       role: Prisma.$RolePayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -6199,6 +6336,7 @@ export namespace Prisma {
     sales<T extends User$salesArgs<ExtArgs> = {}>(args?: Subset<T, User$salesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SalePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stockMovements<T extends User$stockMovementsArgs<ExtArgs> = {}>(args?: Subset<T, User$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    pointAdjustments<T extends User$pointAdjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$pointAdjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPointHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     role<T extends RoleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RoleDefaultArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -6922,6 +7060,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: StockMovementScalarFieldEnum | StockMovementScalarFieldEnum[]
+  }
+
+  /**
+   * User.pointAdjustments
+   */
+  export type User$pointAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryInclude<ExtArgs> | null
+    where?: CustomerPointHistoryWhereInput
+    orderBy?: CustomerPointHistoryOrderByWithRelationInput | CustomerPointHistoryOrderByWithRelationInput[]
+    cursor?: CustomerPointHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomerPointHistoryScalarFieldEnum | CustomerPointHistoryScalarFieldEnum[]
   }
 
   /**
@@ -13972,10 +14134,14 @@ export namespace Prisma {
 
   export type CustomerAvgAggregateOutputType = {
     points: number | null
+    creditLimit: Decimal | null
+    balance: Decimal | null
   }
 
   export type CustomerSumAggregateOutputType = {
     points: number | null
+    creditLimit: Decimal | null
+    balance: Decimal | null
   }
 
   export type CustomerMinAggregateOutputType = {
@@ -13989,6 +14155,8 @@ export namespace Prisma {
     tier: string | null
     taxId: string | null
     company: string | null
+    creditLimit: Decimal | null
+    balance: Decimal | null
     isActive: boolean | null
     notes: string | null
     createdAt: Date | null
@@ -14006,6 +14174,8 @@ export namespace Prisma {
     tier: string | null
     taxId: string | null
     company: string | null
+    creditLimit: Decimal | null
+    balance: Decimal | null
     isActive: boolean | null
     notes: string | null
     createdAt: Date | null
@@ -14023,6 +14193,8 @@ export namespace Prisma {
     tier: number
     taxId: number
     company: number
+    creditLimit: number
+    balance: number
     isActive: number
     notes: number
     createdAt: number
@@ -14033,10 +14205,14 @@ export namespace Prisma {
 
   export type CustomerAvgAggregateInputType = {
     points?: true
+    creditLimit?: true
+    balance?: true
   }
 
   export type CustomerSumAggregateInputType = {
     points?: true
+    creditLimit?: true
+    balance?: true
   }
 
   export type CustomerMinAggregateInputType = {
@@ -14050,6 +14226,8 @@ export namespace Prisma {
     tier?: true
     taxId?: true
     company?: true
+    creditLimit?: true
+    balance?: true
     isActive?: true
     notes?: true
     createdAt?: true
@@ -14067,6 +14245,8 @@ export namespace Prisma {
     tier?: true
     taxId?: true
     company?: true
+    creditLimit?: true
+    balance?: true
     isActive?: true
     notes?: true
     createdAt?: true
@@ -14084,6 +14264,8 @@ export namespace Prisma {
     tier?: true
     taxId?: true
     company?: true
+    creditLimit?: true
+    balance?: true
     isActive?: true
     notes?: true
     createdAt?: true
@@ -14188,6 +14370,8 @@ export namespace Prisma {
     tier: string | null
     taxId: string | null
     company: string | null
+    creditLimit: Decimal
+    balance: Decimal
     isActive: boolean
     notes: string | null
     createdAt: Date
@@ -14224,12 +14408,15 @@ export namespace Prisma {
     tier?: boolean
     taxId?: boolean
     company?: boolean
+    creditLimit?: boolean
+    balance?: boolean
     isActive?: boolean
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     sales?: boolean | Customer$salesArgs<ExtArgs>
+    pointHistory?: boolean | Customer$pointHistoryArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -14244,6 +14431,8 @@ export namespace Prisma {
     tier?: boolean
     taxId?: boolean
     company?: boolean
+    creditLimit?: boolean
+    balance?: boolean
     isActive?: boolean
     notes?: boolean
     createdAt?: boolean
@@ -14261,6 +14450,8 @@ export namespace Prisma {
     tier?: boolean
     taxId?: boolean
     company?: boolean
+    creditLimit?: boolean
+    balance?: boolean
     isActive?: boolean
     notes?: boolean
     createdAt?: boolean
@@ -14278,16 +14469,19 @@ export namespace Prisma {
     tier?: boolean
     taxId?: boolean
     company?: boolean
+    creditLimit?: boolean
+    balance?: boolean
     isActive?: boolean
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "name" | "email" | "phone" | "address" | "points" | "tier" | "taxId" | "company" | "isActive" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "name" | "email" | "phone" | "address" | "points" | "tier" | "taxId" | "company" | "creditLimit" | "balance" | "isActive" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     sales?: boolean | Customer$salesArgs<ExtArgs>
+    pointHistory?: boolean | Customer$pointHistoryArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -14298,6 +14492,7 @@ export namespace Prisma {
     objects: {
       orders: Prisma.$OrderPayload<ExtArgs>[]
       sales: Prisma.$SalePayload<ExtArgs>[]
+      pointHistory: Prisma.$CustomerPointHistoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -14310,6 +14505,8 @@ export namespace Prisma {
       tier: string | null
       taxId: string | null
       company: string | null
+      creditLimit: Prisma.Decimal
+      balance: Prisma.Decimal
       isActive: boolean
       notes: string | null
       createdAt: Date
@@ -14710,6 +14907,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     orders<T extends Customer$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Customer$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sales<T extends Customer$salesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$salesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SalePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    pointHistory<T extends Customer$pointHistoryArgs<ExtArgs> = {}>(args?: Subset<T, Customer$pointHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPointHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14749,6 +14947,8 @@ export namespace Prisma {
     readonly tier: FieldRef<"Customer", 'String'>
     readonly taxId: FieldRef<"Customer", 'String'>
     readonly company: FieldRef<"Customer", 'String'>
+    readonly creditLimit: FieldRef<"Customer", 'Decimal'>
+    readonly balance: FieldRef<"Customer", 'Decimal'>
     readonly isActive: FieldRef<"Customer", 'Boolean'>
     readonly notes: FieldRef<"Customer", 'String'>
     readonly createdAt: FieldRef<"Customer", 'DateTime'>
@@ -15189,6 +15389,30 @@ export namespace Prisma {
   }
 
   /**
+   * Customer.pointHistory
+   */
+  export type Customer$pointHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryInclude<ExtArgs> | null
+    where?: CustomerPointHistoryWhereInput
+    orderBy?: CustomerPointHistoryOrderByWithRelationInput | CustomerPointHistoryOrderByWithRelationInput[]
+    cursor?: CustomerPointHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomerPointHistoryScalarFieldEnum | CustomerPointHistoryScalarFieldEnum[]
+  }
+
+  /**
    * Customer without action
    */
   export type CustomerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15204,6 +15428,1191 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CustomerInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CustomerPointHistory
+   */
+
+  export type AggregateCustomerPointHistory = {
+    _count: CustomerPointHistoryCountAggregateOutputType | null
+    _avg: CustomerPointHistoryAvgAggregateOutputType | null
+    _sum: CustomerPointHistorySumAggregateOutputType | null
+    _min: CustomerPointHistoryMinAggregateOutputType | null
+    _max: CustomerPointHistoryMaxAggregateOutputType | null
+  }
+
+  export type CustomerPointHistoryAvgAggregateOutputType = {
+    points: number | null
+  }
+
+  export type CustomerPointHistorySumAggregateOutputType = {
+    points: number | null
+  }
+
+  export type CustomerPointHistoryMinAggregateOutputType = {
+    id: string | null
+    customerId: string | null
+    points: number | null
+    type: $Enums.PointMovementType | null
+    reason: string | null
+    saleId: string | null
+    userId: string | null
+    createdAt: Date | null
+  }
+
+  export type CustomerPointHistoryMaxAggregateOutputType = {
+    id: string | null
+    customerId: string | null
+    points: number | null
+    type: $Enums.PointMovementType | null
+    reason: string | null
+    saleId: string | null
+    userId: string | null
+    createdAt: Date | null
+  }
+
+  export type CustomerPointHistoryCountAggregateOutputType = {
+    id: number
+    customerId: number
+    points: number
+    type: number
+    reason: number
+    saleId: number
+    userId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type CustomerPointHistoryAvgAggregateInputType = {
+    points?: true
+  }
+
+  export type CustomerPointHistorySumAggregateInputType = {
+    points?: true
+  }
+
+  export type CustomerPointHistoryMinAggregateInputType = {
+    id?: true
+    customerId?: true
+    points?: true
+    type?: true
+    reason?: true
+    saleId?: true
+    userId?: true
+    createdAt?: true
+  }
+
+  export type CustomerPointHistoryMaxAggregateInputType = {
+    id?: true
+    customerId?: true
+    points?: true
+    type?: true
+    reason?: true
+    saleId?: true
+    userId?: true
+    createdAt?: true
+  }
+
+  export type CustomerPointHistoryCountAggregateInputType = {
+    id?: true
+    customerId?: true
+    points?: true
+    type?: true
+    reason?: true
+    saleId?: true
+    userId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type CustomerPointHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomerPointHistory to aggregate.
+     */
+    where?: CustomerPointHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerPointHistories to fetch.
+     */
+    orderBy?: CustomerPointHistoryOrderByWithRelationInput | CustomerPointHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CustomerPointHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerPointHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerPointHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CustomerPointHistories
+    **/
+    _count?: true | CustomerPointHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CustomerPointHistoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CustomerPointHistorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CustomerPointHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CustomerPointHistoryMaxAggregateInputType
+  }
+
+  export type GetCustomerPointHistoryAggregateType<T extends CustomerPointHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateCustomerPointHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCustomerPointHistory[P]>
+      : GetScalarType<T[P], AggregateCustomerPointHistory[P]>
+  }
+
+
+
+
+  export type CustomerPointHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomerPointHistoryWhereInput
+    orderBy?: CustomerPointHistoryOrderByWithAggregationInput | CustomerPointHistoryOrderByWithAggregationInput[]
+    by: CustomerPointHistoryScalarFieldEnum[] | CustomerPointHistoryScalarFieldEnum
+    having?: CustomerPointHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CustomerPointHistoryCountAggregateInputType | true
+    _avg?: CustomerPointHistoryAvgAggregateInputType
+    _sum?: CustomerPointHistorySumAggregateInputType
+    _min?: CustomerPointHistoryMinAggregateInputType
+    _max?: CustomerPointHistoryMaxAggregateInputType
+  }
+
+  export type CustomerPointHistoryGroupByOutputType = {
+    id: string
+    customerId: string
+    points: number
+    type: $Enums.PointMovementType
+    reason: string
+    saleId: string | null
+    userId: string | null
+    createdAt: Date
+    _count: CustomerPointHistoryCountAggregateOutputType | null
+    _avg: CustomerPointHistoryAvgAggregateOutputType | null
+    _sum: CustomerPointHistorySumAggregateOutputType | null
+    _min: CustomerPointHistoryMinAggregateOutputType | null
+    _max: CustomerPointHistoryMaxAggregateOutputType | null
+  }
+
+  type GetCustomerPointHistoryGroupByPayload<T extends CustomerPointHistoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CustomerPointHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CustomerPointHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CustomerPointHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], CustomerPointHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CustomerPointHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    customerId?: boolean
+    points?: boolean
+    type?: boolean
+    reason?: boolean
+    saleId?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    user?: boolean | CustomerPointHistory$userArgs<ExtArgs>
+    sale?: boolean | CustomerPointHistory$saleArgs<ExtArgs>
+  }, ExtArgs["result"]["customerPointHistory"]>
+
+  export type CustomerPointHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    customerId?: boolean
+    points?: boolean
+    type?: boolean
+    reason?: boolean
+    saleId?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    user?: boolean | CustomerPointHistory$userArgs<ExtArgs>
+    sale?: boolean | CustomerPointHistory$saleArgs<ExtArgs>
+  }, ExtArgs["result"]["customerPointHistory"]>
+
+  export type CustomerPointHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    customerId?: boolean
+    points?: boolean
+    type?: boolean
+    reason?: boolean
+    saleId?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    user?: boolean | CustomerPointHistory$userArgs<ExtArgs>
+    sale?: boolean | CustomerPointHistory$saleArgs<ExtArgs>
+  }, ExtArgs["result"]["customerPointHistory"]>
+
+  export type CustomerPointHistorySelectScalar = {
+    id?: boolean
+    customerId?: boolean
+    points?: boolean
+    type?: boolean
+    reason?: boolean
+    saleId?: boolean
+    userId?: boolean
+    createdAt?: boolean
+  }
+
+  export type CustomerPointHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "points" | "type" | "reason" | "saleId" | "userId" | "createdAt", ExtArgs["result"]["customerPointHistory"]>
+  export type CustomerPointHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    user?: boolean | CustomerPointHistory$userArgs<ExtArgs>
+    sale?: boolean | CustomerPointHistory$saleArgs<ExtArgs>
+  }
+  export type CustomerPointHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    user?: boolean | CustomerPointHistory$userArgs<ExtArgs>
+    sale?: boolean | CustomerPointHistory$saleArgs<ExtArgs>
+  }
+  export type CustomerPointHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | CustomerDefaultArgs<ExtArgs>
+    user?: boolean | CustomerPointHistory$userArgs<ExtArgs>
+    sale?: boolean | CustomerPointHistory$saleArgs<ExtArgs>
+  }
+
+  export type $CustomerPointHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CustomerPointHistory"
+    objects: {
+      customer: Prisma.$CustomerPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs> | null
+      sale: Prisma.$SalePayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      customerId: string
+      points: number
+      type: $Enums.PointMovementType
+      reason: string
+      saleId: string | null
+      userId: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["customerPointHistory"]>
+    composites: {}
+  }
+
+  type CustomerPointHistoryGetPayload<S extends boolean | null | undefined | CustomerPointHistoryDefaultArgs> = $Result.GetResult<Prisma.$CustomerPointHistoryPayload, S>
+
+  type CustomerPointHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CustomerPointHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CustomerPointHistoryCountAggregateInputType | true
+    }
+
+  export interface CustomerPointHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CustomerPointHistory'], meta: { name: 'CustomerPointHistory' } }
+    /**
+     * Find zero or one CustomerPointHistory that matches the filter.
+     * @param {CustomerPointHistoryFindUniqueArgs} args - Arguments to find a CustomerPointHistory
+     * @example
+     * // Get one CustomerPointHistory
+     * const customerPointHistory = await prisma.customerPointHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CustomerPointHistoryFindUniqueArgs>(args: SelectSubset<T, CustomerPointHistoryFindUniqueArgs<ExtArgs>>): Prisma__CustomerPointHistoryClient<$Result.GetResult<Prisma.$CustomerPointHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CustomerPointHistory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CustomerPointHistoryFindUniqueOrThrowArgs} args - Arguments to find a CustomerPointHistory
+     * @example
+     * // Get one CustomerPointHistory
+     * const customerPointHistory = await prisma.customerPointHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CustomerPointHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, CustomerPointHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CustomerPointHistoryClient<$Result.GetResult<Prisma.$CustomerPointHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomerPointHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerPointHistoryFindFirstArgs} args - Arguments to find a CustomerPointHistory
+     * @example
+     * // Get one CustomerPointHistory
+     * const customerPointHistory = await prisma.customerPointHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CustomerPointHistoryFindFirstArgs>(args?: SelectSubset<T, CustomerPointHistoryFindFirstArgs<ExtArgs>>): Prisma__CustomerPointHistoryClient<$Result.GetResult<Prisma.$CustomerPointHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomerPointHistory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerPointHistoryFindFirstOrThrowArgs} args - Arguments to find a CustomerPointHistory
+     * @example
+     * // Get one CustomerPointHistory
+     * const customerPointHistory = await prisma.customerPointHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CustomerPointHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, CustomerPointHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__CustomerPointHistoryClient<$Result.GetResult<Prisma.$CustomerPointHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CustomerPointHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerPointHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CustomerPointHistories
+     * const customerPointHistories = await prisma.customerPointHistory.findMany()
+     * 
+     * // Get first 10 CustomerPointHistories
+     * const customerPointHistories = await prisma.customerPointHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const customerPointHistoryWithIdOnly = await prisma.customerPointHistory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CustomerPointHistoryFindManyArgs>(args?: SelectSubset<T, CustomerPointHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPointHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CustomerPointHistory.
+     * @param {CustomerPointHistoryCreateArgs} args - Arguments to create a CustomerPointHistory.
+     * @example
+     * // Create one CustomerPointHistory
+     * const CustomerPointHistory = await prisma.customerPointHistory.create({
+     *   data: {
+     *     // ... data to create a CustomerPointHistory
+     *   }
+     * })
+     * 
+     */
+    create<T extends CustomerPointHistoryCreateArgs>(args: SelectSubset<T, CustomerPointHistoryCreateArgs<ExtArgs>>): Prisma__CustomerPointHistoryClient<$Result.GetResult<Prisma.$CustomerPointHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CustomerPointHistories.
+     * @param {CustomerPointHistoryCreateManyArgs} args - Arguments to create many CustomerPointHistories.
+     * @example
+     * // Create many CustomerPointHistories
+     * const customerPointHistory = await prisma.customerPointHistory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CustomerPointHistoryCreateManyArgs>(args?: SelectSubset<T, CustomerPointHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CustomerPointHistories and returns the data saved in the database.
+     * @param {CustomerPointHistoryCreateManyAndReturnArgs} args - Arguments to create many CustomerPointHistories.
+     * @example
+     * // Create many CustomerPointHistories
+     * const customerPointHistory = await prisma.customerPointHistory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CustomerPointHistories and only return the `id`
+     * const customerPointHistoryWithIdOnly = await prisma.customerPointHistory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CustomerPointHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, CustomerPointHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPointHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CustomerPointHistory.
+     * @param {CustomerPointHistoryDeleteArgs} args - Arguments to delete one CustomerPointHistory.
+     * @example
+     * // Delete one CustomerPointHistory
+     * const CustomerPointHistory = await prisma.customerPointHistory.delete({
+     *   where: {
+     *     // ... filter to delete one CustomerPointHistory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CustomerPointHistoryDeleteArgs>(args: SelectSubset<T, CustomerPointHistoryDeleteArgs<ExtArgs>>): Prisma__CustomerPointHistoryClient<$Result.GetResult<Prisma.$CustomerPointHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CustomerPointHistory.
+     * @param {CustomerPointHistoryUpdateArgs} args - Arguments to update one CustomerPointHistory.
+     * @example
+     * // Update one CustomerPointHistory
+     * const customerPointHistory = await prisma.customerPointHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CustomerPointHistoryUpdateArgs>(args: SelectSubset<T, CustomerPointHistoryUpdateArgs<ExtArgs>>): Prisma__CustomerPointHistoryClient<$Result.GetResult<Prisma.$CustomerPointHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CustomerPointHistories.
+     * @param {CustomerPointHistoryDeleteManyArgs} args - Arguments to filter CustomerPointHistories to delete.
+     * @example
+     * // Delete a few CustomerPointHistories
+     * const { count } = await prisma.customerPointHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CustomerPointHistoryDeleteManyArgs>(args?: SelectSubset<T, CustomerPointHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomerPointHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerPointHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CustomerPointHistories
+     * const customerPointHistory = await prisma.customerPointHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CustomerPointHistoryUpdateManyArgs>(args: SelectSubset<T, CustomerPointHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomerPointHistories and returns the data updated in the database.
+     * @param {CustomerPointHistoryUpdateManyAndReturnArgs} args - Arguments to update many CustomerPointHistories.
+     * @example
+     * // Update many CustomerPointHistories
+     * const customerPointHistory = await prisma.customerPointHistory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CustomerPointHistories and only return the `id`
+     * const customerPointHistoryWithIdOnly = await prisma.customerPointHistory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CustomerPointHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, CustomerPointHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPointHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CustomerPointHistory.
+     * @param {CustomerPointHistoryUpsertArgs} args - Arguments to update or create a CustomerPointHistory.
+     * @example
+     * // Update or create a CustomerPointHistory
+     * const customerPointHistory = await prisma.customerPointHistory.upsert({
+     *   create: {
+     *     // ... data to create a CustomerPointHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CustomerPointHistory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CustomerPointHistoryUpsertArgs>(args: SelectSubset<T, CustomerPointHistoryUpsertArgs<ExtArgs>>): Prisma__CustomerPointHistoryClient<$Result.GetResult<Prisma.$CustomerPointHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CustomerPointHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerPointHistoryCountArgs} args - Arguments to filter CustomerPointHistories to count.
+     * @example
+     * // Count the number of CustomerPointHistories
+     * const count = await prisma.customerPointHistory.count({
+     *   where: {
+     *     // ... the filter for the CustomerPointHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends CustomerPointHistoryCountArgs>(
+      args?: Subset<T, CustomerPointHistoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CustomerPointHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CustomerPointHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerPointHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CustomerPointHistoryAggregateArgs>(args: Subset<T, CustomerPointHistoryAggregateArgs>): Prisma.PrismaPromise<GetCustomerPointHistoryAggregateType<T>>
+
+    /**
+     * Group by CustomerPointHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomerPointHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CustomerPointHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CustomerPointHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: CustomerPointHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CustomerPointHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCustomerPointHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CustomerPointHistory model
+   */
+  readonly fields: CustomerPointHistoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CustomerPointHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CustomerPointHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends CustomerPointHistory$userArgs<ExtArgs> = {}>(args?: Subset<T, CustomerPointHistory$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    sale<T extends CustomerPointHistory$saleArgs<ExtArgs> = {}>(args?: Subset<T, CustomerPointHistory$saleArgs<ExtArgs>>): Prisma__SaleClient<$Result.GetResult<Prisma.$SalePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CustomerPointHistory model
+   */
+  interface CustomerPointHistoryFieldRefs {
+    readonly id: FieldRef<"CustomerPointHistory", 'String'>
+    readonly customerId: FieldRef<"CustomerPointHistory", 'String'>
+    readonly points: FieldRef<"CustomerPointHistory", 'Int'>
+    readonly type: FieldRef<"CustomerPointHistory", 'PointMovementType'>
+    readonly reason: FieldRef<"CustomerPointHistory", 'String'>
+    readonly saleId: FieldRef<"CustomerPointHistory", 'String'>
+    readonly userId: FieldRef<"CustomerPointHistory", 'String'>
+    readonly createdAt: FieldRef<"CustomerPointHistory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CustomerPointHistory findUnique
+   */
+  export type CustomerPointHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerPointHistory to fetch.
+     */
+    where: CustomerPointHistoryWhereUniqueInput
+  }
+
+  /**
+   * CustomerPointHistory findUniqueOrThrow
+   */
+  export type CustomerPointHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerPointHistory to fetch.
+     */
+    where: CustomerPointHistoryWhereUniqueInput
+  }
+
+  /**
+   * CustomerPointHistory findFirst
+   */
+  export type CustomerPointHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerPointHistory to fetch.
+     */
+    where?: CustomerPointHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerPointHistories to fetch.
+     */
+    orderBy?: CustomerPointHistoryOrderByWithRelationInput | CustomerPointHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomerPointHistories.
+     */
+    cursor?: CustomerPointHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerPointHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerPointHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerPointHistories.
+     */
+    distinct?: CustomerPointHistoryScalarFieldEnum | CustomerPointHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerPointHistory findFirstOrThrow
+   */
+  export type CustomerPointHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerPointHistory to fetch.
+     */
+    where?: CustomerPointHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerPointHistories to fetch.
+     */
+    orderBy?: CustomerPointHistoryOrderByWithRelationInput | CustomerPointHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomerPointHistories.
+     */
+    cursor?: CustomerPointHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerPointHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerPointHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomerPointHistories.
+     */
+    distinct?: CustomerPointHistoryScalarFieldEnum | CustomerPointHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerPointHistory findMany
+   */
+  export type CustomerPointHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomerPointHistories to fetch.
+     */
+    where?: CustomerPointHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomerPointHistories to fetch.
+     */
+    orderBy?: CustomerPointHistoryOrderByWithRelationInput | CustomerPointHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CustomerPointHistories.
+     */
+    cursor?: CustomerPointHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomerPointHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomerPointHistories.
+     */
+    skip?: number
+    distinct?: CustomerPointHistoryScalarFieldEnum | CustomerPointHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * CustomerPointHistory create
+   */
+  export type CustomerPointHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CustomerPointHistory.
+     */
+    data: XOR<CustomerPointHistoryCreateInput, CustomerPointHistoryUncheckedCreateInput>
+  }
+
+  /**
+   * CustomerPointHistory createMany
+   */
+  export type CustomerPointHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CustomerPointHistories.
+     */
+    data: CustomerPointHistoryCreateManyInput | CustomerPointHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CustomerPointHistory createManyAndReturn
+   */
+  export type CustomerPointHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many CustomerPointHistories.
+     */
+    data: CustomerPointHistoryCreateManyInput | CustomerPointHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomerPointHistory update
+   */
+  export type CustomerPointHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CustomerPointHistory.
+     */
+    data: XOR<CustomerPointHistoryUpdateInput, CustomerPointHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which CustomerPointHistory to update.
+     */
+    where: CustomerPointHistoryWhereUniqueInput
+  }
+
+  /**
+   * CustomerPointHistory updateMany
+   */
+  export type CustomerPointHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CustomerPointHistories.
+     */
+    data: XOR<CustomerPointHistoryUpdateManyMutationInput, CustomerPointHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomerPointHistories to update
+     */
+    where?: CustomerPointHistoryWhereInput
+    /**
+     * Limit how many CustomerPointHistories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomerPointHistory updateManyAndReturn
+   */
+  export type CustomerPointHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to update CustomerPointHistories.
+     */
+    data: XOR<CustomerPointHistoryUpdateManyMutationInput, CustomerPointHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomerPointHistories to update
+     */
+    where?: CustomerPointHistoryWhereInput
+    /**
+     * Limit how many CustomerPointHistories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomerPointHistory upsert
+   */
+  export type CustomerPointHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CustomerPointHistory to update in case it exists.
+     */
+    where: CustomerPointHistoryWhereUniqueInput
+    /**
+     * In case the CustomerPointHistory found by the `where` argument doesn't exist, create a new CustomerPointHistory with this data.
+     */
+    create: XOR<CustomerPointHistoryCreateInput, CustomerPointHistoryUncheckedCreateInput>
+    /**
+     * In case the CustomerPointHistory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CustomerPointHistoryUpdateInput, CustomerPointHistoryUncheckedUpdateInput>
+  }
+
+  /**
+   * CustomerPointHistory delete
+   */
+  export type CustomerPointHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryInclude<ExtArgs> | null
+    /**
+     * Filter which CustomerPointHistory to delete.
+     */
+    where: CustomerPointHistoryWhereUniqueInput
+  }
+
+  /**
+   * CustomerPointHistory deleteMany
+   */
+  export type CustomerPointHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomerPointHistories to delete
+     */
+    where?: CustomerPointHistoryWhereInput
+    /**
+     * Limit how many CustomerPointHistories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomerPointHistory.user
+   */
+  export type CustomerPointHistory$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * CustomerPointHistory.sale
+   */
+  export type CustomerPointHistory$saleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale
+     */
+    select?: SaleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale
+     */
+    omit?: SaleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SaleInclude<ExtArgs> | null
+    where?: SaleWhereInput
+  }
+
+  /**
+   * CustomerPointHistory without action
+   */
+  export type CustomerPointHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryInclude<ExtArgs> | null
   }
 
 
@@ -15587,6 +16996,7 @@ export namespace Prisma {
     discounts?: boolean | Sale$discountsArgs<ExtArgs>
     items?: boolean | Sale$itemsArgs<ExtArgs>
     promotions?: boolean | Sale$promotionsArgs<ExtArgs>
+    customerPointHistory?: boolean | Sale$customerPointHistoryArgs<ExtArgs>
     _count?: boolean | SaleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["sale"]>
 
@@ -15688,6 +17098,7 @@ export namespace Prisma {
     discounts?: boolean | Sale$discountsArgs<ExtArgs>
     items?: boolean | Sale$itemsArgs<ExtArgs>
     promotions?: boolean | Sale$promotionsArgs<ExtArgs>
+    customerPointHistory?: boolean | Sale$customerPointHistoryArgs<ExtArgs>
     _count?: boolean | SaleCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type SaleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15716,6 +17127,7 @@ export namespace Prisma {
       discounts: Prisma.$SaleDiscountPayload<ExtArgs>[]
       items: Prisma.$SaleItemPayload<ExtArgs>[]
       promotions: Prisma.$SalePromotionPayload<ExtArgs>[]
+      customerPointHistory: Prisma.$CustomerPointHistoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -16145,6 +17557,7 @@ export namespace Prisma {
     discounts<T extends Sale$discountsArgs<ExtArgs> = {}>(args?: Subset<T, Sale$discountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SaleDiscountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     items<T extends Sale$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Sale$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SaleItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     promotions<T extends Sale$promotionsArgs<ExtArgs> = {}>(args?: Subset<T, Sale$promotionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SalePromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    customerPointHistory<T extends Sale$customerPointHistoryArgs<ExtArgs> = {}>(args?: Subset<T, Sale$customerPointHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomerPointHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16781,6 +18194,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SalePromotionScalarFieldEnum | SalePromotionScalarFieldEnum[]
+  }
+
+  /**
+   * Sale.customerPointHistory
+   */
+  export type Sale$customerPointHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomerPointHistory
+     */
+    select?: CustomerPointHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomerPointHistory
+     */
+    omit?: CustomerPointHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerPointHistoryInclude<ExtArgs> | null
+    where?: CustomerPointHistoryWhereInput
+    orderBy?: CustomerPointHistoryOrderByWithRelationInput | CustomerPointHistoryOrderByWithRelationInput[]
+    cursor?: CustomerPointHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomerPointHistoryScalarFieldEnum | CustomerPointHistoryScalarFieldEnum[]
   }
 
   /**
@@ -22394,8 +23831,11 @@ export namespace Prisma {
     action: $Enums.AuditAction | null
     entityType: string | null
     entityId: string | null
+    entityName: string | null
     ipAddress: string | null
     userAgent: string | null
+    sessionId: string | null
+    resultStatus: string | null
     userId: string | null
     createdAt: Date | null
   }
@@ -22405,8 +23845,11 @@ export namespace Prisma {
     action: $Enums.AuditAction | null
     entityType: string | null
     entityId: string | null
+    entityName: string | null
     ipAddress: string | null
     userAgent: string | null
+    sessionId: string | null
+    resultStatus: string | null
     userId: string | null
     createdAt: Date | null
   }
@@ -22416,10 +23859,13 @@ export namespace Prisma {
     action: number
     entityType: number
     entityId: number
+    entityName: number
     oldValues: number
     newValues: number
     ipAddress: number
     userAgent: number
+    sessionId: number
+    resultStatus: number
     userId: number
     createdAt: number
     _all: number
@@ -22431,8 +23877,11 @@ export namespace Prisma {
     action?: true
     entityType?: true
     entityId?: true
+    entityName?: true
     ipAddress?: true
     userAgent?: true
+    sessionId?: true
+    resultStatus?: true
     userId?: true
     createdAt?: true
   }
@@ -22442,8 +23891,11 @@ export namespace Prisma {
     action?: true
     entityType?: true
     entityId?: true
+    entityName?: true
     ipAddress?: true
     userAgent?: true
+    sessionId?: true
+    resultStatus?: true
     userId?: true
     createdAt?: true
   }
@@ -22453,10 +23905,13 @@ export namespace Prisma {
     action?: true
     entityType?: true
     entityId?: true
+    entityName?: true
     oldValues?: true
     newValues?: true
     ipAddress?: true
     userAgent?: true
+    sessionId?: true
+    resultStatus?: true
     userId?: true
     createdAt?: true
     _all?: true
@@ -22539,10 +23994,13 @@ export namespace Prisma {
     action: $Enums.AuditAction
     entityType: string
     entityId: string
+    entityName: string | null
     oldValues: JsonValue | null
     newValues: JsonValue | null
     ipAddress: string | null
     userAgent: string | null
+    sessionId: string | null
+    resultStatus: string
     userId: string | null
     createdAt: Date
     _count: AuditLogCountAggregateOutputType | null
@@ -22569,10 +24027,13 @@ export namespace Prisma {
     action?: boolean
     entityType?: boolean
     entityId?: boolean
+    entityName?: boolean
     oldValues?: boolean
     newValues?: boolean
     ipAddress?: boolean
     userAgent?: boolean
+    sessionId?: boolean
+    resultStatus?: boolean
     userId?: boolean
     createdAt?: boolean
     user?: boolean | AuditLog$userArgs<ExtArgs>
@@ -22583,10 +24044,13 @@ export namespace Prisma {
     action?: boolean
     entityType?: boolean
     entityId?: boolean
+    entityName?: boolean
     oldValues?: boolean
     newValues?: boolean
     ipAddress?: boolean
     userAgent?: boolean
+    sessionId?: boolean
+    resultStatus?: boolean
     userId?: boolean
     createdAt?: boolean
     user?: boolean | AuditLog$userArgs<ExtArgs>
@@ -22597,10 +24061,13 @@ export namespace Prisma {
     action?: boolean
     entityType?: boolean
     entityId?: boolean
+    entityName?: boolean
     oldValues?: boolean
     newValues?: boolean
     ipAddress?: boolean
     userAgent?: boolean
+    sessionId?: boolean
+    resultStatus?: boolean
     userId?: boolean
     createdAt?: boolean
     user?: boolean | AuditLog$userArgs<ExtArgs>
@@ -22611,15 +24078,18 @@ export namespace Prisma {
     action?: boolean
     entityType?: boolean
     entityId?: boolean
+    entityName?: boolean
     oldValues?: boolean
     newValues?: boolean
     ipAddress?: boolean
     userAgent?: boolean
+    sessionId?: boolean
+    resultStatus?: boolean
     userId?: boolean
     createdAt?: boolean
   }
 
-  export type AuditLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "action" | "entityType" | "entityId" | "oldValues" | "newValues" | "ipAddress" | "userAgent" | "userId" | "createdAt", ExtArgs["result"]["auditLog"]>
+  export type AuditLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "action" | "entityType" | "entityId" | "entityName" | "oldValues" | "newValues" | "ipAddress" | "userAgent" | "sessionId" | "resultStatus" | "userId" | "createdAt", ExtArgs["result"]["auditLog"]>
   export type AuditLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | AuditLog$userArgs<ExtArgs>
   }
@@ -22640,10 +24110,13 @@ export namespace Prisma {
       action: $Enums.AuditAction
       entityType: string
       entityId: string
+      entityName: string | null
       oldValues: Prisma.JsonValue | null
       newValues: Prisma.JsonValue | null
       ipAddress: string | null
       userAgent: string | null
+      sessionId: string | null
+      resultStatus: string
       userId: string | null
       createdAt: Date
     }, ExtArgs["result"]["auditLog"]>
@@ -23074,10 +24547,13 @@ export namespace Prisma {
     readonly action: FieldRef<"AuditLog", 'AuditAction'>
     readonly entityType: FieldRef<"AuditLog", 'String'>
     readonly entityId: FieldRef<"AuditLog", 'String'>
+    readonly entityName: FieldRef<"AuditLog", 'String'>
     readonly oldValues: FieldRef<"AuditLog", 'Json'>
     readonly newValues: FieldRef<"AuditLog", 'Json'>
     readonly ipAddress: FieldRef<"AuditLog", 'String'>
     readonly userAgent: FieldRef<"AuditLog", 'String'>
+    readonly sessionId: FieldRef<"AuditLog", 'String'>
+    readonly resultStatus: FieldRef<"AuditLog", 'String'>
     readonly userId: FieldRef<"AuditLog", 'String'>
     readonly createdAt: FieldRef<"AuditLog", 'DateTime'>
   }
@@ -39722,6 +41198,8 @@ export namespace Prisma {
     tier: 'tier',
     taxId: 'taxId',
     company: 'company',
+    creditLimit: 'creditLimit',
+    balance: 'balance',
     isActive: 'isActive',
     notes: 'notes',
     createdAt: 'createdAt',
@@ -39729,6 +41207,20 @@ export namespace Prisma {
   };
 
   export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
+
+
+  export const CustomerPointHistoryScalarFieldEnum: {
+    id: 'id',
+    customerId: 'customerId',
+    points: 'points',
+    type: 'type',
+    reason: 'reason',
+    saleId: 'saleId',
+    userId: 'userId',
+    createdAt: 'createdAt'
+  };
+
+  export type CustomerPointHistoryScalarFieldEnum = (typeof CustomerPointHistoryScalarFieldEnum)[keyof typeof CustomerPointHistoryScalarFieldEnum]
 
 
   export const SaleScalarFieldEnum: {
@@ -39825,10 +41317,13 @@ export namespace Prisma {
     action: 'action',
     entityType: 'entityType',
     entityId: 'entityId',
+    entityName: 'entityName',
     oldValues: 'oldValues',
     newValues: 'newValues',
     ipAddress: 'ipAddress',
     userAgent: 'userAgent',
+    sessionId: 'sessionId',
+    resultStatus: 'resultStatus',
     userId: 'userId',
     createdAt: 'createdAt'
   };
@@ -40196,6 +41691,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'PointMovementType'
+   */
+  export type EnumPointMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PointMovementType'>
+    
+
+
+  /**
+   * Reference to a field of type 'PointMovementType[]'
+   */
+  export type ListEnumPointMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PointMovementType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'SaleStatus'
    */
   export type EnumSaleStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SaleStatus'>
@@ -40524,6 +42033,7 @@ export namespace Prisma {
     sales?: SaleListRelationFilter
     sessions?: SessionListRelationFilter
     stockMovements?: StockMovementListRelationFilter
+    pointAdjustments?: CustomerPointHistoryListRelationFilter
     role?: XOR<RoleScalarRelationFilter, RoleWhereInput>
   }
 
@@ -40552,6 +42062,7 @@ export namespace Prisma {
     sales?: SaleOrderByRelationAggregateInput
     sessions?: SessionOrderByRelationAggregateInput
     stockMovements?: StockMovementOrderByRelationAggregateInput
+    pointAdjustments?: CustomerPointHistoryOrderByRelationAggregateInput
     role?: RoleOrderByWithRelationInput
   }
 
@@ -40583,6 +42094,7 @@ export namespace Prisma {
     sales?: SaleListRelationFilter
     sessions?: SessionListRelationFilter
     stockMovements?: StockMovementListRelationFilter
+    pointAdjustments?: CustomerPointHistoryListRelationFilter
     role?: XOR<RoleScalarRelationFilter, RoleWhereInput>
   }, "id" | "email">
 
@@ -41125,12 +42637,15 @@ export namespace Prisma {
     tier?: StringNullableFilter<"Customer"> | string | null
     taxId?: StringNullableFilter<"Customer"> | string | null
     company?: StringNullableFilter<"Customer"> | string | null
+    creditLimit?: DecimalFilter<"Customer"> | Decimal | DecimalJsLike | number | string
+    balance?: DecimalFilter<"Customer"> | Decimal | DecimalJsLike | number | string
     isActive?: BoolFilter<"Customer"> | boolean
     notes?: StringNullableFilter<"Customer"> | string | null
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     orders?: OrderListRelationFilter
     sales?: SaleListRelationFilter
+    pointHistory?: CustomerPointHistoryListRelationFilter
   }
 
   export type CustomerOrderByWithRelationInput = {
@@ -41144,12 +42659,15 @@ export namespace Prisma {
     tier?: SortOrderInput | SortOrder
     taxId?: SortOrderInput | SortOrder
     company?: SortOrderInput | SortOrder
+    creditLimit?: SortOrder
+    balance?: SortOrder
     isActive?: SortOrder
     notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     orders?: OrderOrderByRelationAggregateInput
     sales?: SaleOrderByRelationAggregateInput
+    pointHistory?: CustomerPointHistoryOrderByRelationAggregateInput
   }
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -41166,12 +42684,15 @@ export namespace Prisma {
     points?: IntFilter<"Customer"> | number
     tier?: StringNullableFilter<"Customer"> | string | null
     company?: StringNullableFilter<"Customer"> | string | null
+    creditLimit?: DecimalFilter<"Customer"> | Decimal | DecimalJsLike | number | string
+    balance?: DecimalFilter<"Customer"> | Decimal | DecimalJsLike | number | string
     isActive?: BoolFilter<"Customer"> | boolean
     notes?: StringNullableFilter<"Customer"> | string | null
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     orders?: OrderListRelationFilter
     sales?: SaleListRelationFilter
+    pointHistory?: CustomerPointHistoryListRelationFilter
   }, "id" | "code" | "email" | "taxId">
 
   export type CustomerOrderByWithAggregationInput = {
@@ -41185,6 +42706,8 @@ export namespace Prisma {
     tier?: SortOrderInput | SortOrder
     taxId?: SortOrderInput | SortOrder
     company?: SortOrderInput | SortOrder
+    creditLimit?: SortOrder
+    balance?: SortOrder
     isActive?: SortOrder
     notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -41210,10 +42733,90 @@ export namespace Prisma {
     tier?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     taxId?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     company?: StringNullableWithAggregatesFilter<"Customer"> | string | null
+    creditLimit?: DecimalWithAggregatesFilter<"Customer"> | Decimal | DecimalJsLike | number | string
+    balance?: DecimalWithAggregatesFilter<"Customer"> | Decimal | DecimalJsLike | number | string
     isActive?: BoolWithAggregatesFilter<"Customer"> | boolean
     notes?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
+  }
+
+  export type CustomerPointHistoryWhereInput = {
+    AND?: CustomerPointHistoryWhereInput | CustomerPointHistoryWhereInput[]
+    OR?: CustomerPointHistoryWhereInput[]
+    NOT?: CustomerPointHistoryWhereInput | CustomerPointHistoryWhereInput[]
+    id?: StringFilter<"CustomerPointHistory"> | string
+    customerId?: StringFilter<"CustomerPointHistory"> | string
+    points?: IntFilter<"CustomerPointHistory"> | number
+    type?: EnumPointMovementTypeFilter<"CustomerPointHistory"> | $Enums.PointMovementType
+    reason?: StringFilter<"CustomerPointHistory"> | string
+    saleId?: StringNullableFilter<"CustomerPointHistory"> | string | null
+    userId?: StringNullableFilter<"CustomerPointHistory"> | string | null
+    createdAt?: DateTimeFilter<"CustomerPointHistory"> | Date | string
+    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    sale?: XOR<SaleNullableScalarRelationFilter, SaleWhereInput> | null
+  }
+
+  export type CustomerPointHistoryOrderByWithRelationInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    points?: SortOrder
+    type?: SortOrder
+    reason?: SortOrder
+    saleId?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    customer?: CustomerOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+    sale?: SaleOrderByWithRelationInput
+  }
+
+  export type CustomerPointHistoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CustomerPointHistoryWhereInput | CustomerPointHistoryWhereInput[]
+    OR?: CustomerPointHistoryWhereInput[]
+    NOT?: CustomerPointHistoryWhereInput | CustomerPointHistoryWhereInput[]
+    customerId?: StringFilter<"CustomerPointHistory"> | string
+    points?: IntFilter<"CustomerPointHistory"> | number
+    type?: EnumPointMovementTypeFilter<"CustomerPointHistory"> | $Enums.PointMovementType
+    reason?: StringFilter<"CustomerPointHistory"> | string
+    saleId?: StringNullableFilter<"CustomerPointHistory"> | string | null
+    userId?: StringNullableFilter<"CustomerPointHistory"> | string | null
+    createdAt?: DateTimeFilter<"CustomerPointHistory"> | Date | string
+    customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    sale?: XOR<SaleNullableScalarRelationFilter, SaleWhereInput> | null
+  }, "id">
+
+  export type CustomerPointHistoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    points?: SortOrder
+    type?: SortOrder
+    reason?: SortOrder
+    saleId?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: CustomerPointHistoryCountOrderByAggregateInput
+    _avg?: CustomerPointHistoryAvgOrderByAggregateInput
+    _max?: CustomerPointHistoryMaxOrderByAggregateInput
+    _min?: CustomerPointHistoryMinOrderByAggregateInput
+    _sum?: CustomerPointHistorySumOrderByAggregateInput
+  }
+
+  export type CustomerPointHistoryScalarWhereWithAggregatesInput = {
+    AND?: CustomerPointHistoryScalarWhereWithAggregatesInput | CustomerPointHistoryScalarWhereWithAggregatesInput[]
+    OR?: CustomerPointHistoryScalarWhereWithAggregatesInput[]
+    NOT?: CustomerPointHistoryScalarWhereWithAggregatesInput | CustomerPointHistoryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CustomerPointHistory"> | string
+    customerId?: StringWithAggregatesFilter<"CustomerPointHistory"> | string
+    points?: IntWithAggregatesFilter<"CustomerPointHistory"> | number
+    type?: EnumPointMovementTypeWithAggregatesFilter<"CustomerPointHistory"> | $Enums.PointMovementType
+    reason?: StringWithAggregatesFilter<"CustomerPointHistory"> | string
+    saleId?: StringNullableWithAggregatesFilter<"CustomerPointHistory"> | string | null
+    userId?: StringNullableWithAggregatesFilter<"CustomerPointHistory"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CustomerPointHistory"> | Date | string
   }
 
   export type SaleWhereInput = {
@@ -41253,6 +42856,7 @@ export namespace Prisma {
     discounts?: SaleDiscountListRelationFilter
     items?: SaleItemListRelationFilter
     promotions?: SalePromotionListRelationFilter
+    customerPointHistory?: CustomerPointHistoryListRelationFilter
   }
 
   export type SaleOrderByWithRelationInput = {
@@ -41289,6 +42893,7 @@ export namespace Prisma {
     discounts?: SaleDiscountOrderByRelationAggregateInput
     items?: SaleItemOrderByRelationAggregateInput
     promotions?: SalePromotionOrderByRelationAggregateInput
+    customerPointHistory?: CustomerPointHistoryOrderByRelationAggregateInput
   }
 
   export type SaleWhereUniqueInput = Prisma.AtLeast<{
@@ -41328,6 +42933,7 @@ export namespace Prisma {
     discounts?: SaleDiscountListRelationFilter
     items?: SaleItemListRelationFilter
     promotions?: SalePromotionListRelationFilter
+    customerPointHistory?: CustomerPointHistoryListRelationFilter
   }, "id" | "saleNumber" | "invoiceNumber" | "refundedSaleId">
 
   export type SaleOrderByWithAggregationInput = {
@@ -41724,10 +43330,13 @@ export namespace Prisma {
     action?: EnumAuditActionFilter<"AuditLog"> | $Enums.AuditAction
     entityType?: StringFilter<"AuditLog"> | string
     entityId?: StringFilter<"AuditLog"> | string
+    entityName?: StringNullableFilter<"AuditLog"> | string | null
     oldValues?: JsonNullableFilter<"AuditLog">
     newValues?: JsonNullableFilter<"AuditLog">
     ipAddress?: StringNullableFilter<"AuditLog"> | string | null
     userAgent?: StringNullableFilter<"AuditLog"> | string | null
+    sessionId?: StringNullableFilter<"AuditLog"> | string | null
+    resultStatus?: StringFilter<"AuditLog"> | string
     userId?: StringNullableFilter<"AuditLog"> | string | null
     createdAt?: DateTimeFilter<"AuditLog"> | Date | string
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
@@ -41738,10 +43347,13 @@ export namespace Prisma {
     action?: SortOrder
     entityType?: SortOrder
     entityId?: SortOrder
+    entityName?: SortOrderInput | SortOrder
     oldValues?: SortOrderInput | SortOrder
     newValues?: SortOrderInput | SortOrder
     ipAddress?: SortOrderInput | SortOrder
     userAgent?: SortOrderInput | SortOrder
+    sessionId?: SortOrderInput | SortOrder
+    resultStatus?: SortOrder
     userId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -41755,10 +43367,13 @@ export namespace Prisma {
     action?: EnumAuditActionFilter<"AuditLog"> | $Enums.AuditAction
     entityType?: StringFilter<"AuditLog"> | string
     entityId?: StringFilter<"AuditLog"> | string
+    entityName?: StringNullableFilter<"AuditLog"> | string | null
     oldValues?: JsonNullableFilter<"AuditLog">
     newValues?: JsonNullableFilter<"AuditLog">
     ipAddress?: StringNullableFilter<"AuditLog"> | string | null
     userAgent?: StringNullableFilter<"AuditLog"> | string | null
+    sessionId?: StringNullableFilter<"AuditLog"> | string | null
+    resultStatus?: StringFilter<"AuditLog"> | string
     userId?: StringNullableFilter<"AuditLog"> | string | null
     createdAt?: DateTimeFilter<"AuditLog"> | Date | string
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
@@ -41769,10 +43384,13 @@ export namespace Prisma {
     action?: SortOrder
     entityType?: SortOrder
     entityId?: SortOrder
+    entityName?: SortOrderInput | SortOrder
     oldValues?: SortOrderInput | SortOrder
     newValues?: SortOrderInput | SortOrder
     ipAddress?: SortOrderInput | SortOrder
     userAgent?: SortOrderInput | SortOrder
+    sessionId?: SortOrderInput | SortOrder
+    resultStatus?: SortOrder
     userId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: AuditLogCountOrderByAggregateInput
@@ -41788,10 +43406,13 @@ export namespace Prisma {
     action?: EnumAuditActionWithAggregatesFilter<"AuditLog"> | $Enums.AuditAction
     entityType?: StringWithAggregatesFilter<"AuditLog"> | string
     entityId?: StringWithAggregatesFilter<"AuditLog"> | string
+    entityName?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
     oldValues?: JsonNullableWithAggregatesFilter<"AuditLog">
     newValues?: JsonNullableWithAggregatesFilter<"AuditLog">
     ipAddress?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
     userAgent?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
+    sessionId?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
+    resultStatus?: StringWithAggregatesFilter<"AuditLog"> | string
     userId?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AuditLog"> | Date | string
   }
@@ -43010,6 +44631,7 @@ export namespace Prisma {
     sales?: SaleCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryCreateNestedManyWithoutUserInput
     role: RoleCreateNestedOneWithoutUsersInput
   }
 
@@ -43038,6 +44660,7 @@ export namespace Prisma {
     sales?: SaleUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -43064,6 +44687,7 @@ export namespace Prisma {
     sales?: SaleUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUpdateManyWithoutUserNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -43092,6 +44716,7 @@ export namespace Prisma {
     sales?: SaleUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -43691,12 +45316,15 @@ export namespace Prisma {
     tier?: string | null
     taxId?: string | null
     company?: string | null
+    creditLimit?: Decimal | DecimalJsLike | number | string
+    balance?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
     sales?: SaleCreateNestedManyWithoutCustomerInput
+    pointHistory?: CustomerPointHistoryCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateInput = {
@@ -43710,12 +45338,15 @@ export namespace Prisma {
     tier?: string | null
     taxId?: string | null
     company?: string | null
+    creditLimit?: Decimal | DecimalJsLike | number | string
+    balance?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
     sales?: SaleUncheckedCreateNestedManyWithoutCustomerInput
+    pointHistory?: CustomerPointHistoryUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUpdateInput = {
@@ -43729,12 +45360,15 @@ export namespace Prisma {
     tier?: NullableStringFieldUpdateOperationsInput | string | null
     taxId?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
+    creditLimit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
     sales?: SaleUpdateManyWithoutCustomerNestedInput
+    pointHistory?: CustomerPointHistoryUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
@@ -43748,12 +45382,15 @@ export namespace Prisma {
     tier?: NullableStringFieldUpdateOperationsInput | string | null
     taxId?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
+    creditLimit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
     sales?: SaleUncheckedUpdateManyWithoutCustomerNestedInput
+    pointHistory?: CustomerPointHistoryUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateManyInput = {
@@ -43767,6 +45404,8 @@ export namespace Prisma {
     tier?: string | null
     taxId?: string | null
     company?: string | null
+    creditLimit?: Decimal | DecimalJsLike | number | string
+    balance?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     notes?: string | null
     createdAt?: Date | string
@@ -43784,6 +45423,8 @@ export namespace Prisma {
     tier?: NullableStringFieldUpdateOperationsInput | string | null
     taxId?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
+    creditLimit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43801,10 +45442,86 @@ export namespace Prisma {
     tier?: NullableStringFieldUpdateOperationsInput | string | null
     taxId?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
+    creditLimit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomerPointHistoryCreateInput = {
+    id?: string
+    points: number
+    type: $Enums.PointMovementType
+    reason: string
+    createdAt?: Date | string
+    customer: CustomerCreateNestedOneWithoutPointHistoryInput
+    user?: UserCreateNestedOneWithoutPointAdjustmentsInput
+    sale?: SaleCreateNestedOneWithoutCustomerPointHistoryInput
+  }
+
+  export type CustomerPointHistoryUncheckedCreateInput = {
+    id?: string
+    customerId: string
+    points: number
+    type: $Enums.PointMovementType
+    reason: string
+    saleId?: string | null
+    userId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CustomerPointHistoryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    points?: IntFieldUpdateOperationsInput | number
+    type?: EnumPointMovementTypeFieldUpdateOperationsInput | $Enums.PointMovementType
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer?: CustomerUpdateOneRequiredWithoutPointHistoryNestedInput
+    user?: UserUpdateOneWithoutPointAdjustmentsNestedInput
+    sale?: SaleUpdateOneWithoutCustomerPointHistoryNestedInput
+  }
+
+  export type CustomerPointHistoryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    points?: IntFieldUpdateOperationsInput | number
+    type?: EnumPointMovementTypeFieldUpdateOperationsInput | $Enums.PointMovementType
+    reason?: StringFieldUpdateOperationsInput | string
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomerPointHistoryCreateManyInput = {
+    id?: string
+    customerId: string
+    points: number
+    type: $Enums.PointMovementType
+    reason: string
+    saleId?: string | null
+    userId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CustomerPointHistoryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    points?: IntFieldUpdateOperationsInput | number
+    type?: EnumPointMovementTypeFieldUpdateOperationsInput | $Enums.PointMovementType
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomerPointHistoryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    points?: IntFieldUpdateOperationsInput | number
+    type?: EnumPointMovementTypeFieldUpdateOperationsInput | $Enums.PointMovementType
+    reason?: StringFieldUpdateOperationsInput | string
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SaleCreateInput = {
@@ -43837,6 +45554,7 @@ export namespace Prisma {
     discounts?: SaleDiscountCreateNestedManyWithoutSaleInput
     items?: SaleItemCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryCreateNestedManyWithoutSaleInput
   }
 
   export type SaleUncheckedCreateInput = {
@@ -43869,6 +45587,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedCreateNestedManyWithoutSaleInput
     items?: SaleItemUncheckedCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionUncheckedCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type SaleUpdateInput = {
@@ -43901,6 +45620,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUpdateManyWithoutSaleNestedInput
     items?: SaleItemUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUncheckedUpdateInput = {
@@ -43933,6 +45653,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedUpdateManyWithoutSaleNestedInput
     items?: SaleItemUncheckedUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUncheckedUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleCreateManyInput = {
@@ -44333,10 +46054,13 @@ export namespace Prisma {
     action: $Enums.AuditAction
     entityType: string
     entityId: string
+    entityName?: string | null
     oldValues?: NullableJsonNullValueInput | InputJsonValue
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: string | null
     userAgent?: string | null
+    sessionId?: string | null
+    resultStatus?: string
     createdAt?: Date | string
     user?: UserCreateNestedOneWithoutAuditLogsInput
   }
@@ -44346,10 +46070,13 @@ export namespace Prisma {
     action: $Enums.AuditAction
     entityType: string
     entityId: string
+    entityName?: string | null
     oldValues?: NullableJsonNullValueInput | InputJsonValue
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: string | null
     userAgent?: string | null
+    sessionId?: string | null
+    resultStatus?: string
     userId?: string | null
     createdAt?: Date | string
   }
@@ -44359,10 +46086,13 @@ export namespace Prisma {
     action?: EnumAuditActionFieldUpdateOperationsInput | $Enums.AuditAction
     entityType?: StringFieldUpdateOperationsInput | string
     entityId?: StringFieldUpdateOperationsInput | string
+    entityName?: NullableStringFieldUpdateOperationsInput | string | null
     oldValues?: NullableJsonNullValueInput | InputJsonValue
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    resultStatus?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutAuditLogsNestedInput
   }
@@ -44372,10 +46102,13 @@ export namespace Prisma {
     action?: EnumAuditActionFieldUpdateOperationsInput | $Enums.AuditAction
     entityType?: StringFieldUpdateOperationsInput | string
     entityId?: StringFieldUpdateOperationsInput | string
+    entityName?: NullableStringFieldUpdateOperationsInput | string | null
     oldValues?: NullableJsonNullValueInput | InputJsonValue
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    resultStatus?: StringFieldUpdateOperationsInput | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -44385,10 +46118,13 @@ export namespace Prisma {
     action: $Enums.AuditAction
     entityType: string
     entityId: string
+    entityName?: string | null
     oldValues?: NullableJsonNullValueInput | InputJsonValue
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: string | null
     userAgent?: string | null
+    sessionId?: string | null
+    resultStatus?: string
     userId?: string | null
     createdAt?: Date | string
   }
@@ -44398,10 +46134,13 @@ export namespace Prisma {
     action?: EnumAuditActionFieldUpdateOperationsInput | $Enums.AuditAction
     entityType?: StringFieldUpdateOperationsInput | string
     entityId?: StringFieldUpdateOperationsInput | string
+    entityName?: NullableStringFieldUpdateOperationsInput | string | null
     oldValues?: NullableJsonNullValueInput | InputJsonValue
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    resultStatus?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -44410,10 +46149,13 @@ export namespace Prisma {
     action?: EnumAuditActionFieldUpdateOperationsInput | $Enums.AuditAction
     entityType?: StringFieldUpdateOperationsInput | string
     entityId?: StringFieldUpdateOperationsInput | string
+    entityName?: NullableStringFieldUpdateOperationsInput | string | null
     oldValues?: NullableJsonNullValueInput | InputJsonValue
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    resultStatus?: StringFieldUpdateOperationsInput | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -45870,6 +47612,12 @@ export namespace Prisma {
     none?: StockMovementWhereInput
   }
 
+  export type CustomerPointHistoryListRelationFilter = {
+    every?: CustomerPointHistoryWhereInput
+    some?: CustomerPointHistoryWhereInput
+    none?: CustomerPointHistoryWhereInput
+  }
+
   export type RoleScalarRelationFilter = {
     is?: RoleWhereInput
     isNot?: RoleWhereInput
@@ -45920,6 +47668,10 @@ export namespace Prisma {
   }
 
   export type StockMovementOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CustomerPointHistoryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -46473,6 +48225,8 @@ export namespace Prisma {
     tier?: SortOrder
     taxId?: SortOrder
     company?: SortOrder
+    creditLimit?: SortOrder
+    balance?: SortOrder
     isActive?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
@@ -46481,6 +48235,8 @@ export namespace Prisma {
 
   export type CustomerAvgOrderByAggregateInput = {
     points?: SortOrder
+    creditLimit?: SortOrder
+    balance?: SortOrder
   }
 
   export type CustomerMaxOrderByAggregateInput = {
@@ -46494,6 +48250,8 @@ export namespace Prisma {
     tier?: SortOrder
     taxId?: SortOrder
     company?: SortOrder
+    creditLimit?: SortOrder
+    balance?: SortOrder
     isActive?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
@@ -46511,6 +48269,8 @@ export namespace Prisma {
     tier?: SortOrder
     taxId?: SortOrder
     company?: SortOrder
+    creditLimit?: SortOrder
+    balance?: SortOrder
     isActive?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
@@ -46519,6 +48279,81 @@ export namespace Prisma {
 
   export type CustomerSumOrderByAggregateInput = {
     points?: SortOrder
+    creditLimit?: SortOrder
+    balance?: SortOrder
+  }
+
+  export type EnumPointMovementTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PointMovementType | EnumPointMovementTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PointMovementType[] | ListEnumPointMovementTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PointMovementType[] | ListEnumPointMovementTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPointMovementTypeFilter<$PrismaModel> | $Enums.PointMovementType
+  }
+
+  export type CustomerScalarRelationFilter = {
+    is?: CustomerWhereInput
+    isNot?: CustomerWhereInput
+  }
+
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type SaleNullableScalarRelationFilter = {
+    is?: SaleWhereInput | null
+    isNot?: SaleWhereInput | null
+  }
+
+  export type CustomerPointHistoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    points?: SortOrder
+    type?: SortOrder
+    reason?: SortOrder
+    saleId?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CustomerPointHistoryAvgOrderByAggregateInput = {
+    points?: SortOrder
+  }
+
+  export type CustomerPointHistoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    points?: SortOrder
+    type?: SortOrder
+    reason?: SortOrder
+    saleId?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CustomerPointHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    customerId?: SortOrder
+    points?: SortOrder
+    type?: SortOrder
+    reason?: SortOrder
+    saleId?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CustomerPointHistorySumOrderByAggregateInput = {
+    points?: SortOrder
+  }
+
+  export type EnumPointMovementTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PointMovementType | EnumPointMovementTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PointMovementType[] | ListEnumPointMovementTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PointMovementType[] | ListEnumPointMovementTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPointMovementTypeWithAggregatesFilter<$PrismaModel> | $Enums.PointMovementType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPointMovementTypeFilter<$PrismaModel>
+    _max?: NestedEnumPointMovementTypeFilter<$PrismaModel>
   }
 
   export type EnumSaleStatusFilter<$PrismaModel = never> = {
@@ -46548,11 +48383,6 @@ export namespace Prisma {
   export type CustomerNullableScalarRelationFilter = {
     is?: CustomerWhereInput | null
     isNot?: CustomerWhereInput | null
-  }
-
-  export type SaleNullableScalarRelationFilter = {
-    is?: SaleWhereInput | null
-    isNot?: SaleWhereInput | null
   }
 
   export type SaleDiscountListRelationFilter = {
@@ -46953,20 +48783,18 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type UserNullableScalarRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
-  }
-
   export type AuditLogCountOrderByAggregateInput = {
     id?: SortOrder
     action?: SortOrder
     entityType?: SortOrder
     entityId?: SortOrder
+    entityName?: SortOrder
     oldValues?: SortOrder
     newValues?: SortOrder
     ipAddress?: SortOrder
     userAgent?: SortOrder
+    sessionId?: SortOrder
+    resultStatus?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
   }
@@ -46976,8 +48804,11 @@ export namespace Prisma {
     action?: SortOrder
     entityType?: SortOrder
     entityId?: SortOrder
+    entityName?: SortOrder
     ipAddress?: SortOrder
     userAgent?: SortOrder
+    sessionId?: SortOrder
+    resultStatus?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
   }
@@ -46987,8 +48818,11 @@ export namespace Prisma {
     action?: SortOrder
     entityType?: SortOrder
     entityId?: SortOrder
+    entityName?: SortOrder
     ipAddress?: SortOrder
     userAgent?: SortOrder
+    sessionId?: SortOrder
+    resultStatus?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
   }
@@ -48028,6 +49862,13 @@ export namespace Prisma {
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
   }
 
+  export type CustomerPointHistoryCreateNestedManyWithoutUserInput = {
+    create?: XOR<CustomerPointHistoryCreateWithoutUserInput, CustomerPointHistoryUncheckedCreateWithoutUserInput> | CustomerPointHistoryCreateWithoutUserInput[] | CustomerPointHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CustomerPointHistoryCreateOrConnectWithoutUserInput | CustomerPointHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: CustomerPointHistoryCreateManyUserInputEnvelope
+    connect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+  }
+
   export type RoleCreateNestedOneWithoutUsersInput = {
     create?: XOR<RoleCreateWithoutUsersInput, RoleUncheckedCreateWithoutUsersInput>
     connectOrCreate?: RoleCreateOrConnectWithoutUsersInput
@@ -48116,6 +49957,13 @@ export namespace Prisma {
     connectOrCreate?: StockMovementCreateOrConnectWithoutUserInput | StockMovementCreateOrConnectWithoutUserInput[]
     createMany?: StockMovementCreateManyUserInputEnvelope
     connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+  }
+
+  export type CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<CustomerPointHistoryCreateWithoutUserInput, CustomerPointHistoryUncheckedCreateWithoutUserInput> | CustomerPointHistoryCreateWithoutUserInput[] | CustomerPointHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CustomerPointHistoryCreateOrConnectWithoutUserInput | CustomerPointHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: CustomerPointHistoryCreateManyUserInputEnvelope
+    connect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -48302,6 +50150,20 @@ export namespace Prisma {
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
   }
 
+  export type CustomerPointHistoryUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CustomerPointHistoryCreateWithoutUserInput, CustomerPointHistoryUncheckedCreateWithoutUserInput> | CustomerPointHistoryCreateWithoutUserInput[] | CustomerPointHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CustomerPointHistoryCreateOrConnectWithoutUserInput | CustomerPointHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: CustomerPointHistoryUpsertWithWhereUniqueWithoutUserInput | CustomerPointHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CustomerPointHistoryCreateManyUserInputEnvelope
+    set?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    disconnect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    delete?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    connect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    update?: CustomerPointHistoryUpdateWithWhereUniqueWithoutUserInput | CustomerPointHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CustomerPointHistoryUpdateManyWithWhereWithoutUserInput | CustomerPointHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CustomerPointHistoryScalarWhereInput | CustomerPointHistoryScalarWhereInput[]
+  }
+
   export type RoleUpdateOneRequiredWithoutUsersNestedInput = {
     create?: XOR<RoleCreateWithoutUsersInput, RoleUncheckedCreateWithoutUsersInput>
     connectOrCreate?: RoleCreateOrConnectWithoutUsersInput
@@ -48476,6 +50338,20 @@ export namespace Prisma {
     update?: StockMovementUpdateWithWhereUniqueWithoutUserInput | StockMovementUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: StockMovementUpdateManyWithWhereWithoutUserInput | StockMovementUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
+  }
+
+  export type CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CustomerPointHistoryCreateWithoutUserInput, CustomerPointHistoryUncheckedCreateWithoutUserInput> | CustomerPointHistoryCreateWithoutUserInput[] | CustomerPointHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CustomerPointHistoryCreateOrConnectWithoutUserInput | CustomerPointHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: CustomerPointHistoryUpsertWithWhereUniqueWithoutUserInput | CustomerPointHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CustomerPointHistoryCreateManyUserInputEnvelope
+    set?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    disconnect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    delete?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    connect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    update?: CustomerPointHistoryUpdateWithWhereUniqueWithoutUserInput | CustomerPointHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CustomerPointHistoryUpdateManyWithWhereWithoutUserInput | CustomerPointHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CustomerPointHistoryScalarWhereInput | CustomerPointHistoryScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutAccountsInput = {
@@ -48970,6 +50846,13 @@ export namespace Prisma {
     connect?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
   }
 
+  export type CustomerPointHistoryCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<CustomerPointHistoryCreateWithoutCustomerInput, CustomerPointHistoryUncheckedCreateWithoutCustomerInput> | CustomerPointHistoryCreateWithoutCustomerInput[] | CustomerPointHistoryUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerPointHistoryCreateOrConnectWithoutCustomerInput | CustomerPointHistoryCreateOrConnectWithoutCustomerInput[]
+    createMany?: CustomerPointHistoryCreateManyCustomerInputEnvelope
+    connect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+  }
+
   export type OrderUncheckedCreateNestedManyWithoutCustomerInput = {
     create?: XOR<OrderCreateWithoutCustomerInput, OrderUncheckedCreateWithoutCustomerInput> | OrderCreateWithoutCustomerInput[] | OrderUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCustomerInput | OrderCreateOrConnectWithoutCustomerInput[]
@@ -48982,6 +50865,13 @@ export namespace Prisma {
     connectOrCreate?: SaleCreateOrConnectWithoutCustomerInput | SaleCreateOrConnectWithoutCustomerInput[]
     createMany?: SaleCreateManyCustomerInputEnvelope
     connect?: SaleWhereUniqueInput | SaleWhereUniqueInput[]
+  }
+
+  export type CustomerPointHistoryUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<CustomerPointHistoryCreateWithoutCustomerInput, CustomerPointHistoryUncheckedCreateWithoutCustomerInput> | CustomerPointHistoryCreateWithoutCustomerInput[] | CustomerPointHistoryUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerPointHistoryCreateOrConnectWithoutCustomerInput | CustomerPointHistoryCreateOrConnectWithoutCustomerInput[]
+    createMany?: CustomerPointHistoryCreateManyCustomerInputEnvelope
+    connect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
   }
 
   export type OrderUpdateManyWithoutCustomerNestedInput = {
@@ -49012,6 +50902,20 @@ export namespace Prisma {
     deleteMany?: SaleScalarWhereInput | SaleScalarWhereInput[]
   }
 
+  export type CustomerPointHistoryUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<CustomerPointHistoryCreateWithoutCustomerInput, CustomerPointHistoryUncheckedCreateWithoutCustomerInput> | CustomerPointHistoryCreateWithoutCustomerInput[] | CustomerPointHistoryUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerPointHistoryCreateOrConnectWithoutCustomerInput | CustomerPointHistoryCreateOrConnectWithoutCustomerInput[]
+    upsert?: CustomerPointHistoryUpsertWithWhereUniqueWithoutCustomerInput | CustomerPointHistoryUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: CustomerPointHistoryCreateManyCustomerInputEnvelope
+    set?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    disconnect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    delete?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    connect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    update?: CustomerPointHistoryUpdateWithWhereUniqueWithoutCustomerInput | CustomerPointHistoryUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: CustomerPointHistoryUpdateManyWithWhereWithoutCustomerInput | CustomerPointHistoryUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: CustomerPointHistoryScalarWhereInput | CustomerPointHistoryScalarWhereInput[]
+  }
+
   export type OrderUncheckedUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<OrderCreateWithoutCustomerInput, OrderUncheckedCreateWithoutCustomerInput> | OrderCreateWithoutCustomerInput[] | OrderUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCustomerInput | OrderCreateOrConnectWithoutCustomerInput[]
@@ -49038,6 +50942,70 @@ export namespace Prisma {
     update?: SaleUpdateWithWhereUniqueWithoutCustomerInput | SaleUpdateWithWhereUniqueWithoutCustomerInput[]
     updateMany?: SaleUpdateManyWithWhereWithoutCustomerInput | SaleUpdateManyWithWhereWithoutCustomerInput[]
     deleteMany?: SaleScalarWhereInput | SaleScalarWhereInput[]
+  }
+
+  export type CustomerPointHistoryUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<CustomerPointHistoryCreateWithoutCustomerInput, CustomerPointHistoryUncheckedCreateWithoutCustomerInput> | CustomerPointHistoryCreateWithoutCustomerInput[] | CustomerPointHistoryUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: CustomerPointHistoryCreateOrConnectWithoutCustomerInput | CustomerPointHistoryCreateOrConnectWithoutCustomerInput[]
+    upsert?: CustomerPointHistoryUpsertWithWhereUniqueWithoutCustomerInput | CustomerPointHistoryUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: CustomerPointHistoryCreateManyCustomerInputEnvelope
+    set?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    disconnect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    delete?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    connect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    update?: CustomerPointHistoryUpdateWithWhereUniqueWithoutCustomerInput | CustomerPointHistoryUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: CustomerPointHistoryUpdateManyWithWhereWithoutCustomerInput | CustomerPointHistoryUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: CustomerPointHistoryScalarWhereInput | CustomerPointHistoryScalarWhereInput[]
+  }
+
+  export type CustomerCreateNestedOneWithoutPointHistoryInput = {
+    create?: XOR<CustomerCreateWithoutPointHistoryInput, CustomerUncheckedCreateWithoutPointHistoryInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutPointHistoryInput
+    connect?: CustomerWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutPointAdjustmentsInput = {
+    create?: XOR<UserCreateWithoutPointAdjustmentsInput, UserUncheckedCreateWithoutPointAdjustmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPointAdjustmentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type SaleCreateNestedOneWithoutCustomerPointHistoryInput = {
+    create?: XOR<SaleCreateWithoutCustomerPointHistoryInput, SaleUncheckedCreateWithoutCustomerPointHistoryInput>
+    connectOrCreate?: SaleCreateOrConnectWithoutCustomerPointHistoryInput
+    connect?: SaleWhereUniqueInput
+  }
+
+  export type EnumPointMovementTypeFieldUpdateOperationsInput = {
+    set?: $Enums.PointMovementType
+  }
+
+  export type CustomerUpdateOneRequiredWithoutPointHistoryNestedInput = {
+    create?: XOR<CustomerCreateWithoutPointHistoryInput, CustomerUncheckedCreateWithoutPointHistoryInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutPointHistoryInput
+    upsert?: CustomerUpsertWithoutPointHistoryInput
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutPointHistoryInput, CustomerUpdateWithoutPointHistoryInput>, CustomerUncheckedUpdateWithoutPointHistoryInput>
+  }
+
+  export type UserUpdateOneWithoutPointAdjustmentsNestedInput = {
+    create?: XOR<UserCreateWithoutPointAdjustmentsInput, UserUncheckedCreateWithoutPointAdjustmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPointAdjustmentsInput
+    upsert?: UserUpsertWithoutPointAdjustmentsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPointAdjustmentsInput, UserUpdateWithoutPointAdjustmentsInput>, UserUncheckedUpdateWithoutPointAdjustmentsInput>
+  }
+
+  export type SaleUpdateOneWithoutCustomerPointHistoryNestedInput = {
+    create?: XOR<SaleCreateWithoutCustomerPointHistoryInput, SaleUncheckedCreateWithoutCustomerPointHistoryInput>
+    connectOrCreate?: SaleCreateOrConnectWithoutCustomerPointHistoryInput
+    upsert?: SaleUpsertWithoutCustomerPointHistoryInput
+    disconnect?: SaleWhereInput | boolean
+    delete?: SaleWhereInput | boolean
+    connect?: SaleWhereUniqueInput
+    update?: XOR<XOR<SaleUpdateToOneWithWhereWithoutCustomerPointHistoryInput, SaleUpdateWithoutCustomerPointHistoryInput>, SaleUncheckedUpdateWithoutCustomerPointHistoryInput>
   }
 
   export type OrderCreateNestedOneWithoutSaleInput = {
@@ -49104,6 +51072,13 @@ export namespace Prisma {
     connect?: SalePromotionWhereUniqueInput | SalePromotionWhereUniqueInput[]
   }
 
+  export type CustomerPointHistoryCreateNestedManyWithoutSaleInput = {
+    create?: XOR<CustomerPointHistoryCreateWithoutSaleInput, CustomerPointHistoryUncheckedCreateWithoutSaleInput> | CustomerPointHistoryCreateWithoutSaleInput[] | CustomerPointHistoryUncheckedCreateWithoutSaleInput[]
+    connectOrCreate?: CustomerPointHistoryCreateOrConnectWithoutSaleInput | CustomerPointHistoryCreateOrConnectWithoutSaleInput[]
+    createMany?: CustomerPointHistoryCreateManySaleInputEnvelope
+    connect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+  }
+
   export type OrderUncheckedCreateNestedOneWithoutSaleInput = {
     create?: XOR<OrderCreateWithoutSaleInput, OrderUncheckedCreateWithoutSaleInput>
     connectOrCreate?: OrderCreateOrConnectWithoutSaleInput
@@ -49142,6 +51117,13 @@ export namespace Prisma {
     connectOrCreate?: SalePromotionCreateOrConnectWithoutSaleInput | SalePromotionCreateOrConnectWithoutSaleInput[]
     createMany?: SalePromotionCreateManySaleInputEnvelope
     connect?: SalePromotionWhereUniqueInput | SalePromotionWhereUniqueInput[]
+  }
+
+  export type CustomerPointHistoryUncheckedCreateNestedManyWithoutSaleInput = {
+    create?: XOR<CustomerPointHistoryCreateWithoutSaleInput, CustomerPointHistoryUncheckedCreateWithoutSaleInput> | CustomerPointHistoryCreateWithoutSaleInput[] | CustomerPointHistoryUncheckedCreateWithoutSaleInput[]
+    connectOrCreate?: CustomerPointHistoryCreateOrConnectWithoutSaleInput | CustomerPointHistoryCreateOrConnectWithoutSaleInput[]
+    createMany?: CustomerPointHistoryCreateManySaleInputEnvelope
+    connect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
   }
 
   export type EnumSaleStatusFieldUpdateOperationsInput = {
@@ -49266,6 +51248,20 @@ export namespace Prisma {
     deleteMany?: SalePromotionScalarWhereInput | SalePromotionScalarWhereInput[]
   }
 
+  export type CustomerPointHistoryUpdateManyWithoutSaleNestedInput = {
+    create?: XOR<CustomerPointHistoryCreateWithoutSaleInput, CustomerPointHistoryUncheckedCreateWithoutSaleInput> | CustomerPointHistoryCreateWithoutSaleInput[] | CustomerPointHistoryUncheckedCreateWithoutSaleInput[]
+    connectOrCreate?: CustomerPointHistoryCreateOrConnectWithoutSaleInput | CustomerPointHistoryCreateOrConnectWithoutSaleInput[]
+    upsert?: CustomerPointHistoryUpsertWithWhereUniqueWithoutSaleInput | CustomerPointHistoryUpsertWithWhereUniqueWithoutSaleInput[]
+    createMany?: CustomerPointHistoryCreateManySaleInputEnvelope
+    set?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    disconnect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    delete?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    connect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    update?: CustomerPointHistoryUpdateWithWhereUniqueWithoutSaleInput | CustomerPointHistoryUpdateWithWhereUniqueWithoutSaleInput[]
+    updateMany?: CustomerPointHistoryUpdateManyWithWhereWithoutSaleInput | CustomerPointHistoryUpdateManyWithWhereWithoutSaleInput[]
+    deleteMany?: CustomerPointHistoryScalarWhereInput | CustomerPointHistoryScalarWhereInput[]
+  }
+
   export type OrderUncheckedUpdateOneWithoutSaleNestedInput = {
     create?: XOR<OrderCreateWithoutSaleInput, OrderUncheckedCreateWithoutSaleInput>
     connectOrCreate?: OrderCreateOrConnectWithoutSaleInput
@@ -49340,6 +51336,20 @@ export namespace Prisma {
     update?: SalePromotionUpdateWithWhereUniqueWithoutSaleInput | SalePromotionUpdateWithWhereUniqueWithoutSaleInput[]
     updateMany?: SalePromotionUpdateManyWithWhereWithoutSaleInput | SalePromotionUpdateManyWithWhereWithoutSaleInput[]
     deleteMany?: SalePromotionScalarWhereInput | SalePromotionScalarWhereInput[]
+  }
+
+  export type CustomerPointHistoryUncheckedUpdateManyWithoutSaleNestedInput = {
+    create?: XOR<CustomerPointHistoryCreateWithoutSaleInput, CustomerPointHistoryUncheckedCreateWithoutSaleInput> | CustomerPointHistoryCreateWithoutSaleInput[] | CustomerPointHistoryUncheckedCreateWithoutSaleInput[]
+    connectOrCreate?: CustomerPointHistoryCreateOrConnectWithoutSaleInput | CustomerPointHistoryCreateOrConnectWithoutSaleInput[]
+    upsert?: CustomerPointHistoryUpsertWithWhereUniqueWithoutSaleInput | CustomerPointHistoryUpsertWithWhereUniqueWithoutSaleInput[]
+    createMany?: CustomerPointHistoryCreateManySaleInputEnvelope
+    set?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    disconnect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    delete?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    connect?: CustomerPointHistoryWhereUniqueInput | CustomerPointHistoryWhereUniqueInput[]
+    update?: CustomerPointHistoryUpdateWithWhereUniqueWithoutSaleInput | CustomerPointHistoryUpdateWithWhereUniqueWithoutSaleInput[]
+    updateMany?: CustomerPointHistoryUpdateManyWithWhereWithoutSaleInput | CustomerPointHistoryUpdateManyWithWhereWithoutSaleInput[]
+    deleteMany?: CustomerPointHistoryScalarWhereInput | CustomerPointHistoryScalarWhereInput[]
   }
 
   export type ProductCreateNestedOneWithoutSaleItemsInput = {
@@ -50406,6 +52416,23 @@ export namespace Prisma {
     _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumPointMovementTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PointMovementType | EnumPointMovementTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PointMovementType[] | ListEnumPointMovementTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PointMovementType[] | ListEnumPointMovementTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPointMovementTypeFilter<$PrismaModel> | $Enums.PointMovementType
+  }
+
+  export type NestedEnumPointMovementTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PointMovementType | EnumPointMovementTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PointMovementType[] | ListEnumPointMovementTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PointMovementType[] | ListEnumPointMovementTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPointMovementTypeWithAggregatesFilter<$PrismaModel> | $Enums.PointMovementType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPointMovementTypeFilter<$PrismaModel>
+    _max?: NestedEnumPointMovementTypeFilter<$PrismaModel>
+  }
+
   export type NestedEnumSaleStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.SaleStatus | EnumSaleStatusFieldRefInput<$PrismaModel>
     in?: $Enums.SaleStatus[] | ListEnumSaleStatusFieldRefInput<$PrismaModel>
@@ -50731,6 +52758,7 @@ export namespace Prisma {
     sales?: SaleCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRoleInput = {
@@ -50757,6 +52785,7 @@ export namespace Prisma {
     sales?: SaleUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRoleInput = {
@@ -50846,10 +52875,13 @@ export namespace Prisma {
     action: $Enums.AuditAction
     entityType: string
     entityId: string
+    entityName?: string | null
     oldValues?: NullableJsonNullValueInput | InputJsonValue
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: string | null
     userAgent?: string | null
+    sessionId?: string | null
+    resultStatus?: string
     createdAt?: Date | string
   }
 
@@ -50858,10 +52890,13 @@ export namespace Prisma {
     action: $Enums.AuditAction
     entityType: string
     entityId: string
+    entityName?: string | null
     oldValues?: NullableJsonNullValueInput | InputJsonValue
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: string | null
     userAgent?: string | null
+    sessionId?: string | null
+    resultStatus?: string
     createdAt?: Date | string
   }
 
@@ -51140,6 +53175,7 @@ export namespace Prisma {
     discounts?: SaleDiscountCreateNestedManyWithoutSaleInput
     items?: SaleItemCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryCreateNestedManyWithoutSaleInput
   }
 
   export type SaleUncheckedCreateWithoutUserInput = {
@@ -51171,6 +53207,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedCreateNestedManyWithoutSaleInput
     items?: SaleItemUncheckedCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionUncheckedCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type SaleCreateOrConnectWithoutUserInput = {
@@ -51238,6 +53275,36 @@ export namespace Prisma {
 
   export type StockMovementCreateManyUserInputEnvelope = {
     data: StockMovementCreateManyUserInput | StockMovementCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CustomerPointHistoryCreateWithoutUserInput = {
+    id?: string
+    points: number
+    type: $Enums.PointMovementType
+    reason: string
+    createdAt?: Date | string
+    customer: CustomerCreateNestedOneWithoutPointHistoryInput
+    sale?: SaleCreateNestedOneWithoutCustomerPointHistoryInput
+  }
+
+  export type CustomerPointHistoryUncheckedCreateWithoutUserInput = {
+    id?: string
+    customerId: string
+    points: number
+    type: $Enums.PointMovementType
+    reason: string
+    saleId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CustomerPointHistoryCreateOrConnectWithoutUserInput = {
+    where: CustomerPointHistoryWhereUniqueInput
+    create: XOR<CustomerPointHistoryCreateWithoutUserInput, CustomerPointHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type CustomerPointHistoryCreateManyUserInputEnvelope = {
+    data: CustomerPointHistoryCreateManyUserInput | CustomerPointHistoryCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -51322,10 +53389,13 @@ export namespace Prisma {
     action?: EnumAuditActionFilter<"AuditLog"> | $Enums.AuditAction
     entityType?: StringFilter<"AuditLog"> | string
     entityId?: StringFilter<"AuditLog"> | string
+    entityName?: StringNullableFilter<"AuditLog"> | string | null
     oldValues?: JsonNullableFilter<"AuditLog">
     newValues?: JsonNullableFilter<"AuditLog">
     ipAddress?: StringNullableFilter<"AuditLog"> | string | null
     userAgent?: StringNullableFilter<"AuditLog"> | string | null
+    sessionId?: StringNullableFilter<"AuditLog"> | string | null
+    resultStatus?: StringFilter<"AuditLog"> | string
     userId?: StringNullableFilter<"AuditLog"> | string | null
     createdAt?: DateTimeFilter<"AuditLog"> | Date | string
   }
@@ -51653,6 +53723,36 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"StockMovement"> | Date | string
   }
 
+  export type CustomerPointHistoryUpsertWithWhereUniqueWithoutUserInput = {
+    where: CustomerPointHistoryWhereUniqueInput
+    update: XOR<CustomerPointHistoryUpdateWithoutUserInput, CustomerPointHistoryUncheckedUpdateWithoutUserInput>
+    create: XOR<CustomerPointHistoryCreateWithoutUserInput, CustomerPointHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type CustomerPointHistoryUpdateWithWhereUniqueWithoutUserInput = {
+    where: CustomerPointHistoryWhereUniqueInput
+    data: XOR<CustomerPointHistoryUpdateWithoutUserInput, CustomerPointHistoryUncheckedUpdateWithoutUserInput>
+  }
+
+  export type CustomerPointHistoryUpdateManyWithWhereWithoutUserInput = {
+    where: CustomerPointHistoryScalarWhereInput
+    data: XOR<CustomerPointHistoryUpdateManyMutationInput, CustomerPointHistoryUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type CustomerPointHistoryScalarWhereInput = {
+    AND?: CustomerPointHistoryScalarWhereInput | CustomerPointHistoryScalarWhereInput[]
+    OR?: CustomerPointHistoryScalarWhereInput[]
+    NOT?: CustomerPointHistoryScalarWhereInput | CustomerPointHistoryScalarWhereInput[]
+    id?: StringFilter<"CustomerPointHistory"> | string
+    customerId?: StringFilter<"CustomerPointHistory"> | string
+    points?: IntFilter<"CustomerPointHistory"> | number
+    type?: EnumPointMovementTypeFilter<"CustomerPointHistory"> | $Enums.PointMovementType
+    reason?: StringFilter<"CustomerPointHistory"> | string
+    saleId?: StringNullableFilter<"CustomerPointHistory"> | string | null
+    userId?: StringNullableFilter<"CustomerPointHistory"> | string | null
+    createdAt?: DateTimeFilter<"CustomerPointHistory"> | Date | string
+  }
+
   export type RoleUpsertWithoutUsersInput = {
     update: XOR<RoleUpdateWithoutUsersInput, RoleUncheckedUpdateWithoutUsersInput>
     create: XOR<RoleCreateWithoutUsersInput, RoleUncheckedCreateWithoutUsersInput>
@@ -51705,6 +53805,7 @@ export namespace Prisma {
     sales?: SaleCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryCreateNestedManyWithoutUserInput
     role: RoleCreateNestedOneWithoutUsersInput
   }
 
@@ -51732,6 +53833,7 @@ export namespace Prisma {
     sales?: SaleUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -51773,6 +53875,7 @@ export namespace Prisma {
     sales?: SaleUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUpdateManyWithoutUserNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -51800,6 +53903,7 @@ export namespace Prisma {
     sales?: SaleUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -51825,6 +53929,7 @@ export namespace Prisma {
     refunds?: RefundCreateNestedManyWithoutProcessedByInput
     sales?: SaleCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryCreateNestedManyWithoutUserInput
     role: RoleCreateNestedOneWithoutUsersInput
   }
 
@@ -51852,6 +53957,7 @@ export namespace Prisma {
     refunds?: RefundUncheckedCreateNestedManyWithoutProcessedByInput
     sales?: SaleUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -51893,6 +53999,7 @@ export namespace Prisma {
     refunds?: RefundUpdateManyWithoutProcessedByNestedInput
     sales?: SaleUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUpdateManyWithoutUserNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -51920,6 +54027,7 @@ export namespace Prisma {
     refunds?: RefundUncheckedUpdateManyWithoutProcessedByNestedInput
     sales?: SaleUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutResetTokensInput = {
@@ -51945,6 +54053,7 @@ export namespace Prisma {
     sales?: SaleCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryCreateNestedManyWithoutUserInput
     role: RoleCreateNestedOneWithoutUsersInput
   }
 
@@ -51972,6 +54081,7 @@ export namespace Prisma {
     sales?: SaleUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutResetTokensInput = {
@@ -52013,6 +54123,7 @@ export namespace Prisma {
     sales?: SaleUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUpdateManyWithoutUserNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -52040,6 +54151,7 @@ export namespace Prisma {
     sales?: SaleUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CategoryCreateWithoutChildrenInput = {
@@ -52787,6 +54899,7 @@ export namespace Prisma {
     discounts?: SaleDiscountCreateNestedManyWithoutSaleInput
     items?: SaleItemCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryCreateNestedManyWithoutSaleInput
   }
 
   export type SaleUncheckedCreateWithoutCustomerInput = {
@@ -52818,6 +54931,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedCreateNestedManyWithoutSaleInput
     items?: SaleItemUncheckedCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionUncheckedCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type SaleCreateOrConnectWithoutCustomerInput = {
@@ -52827,6 +54941,36 @@ export namespace Prisma {
 
   export type SaleCreateManyCustomerInputEnvelope = {
     data: SaleCreateManyCustomerInput | SaleCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CustomerPointHistoryCreateWithoutCustomerInput = {
+    id?: string
+    points: number
+    type: $Enums.PointMovementType
+    reason: string
+    createdAt?: Date | string
+    user?: UserCreateNestedOneWithoutPointAdjustmentsInput
+    sale?: SaleCreateNestedOneWithoutCustomerPointHistoryInput
+  }
+
+  export type CustomerPointHistoryUncheckedCreateWithoutCustomerInput = {
+    id?: string
+    points: number
+    type: $Enums.PointMovementType
+    reason: string
+    saleId?: string | null
+    userId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CustomerPointHistoryCreateOrConnectWithoutCustomerInput = {
+    where: CustomerPointHistoryWhereUniqueInput
+    create: XOR<CustomerPointHistoryCreateWithoutCustomerInput, CustomerPointHistoryUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type CustomerPointHistoryCreateManyCustomerInputEnvelope = {
+    data: CustomerPointHistoryCreateManyCustomerInput | CustomerPointHistoryCreateManyCustomerInput[]
     skipDuplicates?: boolean
   }
 
@@ -52860,6 +55004,390 @@ export namespace Prisma {
   export type SaleUpdateManyWithWhereWithoutCustomerInput = {
     where: SaleScalarWhereInput
     data: XOR<SaleUpdateManyMutationInput, SaleUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type CustomerPointHistoryUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: CustomerPointHistoryWhereUniqueInput
+    update: XOR<CustomerPointHistoryUpdateWithoutCustomerInput, CustomerPointHistoryUncheckedUpdateWithoutCustomerInput>
+    create: XOR<CustomerPointHistoryCreateWithoutCustomerInput, CustomerPointHistoryUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type CustomerPointHistoryUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: CustomerPointHistoryWhereUniqueInput
+    data: XOR<CustomerPointHistoryUpdateWithoutCustomerInput, CustomerPointHistoryUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type CustomerPointHistoryUpdateManyWithWhereWithoutCustomerInput = {
+    where: CustomerPointHistoryScalarWhereInput
+    data: XOR<CustomerPointHistoryUpdateManyMutationInput, CustomerPointHistoryUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type CustomerCreateWithoutPointHistoryInput = {
+    id?: string
+    code: string
+    name: string
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    points?: number
+    tier?: string | null
+    taxId?: string | null
+    company?: string | null
+    creditLimit?: Decimal | DecimalJsLike | number | string
+    balance?: Decimal | DecimalJsLike | number | string
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    sales?: SaleCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutPointHistoryInput = {
+    id?: string
+    code: string
+    name: string
+    email?: string | null
+    phone?: string | null
+    address?: string | null
+    points?: number
+    tier?: string | null
+    taxId?: string | null
+    company?: string | null
+    creditLimit?: Decimal | DecimalJsLike | number | string
+    balance?: Decimal | DecimalJsLike | number | string
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    sales?: SaleUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutPointHistoryInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutPointHistoryInput, CustomerUncheckedCreateWithoutPointHistoryInput>
+  }
+
+  export type UserCreateWithoutPointAdjustmentsInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    emailVerified?: Date | string | null
+    status?: $Enums.AccountStatus
+    failedAttempts?: number
+    lockoutUntil?: Date | string | null
+    lastLogin?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    cashMovements?: CashMovementCreateNestedManyWithoutUserInput
+    cashSessions?: CashSessionCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    resetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    priceHistory?: PriceHistoryCreateNestedManyWithoutUserInput
+    refunds?: RefundCreateNestedManyWithoutProcessedByInput
+    sales?: SaleCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    role: RoleCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutPointAdjustmentsInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    emailVerified?: Date | string | null
+    status?: $Enums.AccountStatus
+    failedAttempts?: number
+    lockoutUntil?: Date | string | null
+    roleId: string
+    lastLogin?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    cashMovements?: CashMovementUncheckedCreateNestedManyWithoutUserInput
+    cashSessions?: CashSessionUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    resetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    priceHistory?: PriceHistoryUncheckedCreateNestedManyWithoutUserInput
+    refunds?: RefundUncheckedCreateNestedManyWithoutProcessedByInput
+    sales?: SaleUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPointAdjustmentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPointAdjustmentsInput, UserUncheckedCreateWithoutPointAdjustmentsInput>
+  }
+
+  export type SaleCreateWithoutCustomerPointHistoryInput = {
+    id?: string
+    saleNumber: string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    tax?: Decimal | DecimalJsLike | number | string
+    total: Decimal | DecimalJsLike | number | string
+    status?: $Enums.SaleStatus
+    paymentMethod?: $Enums.PaymentMethod
+    amountPaid?: Decimal | DecimalJsLike | number | string | null
+    change?: Decimal | DecimalJsLike | number | string | null
+    tip?: Decimal | DecimalJsLike | number | string | null
+    tipPercent?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
+    invoiceNumber?: string | null
+    date?: Date | string
+    authorizedBy?: string | null
+    authReason?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    order?: OrderCreateNestedOneWithoutSaleInput
+    refundRecords?: RefundCreateNestedManyWithoutSaleInput
+    cashSession?: CashSessionCreateNestedOneWithoutSalesInput
+    customer?: CustomerCreateNestedOneWithoutSalesInput
+    refundedSale?: SaleCreateNestedOneWithoutRefundInput
+    refund?: SaleCreateNestedOneWithoutRefundedSaleInput
+    user: UserCreateNestedOneWithoutSalesInput
+    discounts?: SaleDiscountCreateNestedManyWithoutSaleInput
+    items?: SaleItemCreateNestedManyWithoutSaleInput
+    promotions?: SalePromotionCreateNestedManyWithoutSaleInput
+  }
+
+  export type SaleUncheckedCreateWithoutCustomerPointHistoryInput = {
+    id?: string
+    saleNumber: string
+    subtotal: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    tax?: Decimal | DecimalJsLike | number | string
+    total: Decimal | DecimalJsLike | number | string
+    status?: $Enums.SaleStatus
+    paymentMethod?: $Enums.PaymentMethod
+    amountPaid?: Decimal | DecimalJsLike | number | string | null
+    change?: Decimal | DecimalJsLike | number | string | null
+    tip?: Decimal | DecimalJsLike | number | string | null
+    tipPercent?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
+    invoiceNumber?: string | null
+    date?: Date | string
+    userId: string
+    customerId?: string | null
+    refundedSaleId?: string | null
+    authorizedBy?: string | null
+    authReason?: string | null
+    cashSessionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    order?: OrderUncheckedCreateNestedOneWithoutSaleInput
+    refundRecords?: RefundUncheckedCreateNestedManyWithoutSaleInput
+    refund?: SaleUncheckedCreateNestedOneWithoutRefundedSaleInput
+    discounts?: SaleDiscountUncheckedCreateNestedManyWithoutSaleInput
+    items?: SaleItemUncheckedCreateNestedManyWithoutSaleInput
+    promotions?: SalePromotionUncheckedCreateNestedManyWithoutSaleInput
+  }
+
+  export type SaleCreateOrConnectWithoutCustomerPointHistoryInput = {
+    where: SaleWhereUniqueInput
+    create: XOR<SaleCreateWithoutCustomerPointHistoryInput, SaleUncheckedCreateWithoutCustomerPointHistoryInput>
+  }
+
+  export type CustomerUpsertWithoutPointHistoryInput = {
+    update: XOR<CustomerUpdateWithoutPointHistoryInput, CustomerUncheckedUpdateWithoutPointHistoryInput>
+    create: XOR<CustomerCreateWithoutPointHistoryInput, CustomerUncheckedCreateWithoutPointHistoryInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutPointHistoryInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutPointHistoryInput, CustomerUncheckedUpdateWithoutPointHistoryInput>
+  }
+
+  export type CustomerUpdateWithoutPointHistoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    points?: IntFieldUpdateOperationsInput | number
+    tier?: NullableStringFieldUpdateOperationsInput | string | null
+    taxId?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    creditLimit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    sales?: SaleUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutPointHistoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    points?: IntFieldUpdateOperationsInput | number
+    tier?: NullableStringFieldUpdateOperationsInput | string | null
+    taxId?: NullableStringFieldUpdateOperationsInput | string | null
+    company?: NullableStringFieldUpdateOperationsInput | string | null
+    creditLimit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    sales?: SaleUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type UserUpsertWithoutPointAdjustmentsInput = {
+    update: XOR<UserUpdateWithoutPointAdjustmentsInput, UserUncheckedUpdateWithoutPointAdjustmentsInput>
+    create: XOR<UserCreateWithoutPointAdjustmentsInput, UserUncheckedCreateWithoutPointAdjustmentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPointAdjustmentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPointAdjustmentsInput, UserUncheckedUpdateWithoutPointAdjustmentsInput>
+  }
+
+  export type UserUpdateWithoutPointAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
+    failedAttempts?: IntFieldUpdateOperationsInput | number
+    lockoutUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    cashMovements?: CashMovementUpdateManyWithoutUserNestedInput
+    cashSessions?: CashSessionUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    resetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    priceHistory?: PriceHistoryUpdateManyWithoutUserNestedInput
+    refunds?: RefundUpdateManyWithoutProcessedByNestedInput
+    sales?: SaleUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    role?: RoleUpdateOneRequiredWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPointAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumAccountStatusFieldUpdateOperationsInput | $Enums.AccountStatus
+    failedAttempts?: IntFieldUpdateOperationsInput | number
+    lockoutUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roleId?: StringFieldUpdateOperationsInput | string
+    lastLogin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    cashMovements?: CashMovementUncheckedUpdateManyWithoutUserNestedInput
+    cashSessions?: CashSessionUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    resetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    priceHistory?: PriceHistoryUncheckedUpdateManyWithoutUserNestedInput
+    refunds?: RefundUncheckedUpdateManyWithoutProcessedByNestedInput
+    sales?: SaleUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type SaleUpsertWithoutCustomerPointHistoryInput = {
+    update: XOR<SaleUpdateWithoutCustomerPointHistoryInput, SaleUncheckedUpdateWithoutCustomerPointHistoryInput>
+    create: XOR<SaleCreateWithoutCustomerPointHistoryInput, SaleUncheckedCreateWithoutCustomerPointHistoryInput>
+    where?: SaleWhereInput
+  }
+
+  export type SaleUpdateToOneWithWhereWithoutCustomerPointHistoryInput = {
+    where?: SaleWhereInput
+    data: XOR<SaleUpdateWithoutCustomerPointHistoryInput, SaleUncheckedUpdateWithoutCustomerPointHistoryInput>
+  }
+
+  export type SaleUpdateWithoutCustomerPointHistoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    saleNumber?: StringFieldUpdateOperationsInput | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    tax?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    amountPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    change?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    tip?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    tipPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    authorizedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    authReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    order?: OrderUpdateOneWithoutSaleNestedInput
+    refundRecords?: RefundUpdateManyWithoutSaleNestedInput
+    cashSession?: CashSessionUpdateOneWithoutSalesNestedInput
+    customer?: CustomerUpdateOneWithoutSalesNestedInput
+    refundedSale?: SaleUpdateOneWithoutRefundNestedInput
+    refund?: SaleUpdateOneWithoutRefundedSaleNestedInput
+    user?: UserUpdateOneRequiredWithoutSalesNestedInput
+    discounts?: SaleDiscountUpdateManyWithoutSaleNestedInput
+    items?: SaleItemUpdateManyWithoutSaleNestedInput
+    promotions?: SalePromotionUpdateManyWithoutSaleNestedInput
+  }
+
+  export type SaleUncheckedUpdateWithoutCustomerPointHistoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    saleNumber?: StringFieldUpdateOperationsInput | string
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    tax?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    amountPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    change?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    tip?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    tipPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    refundedSaleId?: NullableStringFieldUpdateOperationsInput | string | null
+    authorizedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    authReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cashSessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    order?: OrderUncheckedUpdateOneWithoutSaleNestedInput
+    refundRecords?: RefundUncheckedUpdateManyWithoutSaleNestedInput
+    refund?: SaleUncheckedUpdateOneWithoutRefundedSaleNestedInput
+    discounts?: SaleDiscountUncheckedUpdateManyWithoutSaleNestedInput
+    items?: SaleItemUncheckedUpdateManyWithoutSaleNestedInput
+    promotions?: SalePromotionUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type OrderCreateWithoutSaleInput = {
@@ -52977,11 +55505,14 @@ export namespace Prisma {
     tier?: string | null
     taxId?: string | null
     company?: string | null
+    creditLimit?: Decimal | DecimalJsLike | number | string
+    balance?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
+    pointHistory?: CustomerPointHistoryCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutSalesInput = {
@@ -52995,11 +55526,14 @@ export namespace Prisma {
     tier?: string | null
     taxId?: string | null
     company?: string | null
+    creditLimit?: Decimal | DecimalJsLike | number | string
+    balance?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    pointHistory?: CustomerPointHistoryUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutSalesInput = {
@@ -53036,6 +55570,7 @@ export namespace Prisma {
     discounts?: SaleDiscountCreateNestedManyWithoutSaleInput
     items?: SaleItemCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryCreateNestedManyWithoutSaleInput
   }
 
   export type SaleUncheckedCreateWithoutRefundInput = {
@@ -53067,6 +55602,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedCreateNestedManyWithoutSaleInput
     items?: SaleItemUncheckedCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionUncheckedCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type SaleCreateOrConnectWithoutRefundInput = {
@@ -53103,6 +55639,7 @@ export namespace Prisma {
     discounts?: SaleDiscountCreateNestedManyWithoutSaleInput
     items?: SaleItemCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryCreateNestedManyWithoutSaleInput
   }
 
   export type SaleUncheckedCreateWithoutRefundedSaleInput = {
@@ -53134,6 +55671,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedCreateNestedManyWithoutSaleInput
     items?: SaleItemUncheckedCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionUncheckedCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type SaleCreateOrConnectWithoutRefundedSaleInput = {
@@ -53164,6 +55702,7 @@ export namespace Prisma {
     refunds?: RefundCreateNestedManyWithoutProcessedByInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryCreateNestedManyWithoutUserInput
     role: RoleCreateNestedOneWithoutUsersInput
   }
 
@@ -53191,6 +55730,7 @@ export namespace Prisma {
     refunds?: RefundUncheckedCreateNestedManyWithoutProcessedByInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSalesInput = {
@@ -53277,6 +55817,36 @@ export namespace Prisma {
 
   export type SalePromotionCreateManySaleInputEnvelope = {
     data: SalePromotionCreateManySaleInput | SalePromotionCreateManySaleInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CustomerPointHistoryCreateWithoutSaleInput = {
+    id?: string
+    points: number
+    type: $Enums.PointMovementType
+    reason: string
+    createdAt?: Date | string
+    customer: CustomerCreateNestedOneWithoutPointHistoryInput
+    user?: UserCreateNestedOneWithoutPointAdjustmentsInput
+  }
+
+  export type CustomerPointHistoryUncheckedCreateWithoutSaleInput = {
+    id?: string
+    customerId: string
+    points: number
+    type: $Enums.PointMovementType
+    reason: string
+    userId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CustomerPointHistoryCreateOrConnectWithoutSaleInput = {
+    where: CustomerPointHistoryWhereUniqueInput
+    create: XOR<CustomerPointHistoryCreateWithoutSaleInput, CustomerPointHistoryUncheckedCreateWithoutSaleInput>
+  }
+
+  export type CustomerPointHistoryCreateManySaleInputEnvelope = {
+    data: CustomerPointHistoryCreateManySaleInput | CustomerPointHistoryCreateManySaleInput[]
     skipDuplicates?: boolean
   }
 
@@ -53402,11 +55972,14 @@ export namespace Prisma {
     tier?: NullableStringFieldUpdateOperationsInput | string | null
     taxId?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
+    creditLimit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
+    pointHistory?: CustomerPointHistoryUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutSalesInput = {
@@ -53420,11 +55993,14 @@ export namespace Prisma {
     tier?: NullableStringFieldUpdateOperationsInput | string | null
     taxId?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
+    creditLimit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    pointHistory?: CustomerPointHistoryUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type SaleUpsertWithoutRefundInput = {
@@ -53467,6 +56043,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUpdateManyWithoutSaleNestedInput
     items?: SaleItemUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUncheckedUpdateWithoutRefundInput = {
@@ -53498,6 +56075,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedUpdateManyWithoutSaleNestedInput
     items?: SaleItemUncheckedUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUncheckedUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUpsertWithoutRefundedSaleInput = {
@@ -53540,6 +56118,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUpdateManyWithoutSaleNestedInput
     items?: SaleItemUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUncheckedUpdateWithoutRefundedSaleInput = {
@@ -53571,6 +56150,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedUpdateManyWithoutSaleNestedInput
     items?: SaleItemUncheckedUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUncheckedUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type UserUpsertWithoutSalesInput = {
@@ -53607,6 +56187,7 @@ export namespace Prisma {
     refunds?: RefundUpdateManyWithoutProcessedByNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUpdateManyWithoutUserNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -53634,6 +56215,7 @@ export namespace Prisma {
     refunds?: RefundUncheckedUpdateManyWithoutProcessedByNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SaleDiscountUpsertWithWhereUniqueWithoutSaleInput = {
@@ -53708,6 +56290,22 @@ export namespace Prisma {
     saleId?: StringFilter<"SalePromotion"> | string
     promotionId?: StringFilter<"SalePromotion"> | string
     discount?: DecimalFilter<"SalePromotion"> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type CustomerPointHistoryUpsertWithWhereUniqueWithoutSaleInput = {
+    where: CustomerPointHistoryWhereUniqueInput
+    update: XOR<CustomerPointHistoryUpdateWithoutSaleInput, CustomerPointHistoryUncheckedUpdateWithoutSaleInput>
+    create: XOR<CustomerPointHistoryCreateWithoutSaleInput, CustomerPointHistoryUncheckedCreateWithoutSaleInput>
+  }
+
+  export type CustomerPointHistoryUpdateWithWhereUniqueWithoutSaleInput = {
+    where: CustomerPointHistoryWhereUniqueInput
+    data: XOR<CustomerPointHistoryUpdateWithoutSaleInput, CustomerPointHistoryUncheckedUpdateWithoutSaleInput>
+  }
+
+  export type CustomerPointHistoryUpdateManyWithWhereWithoutSaleInput = {
+    where: CustomerPointHistoryScalarWhereInput
+    data: XOR<CustomerPointHistoryUpdateManyMutationInput, CustomerPointHistoryUncheckedUpdateManyWithoutSaleInput>
   }
 
   export type ProductCreateWithoutSaleItemsInput = {
@@ -53802,6 +56400,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutSalesInput
     discounts?: SaleDiscountCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryCreateNestedManyWithoutSaleInput
   }
 
   export type SaleUncheckedCreateWithoutItemsInput = {
@@ -53833,6 +56432,7 @@ export namespace Prisma {
     refund?: SaleUncheckedCreateNestedOneWithoutRefundedSaleInput
     discounts?: SaleDiscountUncheckedCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionUncheckedCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type SaleCreateOrConnectWithoutItemsInput = {
@@ -53949,6 +56549,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutSalesNestedInput
     discounts?: SaleDiscountUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUncheckedUpdateWithoutItemsInput = {
@@ -53980,6 +56581,7 @@ export namespace Prisma {
     refund?: SaleUncheckedUpdateOneWithoutRefundedSaleNestedInput
     discounts?: SaleDiscountUncheckedUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUncheckedUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type PromotionCategoryCreateWithoutPromotionInput = {
@@ -54552,6 +57154,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutSalesInput
     discounts?: SaleDiscountCreateNestedManyWithoutSaleInput
     items?: SaleItemCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryCreateNestedManyWithoutSaleInput
   }
 
   export type SaleUncheckedCreateWithoutPromotionsInput = {
@@ -54583,6 +57186,7 @@ export namespace Prisma {
     refund?: SaleUncheckedCreateNestedOneWithoutRefundedSaleInput
     discounts?: SaleDiscountUncheckedCreateNestedManyWithoutSaleInput
     items?: SaleItemUncheckedCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type SaleCreateOrConnectWithoutPromotionsInput = {
@@ -54679,6 +57283,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutSalesNestedInput
     discounts?: SaleDiscountUpdateManyWithoutSaleNestedInput
     items?: SaleItemUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUncheckedUpdateWithoutPromotionsInput = {
@@ -54710,6 +57315,7 @@ export namespace Prisma {
     refund?: SaleUncheckedUpdateOneWithoutRefundedSaleNestedInput
     discounts?: SaleDiscountUncheckedUpdateManyWithoutSaleNestedInput
     items?: SaleItemUncheckedUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -54735,6 +57341,7 @@ export namespace Prisma {
     sales?: SaleCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryCreateNestedManyWithoutUserInput
     role: RoleCreateNestedOneWithoutUsersInput
   }
 
@@ -54762,6 +57369,7 @@ export namespace Prisma {
     sales?: SaleUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -54803,6 +57411,7 @@ export namespace Prisma {
     sales?: SaleUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUpdateManyWithoutUserNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -54830,6 +57439,7 @@ export namespace Prisma {
     sales?: SaleUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductCreateWithoutStockMovementsInput = {
@@ -54918,6 +57528,7 @@ export namespace Prisma {
     refunds?: RefundCreateNestedManyWithoutProcessedByInput
     sales?: SaleCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryCreateNestedManyWithoutUserInput
     role: RoleCreateNestedOneWithoutUsersInput
   }
 
@@ -54945,6 +57556,7 @@ export namespace Prisma {
     refunds?: RefundUncheckedCreateNestedManyWithoutProcessedByInput
     sales?: SaleUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStockMovementsInput = {
@@ -55055,6 +57667,7 @@ export namespace Prisma {
     refunds?: RefundUpdateManyWithoutProcessedByNestedInput
     sales?: SaleUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUpdateManyWithoutUserNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -55082,6 +57695,7 @@ export namespace Prisma {
     refunds?: RefundUncheckedUpdateManyWithoutProcessedByNestedInput
     sales?: SaleUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductCreateWithoutPriceHistoryInput = {
@@ -55170,6 +57784,7 @@ export namespace Prisma {
     sales?: SaleCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryCreateNestedManyWithoutUserInput
     role: RoleCreateNestedOneWithoutUsersInput
   }
 
@@ -55197,6 +57812,7 @@ export namespace Prisma {
     sales?: SaleUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPriceHistoryInput = {
@@ -55307,6 +57923,7 @@ export namespace Prisma {
     sales?: SaleUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUpdateManyWithoutUserNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -55334,6 +57951,7 @@ export namespace Prisma {
     sales?: SaleUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CashSessionCreateWithoutRegisterInput = {
@@ -55472,6 +58090,7 @@ export namespace Prisma {
     sales?: SaleCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryCreateNestedManyWithoutUserInput
     role: RoleCreateNestedOneWithoutUsersInput
   }
 
@@ -55499,6 +58118,7 @@ export namespace Prisma {
     sales?: SaleUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCashSessionsInput = {
@@ -55535,6 +58155,7 @@ export namespace Prisma {
     discounts?: SaleDiscountCreateNestedManyWithoutSaleInput
     items?: SaleItemCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryCreateNestedManyWithoutSaleInput
   }
 
   export type SaleUncheckedCreateWithoutCashSessionInput = {
@@ -55566,6 +58187,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedCreateNestedManyWithoutSaleInput
     items?: SaleItemUncheckedCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionUncheckedCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type SaleCreateOrConnectWithoutCashSessionInput = {
@@ -55659,6 +58281,7 @@ export namespace Prisma {
     sales?: SaleUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUpdateManyWithoutUserNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -55686,6 +58309,7 @@ export namespace Prisma {
     sales?: SaleUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SaleUpsertWithWhereUniqueWithoutCashSessionInput = {
@@ -55764,6 +58388,7 @@ export namespace Prisma {
     sales?: SaleCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryCreateNestedManyWithoutUserInput
     role: RoleCreateNestedOneWithoutUsersInput
   }
 
@@ -55791,6 +58416,7 @@ export namespace Prisma {
     sales?: SaleUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCashMovementsInput = {
@@ -55875,6 +58501,7 @@ export namespace Prisma {
     sales?: SaleUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUpdateManyWithoutUserNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -55902,6 +58529,7 @@ export namespace Prisma {
     sales?: SaleUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutRefundsInput = {
@@ -55927,6 +58555,7 @@ export namespace Prisma {
     sales?: SaleCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryCreateNestedManyWithoutUserInput
     role: RoleCreateNestedOneWithoutUsersInput
   }
 
@@ -55954,6 +58583,7 @@ export namespace Prisma {
     sales?: SaleUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRefundsInput = {
@@ -55990,6 +58620,7 @@ export namespace Prisma {
     discounts?: SaleDiscountCreateNestedManyWithoutSaleInput
     items?: SaleItemCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryCreateNestedManyWithoutSaleInput
   }
 
   export type SaleUncheckedCreateWithoutRefundRecordsInput = {
@@ -56021,6 +58652,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedCreateNestedManyWithoutSaleInput
     items?: SaleItemUncheckedCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionUncheckedCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type SaleCreateOrConnectWithoutRefundRecordsInput = {
@@ -56088,6 +58720,7 @@ export namespace Prisma {
     sales?: SaleUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUpdateManyWithoutUserNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -56115,6 +58748,7 @@ export namespace Prisma {
     sales?: SaleUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SaleUpsertWithoutRefundRecordsInput = {
@@ -56157,6 +58791,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUpdateManyWithoutSaleNestedInput
     items?: SaleItemUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUncheckedUpdateWithoutRefundRecordsInput = {
@@ -56188,6 +58823,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedUpdateManyWithoutSaleNestedInput
     items?: SaleItemUncheckedUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUncheckedUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type RefundItemUpsertWithWhereUniqueWithoutRefundInput = {
@@ -56427,6 +59063,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutSalesInput
     items?: SaleItemCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryCreateNestedManyWithoutSaleInput
   }
 
   export type SaleUncheckedCreateWithoutDiscountsInput = {
@@ -56458,6 +59095,7 @@ export namespace Prisma {
     refund?: SaleUncheckedCreateNestedOneWithoutRefundedSaleInput
     items?: SaleItemUncheckedCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionUncheckedCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type SaleCreateOrConnectWithoutDiscountsInput = {
@@ -56505,6 +59143,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutSalesNestedInput
     items?: SaleItemUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUncheckedUpdateWithoutDiscountsInput = {
@@ -56536,6 +59175,7 @@ export namespace Prisma {
     refund?: SaleUncheckedUpdateOneWithoutRefundedSaleNestedInput
     items?: SaleItemUncheckedUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUncheckedUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type CustomerCreateWithoutOrdersInput = {
@@ -56549,11 +59189,14 @@ export namespace Prisma {
     tier?: string | null
     taxId?: string | null
     company?: string | null
+    creditLimit?: Decimal | DecimalJsLike | number | string
+    balance?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sales?: SaleCreateNestedManyWithoutCustomerInput
+    pointHistory?: CustomerPointHistoryCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutOrdersInput = {
@@ -56567,11 +59210,14 @@ export namespace Prisma {
     tier?: string | null
     taxId?: string | null
     company?: string | null
+    creditLimit?: Decimal | DecimalJsLike | number | string
+    balance?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sales?: SaleUncheckedCreateNestedManyWithoutCustomerInput
+    pointHistory?: CustomerPointHistoryUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutOrdersInput = {
@@ -56608,6 +59254,7 @@ export namespace Prisma {
     discounts?: SaleDiscountCreateNestedManyWithoutSaleInput
     items?: SaleItemCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryCreateNestedManyWithoutSaleInput
   }
 
   export type SaleUncheckedCreateWithoutOrderInput = {
@@ -56639,6 +59286,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedCreateNestedManyWithoutSaleInput
     items?: SaleItemUncheckedCreateNestedManyWithoutSaleInput
     promotions?: SalePromotionUncheckedCreateNestedManyWithoutSaleInput
+    customerPointHistory?: CustomerPointHistoryUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type SaleCreateOrConnectWithoutOrderInput = {
@@ -56669,6 +59317,7 @@ export namespace Prisma {
     sales?: SaleCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryCreateNestedManyWithoutUserInput
     role: RoleCreateNestedOneWithoutUsersInput
   }
 
@@ -56696,6 +59345,7 @@ export namespace Prisma {
     sales?: SaleUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -56751,11 +59401,14 @@ export namespace Prisma {
     tier?: NullableStringFieldUpdateOperationsInput | string | null
     taxId?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
+    creditLimit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sales?: SaleUpdateManyWithoutCustomerNestedInput
+    pointHistory?: CustomerPointHistoryUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutOrdersInput = {
@@ -56769,11 +59422,14 @@ export namespace Prisma {
     tier?: NullableStringFieldUpdateOperationsInput | string | null
     taxId?: NullableStringFieldUpdateOperationsInput | string | null
     company?: NullableStringFieldUpdateOperationsInput | string | null
+    creditLimit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sales?: SaleUncheckedUpdateManyWithoutCustomerNestedInput
+    pointHistory?: CustomerPointHistoryUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type SaleUpsertWithoutOrderInput = {
@@ -56816,6 +59472,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUpdateManyWithoutSaleNestedInput
     items?: SaleItemUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUncheckedUpdateWithoutOrderInput = {
@@ -56847,6 +59504,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedUpdateManyWithoutSaleNestedInput
     items?: SaleItemUncheckedUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUncheckedUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type UserUpsertWithoutOrdersInput = {
@@ -56883,6 +59541,7 @@ export namespace Prisma {
     sales?: SaleUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUpdateManyWithoutUserNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -56910,6 +59569,7 @@ export namespace Prisma {
     sales?: SaleUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutOrderInput = {
@@ -57159,6 +59819,7 @@ export namespace Prisma {
     sales?: SaleCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryCreateNestedManyWithoutUserInput
     role: RoleCreateNestedOneWithoutUsersInput
   }
 
@@ -57186,6 +59847,7 @@ export namespace Prisma {
     sales?: SaleUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     stockMovements?: StockMovementUncheckedCreateNestedManyWithoutUserInput
+    pointAdjustments?: CustomerPointHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -57227,6 +59889,7 @@ export namespace Prisma {
     sales?: SaleUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUpdateManyWithoutUserNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -57254,6 +59917,7 @@ export namespace Prisma {
     sales?: SaleUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyRoleInput = {
@@ -57294,6 +59958,7 @@ export namespace Prisma {
     sales?: SaleUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRoleInput = {
@@ -57320,6 +59985,7 @@ export namespace Prisma {
     sales?: SaleUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     stockMovements?: StockMovementUncheckedUpdateManyWithoutUserNestedInput
+    pointAdjustments?: CustomerPointHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutRoleInput = {
@@ -57355,10 +60021,13 @@ export namespace Prisma {
     action: $Enums.AuditAction
     entityType: string
     entityId: string
+    entityName?: string | null
     oldValues?: NullableJsonNullValueInput | InputJsonValue
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: string | null
     userAgent?: string | null
+    sessionId?: string | null
+    resultStatus?: string
     createdAt?: Date | string
   }
 
@@ -57485,6 +60154,16 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type CustomerPointHistoryCreateManyUserInput = {
+    id?: string
+    customerId: string
+    points: number
+    type: $Enums.PointMovementType
+    reason: string
+    saleId?: string | null
+    createdAt?: Date | string
+  }
+
   export type AccountUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
@@ -57532,10 +60211,13 @@ export namespace Prisma {
     action?: EnumAuditActionFieldUpdateOperationsInput | $Enums.AuditAction
     entityType?: StringFieldUpdateOperationsInput | string
     entityId?: StringFieldUpdateOperationsInput | string
+    entityName?: NullableStringFieldUpdateOperationsInput | string | null
     oldValues?: NullableJsonNullValueInput | InputJsonValue
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    resultStatus?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -57544,10 +60226,13 @@ export namespace Prisma {
     action?: EnumAuditActionFieldUpdateOperationsInput | $Enums.AuditAction
     entityType?: StringFieldUpdateOperationsInput | string
     entityId?: StringFieldUpdateOperationsInput | string
+    entityName?: NullableStringFieldUpdateOperationsInput | string | null
     oldValues?: NullableJsonNullValueInput | InputJsonValue
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    resultStatus?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -57556,10 +60241,13 @@ export namespace Prisma {
     action?: EnumAuditActionFieldUpdateOperationsInput | $Enums.AuditAction
     entityType?: StringFieldUpdateOperationsInput | string
     entityId?: StringFieldUpdateOperationsInput | string
+    entityName?: NullableStringFieldUpdateOperationsInput | string | null
     oldValues?: NullableJsonNullValueInput | InputJsonValue
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    resultStatus?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -57837,6 +60525,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUpdateManyWithoutSaleNestedInput
     items?: SaleItemUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUncheckedUpdateWithoutUserInput = {
@@ -57868,6 +60557,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedUpdateManyWithoutSaleNestedInput
     items?: SaleItemUncheckedUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUncheckedUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUncheckedUpdateManyWithoutUserInput = {
@@ -57949,6 +60639,36 @@ export namespace Prisma {
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     reference?: NullableStringFieldUpdateOperationsInput | string | null
     cost?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomerPointHistoryUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    points?: IntFieldUpdateOperationsInput | number
+    type?: EnumPointMovementTypeFieldUpdateOperationsInput | $Enums.PointMovementType
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer?: CustomerUpdateOneRequiredWithoutPointHistoryNestedInput
+    sale?: SaleUpdateOneWithoutCustomerPointHistoryNestedInput
+  }
+
+  export type CustomerPointHistoryUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    points?: IntFieldUpdateOperationsInput | number
+    type?: EnumPointMovementTypeFieldUpdateOperationsInput | $Enums.PointMovementType
+    reason?: StringFieldUpdateOperationsInput | string
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomerPointHistoryUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    points?: IntFieldUpdateOperationsInput | number
+    type?: EnumPointMovementTypeFieldUpdateOperationsInput | $Enums.PointMovementType
+    reason?: StringFieldUpdateOperationsInput | string
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -58377,6 +61097,16 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type CustomerPointHistoryCreateManyCustomerInput = {
+    id?: string
+    points: number
+    type: $Enums.PointMovementType
+    reason: string
+    saleId?: string | null
+    userId?: string | null
+    createdAt?: Date | string
+  }
+
   export type OrderUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     orderNumber?: StringFieldUpdateOperationsInput | string
@@ -58450,6 +61180,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUpdateManyWithoutSaleNestedInput
     items?: SaleItemUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUncheckedUpdateWithoutCustomerInput = {
@@ -58481,6 +61212,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedUpdateManyWithoutSaleNestedInput
     items?: SaleItemUncheckedUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUncheckedUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUncheckedUpdateManyWithoutCustomerInput = {
@@ -58506,6 +61238,36 @@ export namespace Prisma {
     cashSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomerPointHistoryUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    points?: IntFieldUpdateOperationsInput | number
+    type?: EnumPointMovementTypeFieldUpdateOperationsInput | $Enums.PointMovementType
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutPointAdjustmentsNestedInput
+    sale?: SaleUpdateOneWithoutCustomerPointHistoryNestedInput
+  }
+
+  export type CustomerPointHistoryUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    points?: IntFieldUpdateOperationsInput | number
+    type?: EnumPointMovementTypeFieldUpdateOperationsInput | $Enums.PointMovementType
+    reason?: StringFieldUpdateOperationsInput | string
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomerPointHistoryUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    points?: IntFieldUpdateOperationsInput | number
+    type?: EnumPointMovementTypeFieldUpdateOperationsInput | $Enums.PointMovementType
+    reason?: StringFieldUpdateOperationsInput | string
+    saleId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RefundCreateManySaleInput = {
@@ -58542,6 +61304,16 @@ export namespace Prisma {
     id?: string
     promotionId: string
     discount: Decimal | DecimalJsLike | number | string
+  }
+
+  export type CustomerPointHistoryCreateManySaleInput = {
+    id?: string
+    customerId: string
+    points: number
+    type: $Enums.PointMovementType
+    reason: string
+    userId?: string | null
+    createdAt?: Date | string
   }
 
   export type RefundUpdateWithoutSaleInput = {
@@ -58652,6 +61424,36 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     promotionId?: StringFieldUpdateOperationsInput | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type CustomerPointHistoryUpdateWithoutSaleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    points?: IntFieldUpdateOperationsInput | number
+    type?: EnumPointMovementTypeFieldUpdateOperationsInput | $Enums.PointMovementType
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer?: CustomerUpdateOneRequiredWithoutPointHistoryNestedInput
+    user?: UserUpdateOneWithoutPointAdjustmentsNestedInput
+  }
+
+  export type CustomerPointHistoryUncheckedUpdateWithoutSaleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    points?: IntFieldUpdateOperationsInput | number
+    type?: EnumPointMovementTypeFieldUpdateOperationsInput | $Enums.PointMovementType
+    reason?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomerPointHistoryUncheckedUpdateManyWithoutSaleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    points?: IntFieldUpdateOperationsInput | number
+    type?: EnumPointMovementTypeFieldUpdateOperationsInput | $Enums.PointMovementType
+    reason?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PromotionCategoryCreateManyPromotionInput = {
@@ -58872,6 +61674,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUpdateManyWithoutSaleNestedInput
     items?: SaleItemUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUncheckedUpdateWithoutCashSessionInput = {
@@ -58903,6 +61706,7 @@ export namespace Prisma {
     discounts?: SaleDiscountUncheckedUpdateManyWithoutSaleNestedInput
     items?: SaleItemUncheckedUpdateManyWithoutSaleNestedInput
     promotions?: SalePromotionUncheckedUpdateManyWithoutSaleNestedInput
+    customerPointHistory?: CustomerPointHistoryUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type SaleUncheckedUpdateManyWithoutCashSessionInput = {

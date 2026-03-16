@@ -1,0 +1,16 @@
+scripts/check-notifications-order.ts(1,24): error TS2307: Cannot find module './src/lib/prisma' or its corresponding type declarations.
+scripts/check-notifications-order.ts(16,28): error TS7006: Parameter 'l' implicitly has an 'any' type.
+scripts/verify-audit-name.ts(1,30): error TS2307: Cannot find module './src/services/AuditService' or its corresponding type declarations.
+scripts/verify-audit-name.ts(2,24): error TS2307: Cannot find module './src/lib/prisma' or its corresponding type declarations.
+src/app/(admin)/admin/reports/cash/daily-cutoff/page.tsx(5,26): error TS2307: Cannot find module '@/components/ui/skeleton' or its corresponding type declarations.
+src/app/(admin)/admin/reports/cash/daily-cutoff/page.tsx(16,10): error TS2305: Module '"@/lib/utils"' has no exported member 'formatCurrency'.
+src/app/(admin)/admin/reports/cash/page.tsx(5,26): error TS2307: Cannot find module '@/components/ui/skeleton' or its corresponding type declarations.
+src/app/(admin)/admin/reports/cash/page.tsx(28,10): error TS2305: Module '"@/lib/utils"' has no exported member 'formatCurrency'.
+src/app/(admin)/admin/reports/inventory/page.tsx(5,26): error TS2307: Cannot find module '@/components/ui/skeleton' or its corresponding type declarations.
+src/app/(admin)/admin/reports/inventory/page.tsx(26,10): error TS2305: Module '"@/lib/utils"' has no exported member 'formatCurrency'.
+src/app/(admin)/admin/reports/page.tsx(5,26): error TS2307: Cannot find module '@/components/ui/skeleton' or its corresponding type declarations.
+src/app/(admin)/admin/reports/page.tsx(18,10): error TS2305: Module '"@/lib/utils"' has no exported member 'formatCurrency'.
+src/app/(admin)/admin/reports/sales/page.tsx(5,26): error TS2307: Cannot find module '@/components/ui/skeleton' or its corresponding type declarations.
+src/app/(admin)/admin/reports/sales/page.tsx(27,10): error TS2305: Module '"@/lib/utils"' has no exported member 'formatCurrency'.
+src/app/(admin)/admin/reports/seafood/page.tsx(5,26): error TS2307: Cannot find module '@/components/ui/skeleton' or its corresponding type declarations.
+src/app/(admin)/admin/reports/seafood/page.tsx(24,10): error TS2305: Module '"@/lib/utils"' has no exported member 'formatCurrency'.

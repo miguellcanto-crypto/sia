@@ -22,6 +22,7 @@ export class CategoryService {
 
         await AuditService.log('CREATE', 'Category', category.id, {
             newValues: category,
+            entityName: category.name,
             metadata: { userId },
         });
 
@@ -53,6 +54,7 @@ export class CategoryService {
 
         await AuditService.log('DELETE', 'Category', id, {
             oldValues: category,
+            entityName: category.name,
             metadata: { userId },
         });
 

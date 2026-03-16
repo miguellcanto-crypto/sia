@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { authOptions } from '@/lib/auth';
 import { NotificationService } from '@/services/NotificationService';
 import { NotificationType, Prisma } from '@/generated/client';
+import { AuditService } from '@/services/AuditService';
 
 export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
@@ -116,14 +117,54 @@ export async function POST(request: Request) {
                 }
             });
 
-            // 5. Global Notification for Sale
+            // 5. Acumular Puntos de Lealtad (1 punto por cada $10 gastados)
+            if (customerId) {
+                const pointsEarned = Math.floor(total / 10);
+                
+                if (pointsEarned > 0) {
+                    const customer = await tx.customer.findUnique({ where: { id: customerId } });
+                    if (customer) {
+                        const newPoints = customer.points + pointsEarned;
+                        const newTier = newPoints >= 2000 ? 'GOLD' : newPoints >= 500 ? 'SILVER' : 'BRONZE';
+                        
+                        await tx.customer.update({
+                            where: { id: customerId },
+                            data: { points: newPoints, tier: newTier }
+                        });
+
+                        await tx.customerPointHistory.create({
+                            data: {
+                                customerId: customerId,
+                                points: pointsEarned,
+                                type: 'EARNED',
+                                reason: `Venta ${sale.saleNumber}`,
+                                userId: (session.user as any).id,
+                                saleId: sale.id
+                            }
+                        });
+                    }
+                }
+            }
+
+            // 6. Notification for Sale (targeted to current user)
             await NotificationService.notify({
                 type: NotificationType.SUCCESS,
                 title: 'Venta Realizada',
                 message: `Se ha procesado una venta por un total de $${total.toFixed(2)}.`,
+                userId: (session.user as any).id,
                 entityType: 'Sale',
                 entityId: sale.id
             }, tx);
+
+            // 6. Auditoría de Venta
+            await AuditService.log('SALE_CREATED', 'Sale', sale.id, {
+                newValues: sale,
+                entityName: sale.saleNumber,
+                metadata: {
+                    userId: (session.user as any).id,
+                    ipAddress: request.headers.get('x-forwarded-for') || 'unknown'
+                }
+            });
 
             return sale;
         });
@@ -132,6 +173,19 @@ export async function POST(request: Request) {
 
     } catch (error: any) {
         console.error('Sale transaction error:', error);
+
+        // Auditoría de Venta Fallida
+        const session = await getServerSession(authOptions);
+        if (session?.user) {
+            await AuditService.log('SALE_CREATED', 'Sale', 'FAILED', {
+                metadata: {
+                    userId: (session.user as any).id,
+                    resultStatus: 'FAILED',
+                    details: error.message
+                }
+            });
+        }
+
         return NextResponse.json({
             error: error.message || 'Error al procesar la venta',
             details: error.code === 'P2002' ? 'Conflicto de ID único' : undefined

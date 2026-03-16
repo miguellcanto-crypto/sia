@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,7 +18,7 @@ const resetSchema = z.object({
 
 type ResetFormValues = z.infer<typeof resetSchema>;
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
@@ -176,5 +176,13 @@ export default function ResetPasswordPage() {
                 </div>
             </motion.div>
         </div>
+    );
+}
+
+export default function ResetPasswordPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#0f172a]"><Loader2 className="w-8 h-8 animate-spin text-teal-500" /></div>}>
+            <ResetPasswordContent />
+        </Suspense>
     );
 }

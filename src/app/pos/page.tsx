@@ -10,6 +10,7 @@ import { CloseSessionModal } from '@/features/pos/components/CloseSessionModal';
 import { WeighableProductModal } from '@/features/pos/components/WeighableProductModal';
 import { RevenueTicker } from '@/features/pos/components/RevenueTicker';
 import { Cart } from '@/features/pos/components/Cart';
+import { CustomerSelector } from '@/features/pos/components/CustomerSelector';
 import { ProductCard } from '@/features/pos/components/ProductCard';
 import {
     LayoutGrid,
@@ -172,6 +173,8 @@ export default function POSPage() {
                             {cart.items.length} Items
                         </span>
                     </div>
+
+                    <CustomerSelector />
 
                     <div className="flex-1 overflow-hidden px-8">
                         <Cart />

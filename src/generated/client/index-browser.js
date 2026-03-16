@@ -229,10 +229,23 @@ exports.Prisma.CustomerScalarFieldEnum = {
   tier: 'tier',
   taxId: 'taxId',
   company: 'company',
+  creditLimit: 'creditLimit',
+  balance: 'balance',
   isActive: 'isActive',
   notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CustomerPointHistoryScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  points: 'points',
+  type: 'type',
+  reason: 'reason',
+  saleId: 'saleId',
+  userId: 'userId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SaleScalarFieldEnum = {
@@ -311,10 +324,13 @@ exports.Prisma.AuditLogScalarFieldEnum = {
   action: 'action',
   entityType: 'entityType',
   entityId: 'entityId',
+  entityName: 'entityName',
   oldValues: 'oldValues',
   newValues: 'newValues',
   ipAddress: 'ipAddress',
   userAgent: 'userAgent',
+  sessionId: 'sessionId',
+  resultStatus: 'resultStatus',
   userId: 'userId',
   createdAt: 'createdAt'
 };
@@ -559,6 +575,12 @@ exports.AccountStatus = exports.$Enums.AccountStatus = {
   PENDING: 'PENDING'
 };
 
+exports.PointMovementType = exports.$Enums.PointMovementType = {
+  EARNED: 'EARNED',
+  REDEEMED: 'REDEEMED',
+  MANUAL_ADJUSTMENT: 'MANUAL_ADJUSTMENT'
+};
+
 exports.SaleStatus = exports.$Enums.SaleStatus = {
   COMPLETED: 'COMPLETED',
   PENDING: 'PENDING',
@@ -593,7 +615,10 @@ exports.AuditAction = exports.$Enums.AuditAction = {
   UPDATE: 'UPDATE',
   DELETE: 'DELETE',
   LOGIN: 'LOGIN',
+  LOGIN_FAILED: 'LOGIN_FAILED',
   LOGOUT: 'LOGOUT',
+  ACCESS_DENIED: 'ACCESS_DENIED',
+  VALIDATION_FAILED: 'VALIDATION_FAILED',
   SALE_CREATED: 'SALE_CREATED',
   SALE_CANCELLED: 'SALE_CANCELLED',
   PRICE_CHANGED: 'PRICE_CHANGED',
@@ -685,6 +710,7 @@ exports.Prisma.ModelName = {
   Category: 'Category',
   Product: 'Product',
   Customer: 'Customer',
+  CustomerPointHistory: 'CustomerPointHistory',
   Sale: 'Sale',
   SaleItem: 'SaleItem',
   Promotion: 'Promotion',

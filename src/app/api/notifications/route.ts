@@ -7,11 +7,19 @@ export async function GET(request: Request) {
     const session = await getServerSession(authOptions);
     if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+    const { searchParams } = new URL(request.url);
+    const all = searchParams.get('all') === 'true';
+
     try {
         const userId = (session.user as any).id;
-        console.log('[API/Notifications] Fetching for user:', userId);
-        const notifications = await NotificationService.getUnread(userId);
-        console.log('[API/Notifications] Found:', notifications.length);
+        let notifications;
+
+        if (all) {
+            notifications = await NotificationService.getAll(userId);
+        } else {
+            notifications = await NotificationService.getUnread(userId, 10);
+        }
+
         return NextResponse.json(notifications);
     } catch (error: any) {
         console.error('[API/Notifications] Error:', error);

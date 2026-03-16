@@ -26,8 +26,6 @@ export async function POST(request: Request) {
 
     try {
         const body = await request.json();
-        console.log('[SESSION_DEBUG] POST body:', body);
-        console.log('[SESSION_DEBUG] Auth session user:', session.user);
 
         const { registerId, openingAmount, notes } = body;
 
@@ -37,7 +35,6 @@ export async function POST(request: Request) {
 
         const userId = (session.user as any).id;
         if (!userId) {
-            console.error('[SESSION_DEBUG] User ID missing in session');
             return NextResponse.json({ error: 'ID de usuario no encontrado en la sesión' }, { status: 401 });
         }
 
@@ -47,7 +44,6 @@ export async function POST(request: Request) {
         });
 
         if (!userExists) {
-            console.error('[SESSION_DEBUG] User ID in session does not exist in DB:', userId);
             return NextResponse.json({
                 error: 'Su sesión es inválida o el usuario ha sido eliminado. Por favor, cierre sesión e inicie nuevamente.',
                 code: 'INVALID_SESSION'
@@ -78,7 +74,6 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Esta caja ya está en uso por otro usuario' }, { status: 400 });
         }
 
-        console.log('[SESSION_DEBUG] Creating session for user:', userId, 'register:', registerId);
         const newSession = await prisma.cashSession.create({
             data: {
                 registerId,
@@ -89,10 +84,8 @@ export async function POST(request: Request) {
             }
         });
 
-        console.log('[SESSION_DEBUG] Session created successfully:', newSession.id);
         return NextResponse.json(newSession, { status: 201 });
     } catch (error) {
-        console.error('[SESSION_DEBUG] Error creating session:', error);
         return NextResponse.json({
             error: 'Error al abrir la sesión',
             details: error instanceof Error ? error.message : String(error)

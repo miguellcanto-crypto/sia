@@ -56,8 +56,13 @@ async function main() {
                 description: 'Administrador total',
                 permissions: [
                     'CREATE_SALE', 'VIEW_SALES', 'CANCEL_SALE', 'REFUND_SALE',
-                    'CREATE_PRODUCT', 'EDIT_PRODUCT', 'DELETE_PRODUCT', 'VIEW_PRODUCT', 'ADJUST_STOCK', 'EDIT_PRICE',
-                    'MANAGE_PRODUCTS', 'MANAGE_CATEGORIES', 'VIEW_AUDIT_LOG', 'VIEW_REPORTS'
+                    'CREATE_PRODUCT', 'EDIT_PRODUCT', 'DELETE_PRODUCT', 'VIEW_PRODUCT',
+                    'ADJUST_STOCK', 'EDIT_PRICE', 'MANAGE_PRODUCTS', 'MANAGE_CATEGORIES',
+                    'CREATE_USER', 'EDIT_USER', 'DELETE_USER', 'VIEW_USERS',
+                    'CREATE_CUSTOMER', 'EDIT_CUSTOMER', 'DELETE_CUSTOMER', 'VIEW_CUSTOMERS',
+                    'CREATE_PROMOTION', 'EDIT_PROMOTION', 'DELETE_PROMOTION',
+                    'VIEW_AUDIT_LOG', 'VIEW_ERROR_LOG', 'VIEW_REPORTS', 'EXPORT_REPORTS',
+                    'MANAGE_SETTINGS'
                 ]
             }
         })

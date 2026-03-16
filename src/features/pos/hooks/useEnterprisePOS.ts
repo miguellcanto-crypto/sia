@@ -62,7 +62,8 @@ export function useEnterprisePOS() {
                 body: JSON.stringify({
                     name,
                     items: cart.items,
-                    subtotal: cart.total()
+                    subtotal: cart.total(),
+                    customerId: cart.customer?.id || null
                 })
             });
             if (res.ok) {
@@ -84,6 +85,10 @@ export function useEnterprisePOS() {
             // We'll need to adapt the store or ensure the JSON has all fields
             cart.addItem(item);
         });
+        if (parkedSale.customerId) {
+            // We only have the ID here, ideally we'd fetch the customer object, but setting a slim one works for now
+            cart.setCustomer({ id: parkedSale.customerId, name: 'Cliente Reservado' });
+        }
 
         // Remove from DB
         await fetch(`/api/sales/park?id=${parkedSale.id}`, { method: 'DELETE' });
@@ -105,7 +110,8 @@ export function useEnterprisePOS() {
                     tip: paymentData.tip,
                     tipPercent: paymentData.tipPercent,
                     cashSessionId: cashSession.id,
-                    notes: paymentData.notes
+                    notes: paymentData.notes,
+                    customerId: cart.customer?.id || null
                 })
             });
 

@@ -29,24 +29,45 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
     const [lastNotifiedId, setLastNotifiedId] = useState<string | null>(null);
-    const [currentToast, setCurrentToast] = useState<Notification | null>(null);
+    const [toasts, setToasts] = useState<Notification[]>([]);
+
+    const removeToast = useCallback((id: string) => {
+        setToasts(prev => prev.filter(t => t.id !== id));
+    }, []);
 
     const fetchNotifications = useCallback(async () => {
         if (!session?.user) return;
         try {
             const res = await fetch('/api/notifications');
             if (res.ok) {
-                const data = await res.json();
+                const data: Notification[] = await res.json();
                 setNotifications(data);
 
-                // Show toast for new notifications
+                // Show toasts for new notifications ONLY if they are recent
                 if (data.length > 0) {
-                    const latest = data[0];
-                    if (latest.id !== lastNotifiedId) {
-                        setCurrentToast(latest);
-                        setLastNotifiedId(latest.id);
-                        // Auto-hide toast after 5 seconds
-                        setTimeout(() => setCurrentToast(null), 5000);
+                    const now = Date.now();
+                    const newToasts: Notification[] = [];
+
+                    // Identify which notifications are NEW and RECENT
+                    for (const n of data) {
+                        if (n.id === lastNotifiedId) break; // Reached already seen notifications
+
+                        const createdAt = new Date(n.createdAt).getTime();
+                        if ((now - createdAt) < 60000) {
+                            newToasts.push(n);
+                        }
+                    }
+
+                    if (newToasts.length > 0) {
+                        setToasts(prev => [...newToasts.reverse(), ...prev].slice(0, 5));
+                        setLastNotifiedId(data[0].id);
+
+                        // Auto-hide each new toast after 5 seconds
+                        newToasts.forEach(t => {
+                            setTimeout(() => removeToast(t.id), 5000);
+                        });
+                    } else if (data[0].id !== lastNotifiedId) {
+                        setLastNotifiedId(data[0].id);
                     }
                 }
 
@@ -55,7 +76,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         } catch (error) {
             console.error('Failed to fetch notifications:', error);
         }
-    }, [session, lastNotifiedId]);
+    }, [session, lastNotifiedId, removeToast]);
 
     const markAsRead = async (id: string) => {
         try {
@@ -67,6 +88,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
             if (res.ok) {
                 setNotifications(prev => prev.filter(n => n.id !== id));
                 setUnreadCount(prev => Math.max(0, prev - 1));
+                removeToast(id);
             }
         } catch (error) {
             console.error('Failed to mark notification as read:', error);
@@ -83,6 +105,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
             if (res.ok) {
                 setNotifications([]);
                 setUnreadCount(0);
+                setToasts([]);
             }
         } catch (error) {
             console.error('Failed to mark all as read:', error);
@@ -92,9 +115,23 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     useEffect(() => {
         if (session?.user) {
             fetchNotifications();
-            // Poll for notifications every 30 seconds (faster for better feel)
-            const interval = setInterval(fetchNotifications, 30000);
-            return () => clearInterval(interval);
+
+            // Poll every 5 seconds for better responsiveness
+            const interval = setInterval(fetchNotifications, 5000);
+
+            // Fetch immediately when window becomes visible
+            const handleVisibilityChange = () => {
+                if (document.visibilityState === 'visible') {
+                    fetchNotifications();
+                }
+            };
+
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+
+            return () => {
+                clearInterval(interval);
+                document.removeEventListener('visibilitychange', handleVisibilityChange);
+            };
         }
     }, [session, fetchNotifications]);
 
@@ -108,27 +145,32 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         }}>
             {children}
 
-            {/* Simple Toast UI */}
-            {currentToast && (
-                <div className="fixed bottom-4 right-4 z-[200] max-w-sm animate-in slide-in-from-right-full duration-300">
-                    <div className={`p-4 rounded-xl shadow-2xl border flex gap-3 backdrop-blur-md ${currentToast.type === 'SUCCESS' ? 'bg-green-50/90 border-green-200 text-green-900' :
-                            currentToast.type === 'WARNING' ? 'bg-orange-50/90 border-orange-200 text-orange-900' :
-                                currentToast.type === 'ERROR' ? 'bg-red-50/90 border-red-200 text-red-900' :
+            {/* Stacked Toasts UI - Top Right */}
+            <div className="fixed top-4 right-4 z-[200] flex flex-col gap-3 pointer-events-none w-full max-w-sm">
+                {toasts.map((toast) => (
+                    <div
+                        key={toast.id}
+                        className="pointer-events-auto animate-in slide-in-from-right-full duration-300"
+                    >
+                        <div className={`p-4 rounded-xl shadow-2xl border flex gap-3 backdrop-blur-md ${toast.type === 'SUCCESS' ? 'bg-green-50/90 border-green-200 text-green-900' :
+                            toast.type === 'WARNING' ? 'bg-orange-50/90 border-orange-200 text-orange-900' :
+                                toast.type === 'ERROR' ? 'bg-red-50/90 border-red-200 text-red-900' :
                                     'bg-blue-50/90 border-blue-200 text-blue-900'
-                        }`}>
-                        <div className="flex-1">
-                            <h4 className="font-bold text-sm mb-1">{currentToast.title}</h4>
-                            <p className="text-xs opacity-90 leading-relaxed">{currentToast.message}</p>
+                            }`}>
+                            <div className="flex-1">
+                                <h4 className="font-bold text-sm mb-1">{toast.title}</h4>
+                                <p className="text-xs opacity-90 leading-relaxed">{toast.message}</p>
+                            </div>
+                            <button
+                                onClick={() => removeToast(toast.id)}
+                                className="text-current opacity-50 hover:opacity-100 transition-opacity self-start mt-0.5"
+                            >
+                                ✕
+                            </button>
                         </div>
-                        <button
-                            onClick={() => setCurrentToast(null)}
-                            className="text-current opacity-50 hover:opacity-100 transition-opacity"
-                        >
-                            ✕
-                        </button>
                     </div>
-                </div>
-            )}
+                ))}
+            </div>
         </NotificationContext.Provider>
     );
 }

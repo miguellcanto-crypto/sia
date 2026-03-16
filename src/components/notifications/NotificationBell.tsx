@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { Bell, X, CheckCheck } from 'lucide-react';
 import { useNotifications } from '@/providers/NotificationProvider';
 import {
@@ -110,9 +111,11 @@ export function NotificationBell() {
                 </div>
 
                 <div className="p-3 border-t border-slate-100 dark:border-slate-800 text-center bg-slate-50/50 dark:bg-slate-800/50">
-                    <Button variant="ghost" size="sm" className="w-full text-xs font-semibold hover:text-blue-600 transition-colors">
-                        Ver todas
-                    </Button>
+                    <Link href="/notifications">
+                        <Button variant="ghost" size="sm" className="w-full text-xs font-semibold hover:text-blue-600 transition-colors">
+                            Ver historial completo
+                        </Button>
+                    </Link>
                 </div>
             </DropdownMenuContent>
         </DropdownMenu>

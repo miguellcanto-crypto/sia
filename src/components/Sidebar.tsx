@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import {
     LayoutDashboard,
     ShoppingCart,
@@ -9,7 +10,8 @@ import {
     Users,
     BarChart3,
     Settings,
-    Fish
+    Fish,
+    History as HistoryIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NotificationBell } from './notifications/NotificationBell';
@@ -19,12 +21,45 @@ const navItems = [
     { name: 'Inventario', icon: Package, href: '/inventory' },
     { name: 'Productos', icon: Fish, href: '/products' },
     { name: 'Clientes', icon: Users, href: '/customers' },
-    { name: 'Reportes', icon: BarChart3, href: '/reports' },
+    { name: 'Reportes', icon: BarChart3, href: '/admin/reports' },
+    { name: 'Auditoría', icon: HistoryIcon, href: '/admin/audit' },
     { name: 'Configuración', icon: Settings, href: '/settings' },
 ];
 
 export function Sidebar() {
     const pathname = usePathname();
+    const { data: session, status } = useSession();
+
+    const userRole = (session?.user as any)?.role;
+    const userPermissions = (session?.user as any)?.permissions || [];
+
+    const hasReportAccess = userRole === 'ADMIN' || userRole === 'MANAGER' || (Array.isArray(userPermissions) ? userPermissions.includes('VIEW_REPORTS') : false);
+
+    const filteredNavItems = navItems.filter(item => {
+        if (item.name === 'Reportes') return hasReportAccess;
+        if (item.name === 'Auditoría') return userRole === 'ADMIN';
+        if (item.name === 'Configuración') return userRole === 'ADMIN';
+        return true;
+    });
+
+    if (status === 'loading') {
+        return (
+            <div className="w-64 bg-slate-900 text-slate-300 flex flex-col h-screen border-r border-slate-800">
+                <div className="p-6 flex items-center justify-between gap-3 animate-pulse">
+                    <div className="w-10 h-10 bg-slate-800 rounded-xl"></div>
+                    <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-slate-800 rounded w-2/3"></div>
+                        <div className="h-3 bg-slate-800 rounded w-1/2"></div>
+                    </div>
+                </div>
+                <div className="flex-1 px-4 py-4 space-y-2 animate-pulse">
+                    {[1, 2, 3, 4].map(i => (
+                        <div key={i} className="h-12 bg-slate-800 rounded-lg w-full"></div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="w-64 bg-slate-900 text-slate-300 flex flex-col h-screen border-r border-slate-800">
@@ -42,7 +77,7 @@ export function Sidebar() {
             </div>
 
             <nav className="flex-1 px-4 py-4 space-y-1">
-                {navItems.map((item) => {
+                {filteredNavItems.map((item) => {
                     const isActive = pathname === item.href;
                     return (
                         <Link
@@ -67,12 +102,12 @@ export function Sidebar() {
 
             <div className="p-4 mt-auto border-t border-slate-800">
                 <div className="bg-slate-800/50 rounded-lg p-4 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-white">
-                        AD
+                    <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-white uppercase">
+                        {session?.user?.name?.substring(0, 2) || 'US'}
                     </div>
-                    <div>
-                        <p className="text-sm font-semibold text-white">Admin Principal</p>
-                        <p className="text-xs text-slate-500">marisqueria@sia.com</p>
+                    <div className="overflow-hidden">
+                        <p className="text-sm font-semibold text-white truncate">{session?.user?.name || 'Usuario'}</p>
+                        <p className="text-xs text-slate-500 truncate">{session?.user?.email || '...'}</p>
                     </div>
                 </div>
             </div>

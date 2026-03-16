@@ -5,49 +5,54 @@ import { NotificationService } from './NotificationService';
 
 export class ProductService {
     static async create(data: any, userId: string) {
-        return await prisma.$transaction(async (tx) => {
-            const product = await tx.product.create({
-                data: {
-                    ...data,
-                    version: 0,
-                },
-            });
-
-            // Record initial movement if stock > 0
-            const stockValue = product.stock ? new Prisma.Decimal(product.stock) : new Prisma.Decimal(0);
-            if (stockValue.gt(0)) {
-                await tx.stockMovement.create({
+        try {
+            return await prisma.$transaction(async (tx) => {
+                const product = await tx.product.create({
                     data: {
-                        productId: product.id,
-                        type: MovementType.INITIAL,
-                        quantity: stockValue,
-                        previousStock: new Prisma.Decimal(0),
-                        newStock: stockValue,
-                        userId,
-                        reason: 'Initial load',
+                        ...data,
+                        version: 0,
                     },
                 });
-            }
 
-            // Check if initial stock is already critical
-            const criticalStock = product.criticalStock ? new Prisma.Decimal(product.criticalStock) : new Prisma.Decimal(0);
-            if (stockValue.gt(0) && stockValue.lte(criticalStock)) {
-                await NotificationService.notify({
-                    type: NotificationType.WARNING,
-                    title: 'Stock Crítico Inicial',
-                    message: `El producto ${product.name} ha sido creado con stock crítico (${stockValue.toString()} ${product.unit}).`,
-                    entityType: 'Product',
-                    entityId: product.id
-                });
-            }
+                // Record initial movement if stock > 0
+                const stockValue = product.stock ? new Prisma.Decimal(product.stock) : new Prisma.Decimal(0);
+                if (stockValue.gt(0)) {
+                    await tx.stockMovement.create({
+                        data: {
+                            productId: product.id,
+                            type: MovementType.INITIAL,
+                            quantity: stockValue,
+                            previousStock: new Prisma.Decimal(0),
+                            newStock: stockValue,
+                            userId,
+                            reason: 'Initial load',
+                        },
+                    });
+                }
 
-            await AuditService.log('CREATE', 'Product', product.id, {
-                newValues: product,
-                metadata: { userId },
+                // Check if initial stock is already critical
+                const criticalStock = product.criticalStock ? new Prisma.Decimal(product.criticalStock) : new Prisma.Decimal(0);
+                if (stockValue.gt(0) && stockValue.lte(criticalStock)) {
+                    await NotificationService.notify({
+                        type: NotificationType.WARNING,
+                        title: 'Stock Crítico Inicial',
+                        message: `El producto ${product.name} ha sido creado con stock crítico (${stockValue.toString()} ${product.unit}).`,
+                        entityType: 'Product',
+                        entityId: product.id
+                    });
+                }
+
+                await AuditService.logCreation('Product', product.id, product, userId, product.name);
+
+                return product;
             });
-
-            return product;
-        });
+        } catch (error: any) {
+            console.error('Product creation error:', error);
+            await AuditService.log('CREATE', 'Product', 'FAILED', {
+                metadata: { userId, resultStatus: 'FAILED', details: error.message }
+            });
+            throw error;
+        }
     }
 
     static async updateStock(
@@ -99,7 +104,8 @@ export class ProductService {
         await AuditService.log('STOCK_ADJUSTED', 'Product', id, {
             oldValues: { stock: previousStock },
             newValues: { stock: newStock },
-            metadata: { userId },
+            entityName: product.name,
+            metadata: { userId, details: reason },
         });
 
         // Check for critical stock after adjustment
@@ -148,6 +154,7 @@ export class ProductService {
         await AuditService.log('PRICE_CHANGED', 'Product', id, {
             oldValues: { price: oldPrice, cost: oldCost },
             newValues: { price: newPrice, cost: newCost },
+            entityName: product.name,
             metadata: { userId },
         });
 

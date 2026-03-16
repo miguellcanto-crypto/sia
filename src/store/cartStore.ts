@@ -8,16 +8,20 @@ export interface CartItem extends Product {
 
 interface CartState {
     items: CartItem[];
+    customer: any | null;
     addItem: (product: Product) => void;
     addWeightedItem: (product: Product, quantity: number) => void;
     removeItem: (productId: string) => void;
     updateQuantity: (productId: string, quantity: number) => void;
+    setCustomer: (customer: any | null) => void;
     clearCart: () => void;
     total: () => number;
 }
 
 export const useCartStore = create<CartState>((set, get) => ({
     items: [],
+    customer: null,
+    setCustomer: (customer) => set({ customer }),
     addItem: (product) => {
         const { items } = get();
         const existing = items.find((i) => i.id === product.id);
@@ -66,6 +70,6 @@ export const useCartStore = create<CartState>((set, get) => ({
             ),
         });
     },
-    clearCart: () => set({ items: [] }),
+    clearCart: () => set({ items: [], customer: null }),
     total: () => get().items.reduce((acc, item) => acc + item.subtotal, 0),
 }));
