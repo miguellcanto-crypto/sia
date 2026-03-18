@@ -28,7 +28,12 @@ export default function NotificationsPage() {
     const fetchHistory = async () => {
         setLoading(true);
         try {
-            const res = await fetch('/api/notifications?all=true');
+            const res = await fetch(`/api/notifications?all=true&t=${new Date().getTime()}`, {
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                }
+            });
             if (res.ok) {
                 const data = await res.json();
                 setNotifications(data);

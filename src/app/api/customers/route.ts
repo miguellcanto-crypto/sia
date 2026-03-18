@@ -85,7 +85,7 @@ export async function POST(request: Request) {
         const validationResult = customerSchema.safeParse(body);
         if (!validationResult.success) {
             return NextResponse.json(
-                { error: 'Datos de cliente inválidos', details: validationResult.error.errors },
+                { error: 'Datos de cliente inválidos', details: validationResult.error.flatten().fieldErrors },
                 { status: 400 }
             );
         }

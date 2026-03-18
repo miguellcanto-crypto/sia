@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { NotificationService } from '@/services/NotificationService';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
     const session = await getServerSession(authOptions);
     if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -20,7 +22,11 @@ export async function GET(request: Request) {
             notifications = await NotificationService.getUnread(userId, 10);
         }
 
-        return NextResponse.json(notifications);
+        return NextResponse.json(notifications, {
+            headers: {
+                'Cache-Control': 'no-store, max-age=0',
+            },
+        });
     } catch (error: any) {
         console.error('[API/Notifications] Error:', error);
         return NextResponse.json({ error: error.message }, { status: 500 });

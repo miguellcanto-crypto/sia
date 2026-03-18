@@ -319,13 +319,36 @@ export default function AuditPage() {
                                         {visibleColumns.action && (
                                             <TableCell>
                                                 <Badge variant="outline" className="text-[10px] font-bold border-slate-700 bg-slate-800/50">
-                                                    {log.action}
+                                                    {(() => {
+                                                        const actions: Record<string, string> = {
+                                                            CREATE: 'Creación',
+                                                            UPDATE: 'Actualización',
+                                                            DELETE: 'Eliminación',
+                                                            SALE_CREATED: 'Venta Realizada',
+                                                            POINTS_ADJUSTED: 'Ajuste de Puntos',
+                                                            LOGIN: 'Inicio de Sesión',
+                                                            LOGOUT: 'Cierre de Sesión'
+                                                        };
+                                                        return actions[log.action] || log.action;
+                                                    })()}
                                                 </Badge>
                                             </TableCell>
                                         )}
                                         {visibleColumns.entity && (
                                             <TableCell className="text-sm text-slate-300">
-                                                {log.entityType}
+                                                {(() => {
+                                                    const entities: Record<string, string> = {
+                                                        Product: 'Producto',
+                                                        Sale: 'Venta',
+                                                        Category: 'Categoría',
+                                                        User: 'Usuario',
+                                                        Customer: 'Cliente',
+                                                        CustomerPointHistory: 'Historial de Puntos',
+                                                        Notification: 'Notificación',
+                                                        SECURITY: 'Seguridad'
+                                                    };
+                                                    return entities[log.entityType] || log.entityType;
+                                                })()}
                                             </TableCell>
                                         )}
                                         {visibleColumns.entityId && (

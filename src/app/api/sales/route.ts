@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 
     try {
         const body = await request.json();
-        const { items, paymentMethod, customerId, discount, tip, tipPercent, cashSessionId, notes } = body;
+        const { items, paymentMethod, customerId, discount, pointsUsed, tip, tipPercent, cashSessionId, notes } = body;
 
         if (!items || items.length === 0) {
             return NextResponse.json({ error: 'La venta debe contener al menos un producto' }, { status: 400 });
@@ -117,33 +117,67 @@ export async function POST(request: Request) {
                 }
             });
 
-            // 5. Acumular Puntos de Lealtad (1 punto por cada $10 gastados)
+            // 5. Customer Logic: Credit & Points
             if (customerId) {
-                const pointsEarned = Math.floor(total / 10);
-                
-                if (pointsEarned > 0) {
-                    const customer = await tx.customer.findUnique({ where: { id: customerId } });
-                    if (customer) {
-                        const newPoints = customer.points + pointsEarned;
-                        const newTier = newPoints >= 2000 ? 'GOLD' : newPoints >= 500 ? 'SILVER' : 'BRONZE';
-                        
-                        await tx.customer.update({
-                            where: { id: customerId },
-                            data: { points: newPoints, tier: newTier }
-                        });
+                const customer = await tx.customer.findUnique({ where: { id: customerId } });
+                if (!customer) throw new Error('Cliente no encontrado');
 
-                        await tx.customerPointHistory.create({
-                            data: {
-                                customerId: customerId,
-                                points: pointsEarned,
-                                type: 'EARNED',
-                                reason: `Venta ${sale.saleNumber}`,
-                                userId: (session.user as any).id,
-                                saleId: sale.id
-                            }
-                        });
+                // Variables for updating
+                let newBalance = Number(customer.balance);
+                let newPoints = customer.points;
+
+                // 1. Validate and apply CREDIT sale
+                if (paymentMethod === 'CREDIT') {
+                    newBalance += total; // Add to debt
+                    const availableCredit = Number(customer.creditLimit) - Number(customer.balance);
+                    // Add buffer to allow frontend-backend math differences (e.g. 0.01)
+                    if (total > availableCredit + 0.1) {
+                        throw new Error('Límite de crédito excedido para este cliente.');
                     }
                 }
+
+                // 2. Validate and apply POINTS deduction
+                if (pointsUsed && pointsUsed > 0) {
+                    if (pointsUsed > customer.points) {
+                        throw new Error('Puntos insuficientes para redimir');
+                    }
+                    newPoints -= pointsUsed;
+
+                    await tx.customerPointHistory.create({
+                        data: {
+                            customerId: customerId,
+                            points: -pointsUsed,
+                            type: 'REDEEMED',
+                            reason: `Canje en venta ${sale.saleNumber}`,
+                            userId: (session.user as any).id,
+                            saleId: sale.id
+                        }
+                    });
+                }
+
+                // 3. Acumular Puntos de Lealtad (1 punto por cada $10 gastados, sobre el Total pagado)
+                const pointsEarned = Math.floor(Math.max(0, total) / 10);
+                if (pointsEarned > 0) {
+                    newPoints += pointsEarned;
+                    await tx.customerPointHistory.create({
+                        data: {
+                            customerId: customerId,
+                            points: pointsEarned,
+                            type: 'EARNED',
+                            reason: `Venta ${sale.saleNumber}`,
+                            userId: (session.user as any).id,
+                            saleId: sale.id
+                        }
+                    });
+                }
+
+                // 4. Update Customer State
+                const newTier = newPoints >= 2000 ? 'GOLD' : newPoints >= 500 ? 'SILVER' : 'BRONZE';
+                
+                await tx.customer.update({
+                    where: { id: customerId },
+                    data: { points: newPoints, tier: newTier, balance: newBalance }
+                });
             }
 
             // 6. Notification for Sale (targeted to current user)

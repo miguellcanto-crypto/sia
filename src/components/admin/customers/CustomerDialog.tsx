@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 import { customerSchema, CustomerFormValues } from '@/lib/validations/customer';
 import { toast } from 'react-hot-toast';
 
@@ -31,6 +32,8 @@ interface CustomerDialogProps {
         taxId: string | null;
         creditLimit: number;
         notes: string | null;
+        tier?: string;
+        points?: number;
     };
     onSuccess: () => void;
 }
@@ -78,7 +81,16 @@ export function CustomerDialog({ isOpen, onClose, customer, onSuccess }: Custome
     }, [isOpen, customer, reset]);
 
     const onSubmit = async (data: CustomerFormValues) => {
-        setIsSubmitting(true);
+        const processedData = {
+            ...data,
+            phone: data.phone || null,
+            email: data.email || null,
+            company: data.company || null,
+            taxId: data.taxId || null,
+            notes: data.notes || null,
+            code: data.code || null,
+        };
+
         try {
             const endpoint = isEditing ? `/api/customers/${customer.id}` : '/api/customers';
             const method = isEditing ? 'PUT' : 'POST';
@@ -86,7 +98,7 @@ export function CustomerDialog({ isOpen, onClose, customer, onSuccess }: Custome
             const res = await fetch(endpoint, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
+                body: JSON.stringify(processedData),
             });
 
             if (res.ok) {
@@ -95,7 +107,16 @@ export function CustomerDialog({ isOpen, onClose, customer, onSuccess }: Custome
                 onClose();
             } else {
                 const err = await res.json();
-                toast.error(err.error || 'Error al guardar el cliente');
+                
+                if (err.details) {
+                    // Show specific validation errors
+                    const errorMessages = Object.entries(err.details)
+                        .map(([field, msgs]) => `${field}: ${(msgs as string[]).join(', ')}`)
+                        .join('\n');
+                    toast.error(`Error de validación:\n${errorMessages}`);
+                } else {
+                    toast.error(err.error || 'Error al guardar el cliente');
+                }
             }
         } catch (error) {
             toast.error('Error de conexión al guardar cliente');
@@ -108,11 +129,19 @@ export function CustomerDialog({ isOpen, onClose, customer, onSuccess }: Custome
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DialogContent className="sm:max-w-[600px] bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800">
                 <DialogHeader>
-                    <DialogTitle className="text-xl font-bold flex items-center gap-2">
-                        {isEditing ? 'Editar Cliente' : 'Registrar Nuevo Cliente'}
+                    <DialogTitle className="text-xl font-bold flex items-center justify-between pr-8">
+                        <span className="flex items-center gap-2">
+                            {isEditing ? 'Editar Cliente' : 'Registrar Nuevo Cliente'}
+                        </span>
+                        {isEditing && customer?.tier && (
+                            <Badge variant="outline" className="bg-slate-100 dark:bg-slate-800">
+                                Nivel: <span className="font-bold text-blue-600 dark:text-blue-400 ml-1 mr-2">{customer.tier}</span>
+                                <span className="text-[10px] text-slate-500">({customer.points} pts)</span>
+                            </Badge>
+                        )}
                     </DialogTitle>
                     <DialogDescription>
-                        {isEditing ? 'Modifica los datos del cliente.' : 'Ingresa los datos generales del cliente. El sistema le asignará un código automáticamente si lo dejas en blanco.'}
+                        {isEditing ? 'Modifica los datos del cliente. El nivel y los puntos se calculan automáticamente con sus compras.' : 'Ingresa los datos generales del cliente. El sistema le asignará un código automáticamente si lo dejas en blanco.'}
                     </DialogDescription>
                 </DialogHeader>
 

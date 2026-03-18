@@ -12,9 +12,13 @@ interface PaymentModalProps {
     onSubmit: (data: any) => Promise<any>;
 }
 
+import { useCartStore } from '@/store/cartStore';
+
 export function PaymentModal({ isOpen, onClose, total, onSubmit }: PaymentModalProps) {
-    const [method, setMethod] = useState<'CASH' | 'CARD' | 'TRANSFER'>('CASH');
-    const [discount, setDiscount] = useState('0');
+    const { customer } = useCartStore();
+    const [method, setMethod] = useState<'CASH' | 'CARD' | 'TRANSFER' | 'CREDIT'>('CASH');
+    const [manualDiscount, setManualDiscount] = useState('0');
+    const [pointsToUse, setPointsToUse] = useState(0);
     const [receivedAmount, setReceivedAmount] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -22,23 +26,32 @@ export function PaymentModal({ isOpen, onClose, total, onSubmit }: PaymentModalP
     const [tipAmount, setTipAmount] = useState(0);
     const [tipPercent, setTipPercent] = useState(0);
 
-    const finalTotal = total - parseFloat(discount || '0') + tipAmount;
+    const pointDiscount = pointsToUse * 1; // 1 punto = $1
+    const totalDiscount = parseFloat(manualDiscount || '0') + pointDiscount;
+    const finalTotal = Math.max(0, total - totalDiscount + tipAmount);
     const change = parseFloat(receivedAmount || '0') - finalTotal;
+
+    const availableCredit = customer ? Number(customer.creditLimit) - Number(customer.balance) : 0;
+    const isCreditValid = method !== 'CREDIT' || (customer && availableCredit >= finalTotal);
 
     const handleSubmit = async () => {
         setIsProcessing(true);
         const result = await onSubmit({
             method,
-            discount: parseFloat(discount || '0'),
+            discount: totalDiscount,
+            pointsUsed: pointsToUse, // Send the points used so backend can deduct them
             tip: tipAmount,
             tipPercent: tipPercent,
-            amountPaid: parseFloat(receivedAmount || '0')
+            amountPaid: method === 'CASH' ? parseFloat(receivedAmount || '0') : finalTotal
         });
 
         if (result.success) {
             setSuccess(true);
             setTimeout(() => {
                 setSuccess(false);
+                setPointsToUse(0);
+                setManualDiscount('0');
+                setReceivedAmount('');
                 onClose();
             }, 2000);
         } else {
@@ -88,7 +101,8 @@ export function PaymentModal({ isOpen, onClose, total, onSubmit }: PaymentModalP
                                     {[
                                         { id: 'CASH', label: 'Efectivo', icon: Banknote, color: 'emerald' },
                                         { id: 'CARD', label: 'Tarjeta', icon: CreditCard, color: 'blue' },
-                                        { id: 'TRANSFER', label: 'Transferencia', icon: Landmark, color: 'indigo' }
+                                        { id: 'TRANSFER', label: 'Transferencia', icon: Landmark, color: 'indigo' },
+                                        ...(customer ? [{ id: 'CREDIT', label: 'Crédito', icon: Landmark, color: 'orange' }] : [])
                                     ].map((m) => (
                                         <button
                                             key={m.id}
@@ -111,13 +125,34 @@ export function PaymentModal({ isOpen, onClose, total, onSubmit }: PaymentModalP
                                     <Tags className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                                     <input
                                         type="number"
-                                        value={discount}
-                                        onChange={(e) => setDiscount(e.target.value)}
-                                        className="w-full pl-12 pr-4 py-4 bg-slate-100 dark:bg-slate-800 rounded-2xl border-none focus:ring-2 focus:ring-blue-500 font-mono text-lg"
+                                        value={manualDiscount}
+                                        onChange={(e) => setManualDiscount(e.target.value)}
+                                        className="w-full pl-12 pr-4 py-4 bg-slate-100 dark:bg-slate-800 rounded-2xl border-none focus:ring-2 focus:ring-blue-500 font-mono text-lg text-slate-900 dark:text-white"
                                         placeholder="0.00"
                                     />
                                 </div>
                             </div>
+
+                            {customer && customer.points > 0 && (
+                                <div>
+                                    <label className="block text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4 flex justify-between">
+                                        <span>Canjear Puntos</span>
+                                        <span className="text-blue-500">{customer.points} disponibles</span>
+                                    </label>
+                                    <div className="flex gap-4 items-center">
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max={Math.min(customer.points, Math.floor(total - parseFloat(manualDiscount || '0') + tipAmount))}
+                                            value={pointsToUse}
+                                            onChange={(e) => setPointsToUse(Number(e.target.value))}
+                                            className="flex-1"
+                                        />
+                                        <span className="font-mono font-bold w-16 text-right">${pointDiscount.toFixed(2)}</span>
+                                    </div>
+                                    <p className="text-xs text-slate-500 mt-2">1 punto = $1 de descuento extra</p>
+                                </div>
+                            )}
 
                             <TipCalculator total={total} onTipChange={(amount: number, percent: number) => {
                                 setTipAmount(amount);
@@ -131,10 +166,16 @@ export function PaymentModal({ isOpen, onClose, total, onSubmit }: PaymentModalP
                                     <span>Subtotal</span>
                                     <span className="font-mono text-lg">${total.toFixed(2)}</span>
                                 </div>
-                                {parseFloat(discount || '0') > 0 && (
+                                {parseFloat(manualDiscount || '0') > 0 && (
                                     <div className="flex justify-between items-center text-red-500">
-                                        <span>Descuento</span>
-                                        <span className="font-mono text-lg">-${parseFloat(discount || '0').toFixed(2)}</span>
+                                        <span>Descuento Manual</span>
+                                        <span className="font-mono text-lg">-${parseFloat(manualDiscount || '0').toFixed(2)}</span>
+                                    </div>
+                                )}
+                                {pointDiscount > 0 && (
+                                    <div className="flex justify-between items-center text-red-500">
+                                        <span>Descuento por Puntos ({pointsToUse} pts)</span>
+                                        <span className="font-mono text-lg">-${pointDiscount.toFixed(2)}</span>
                                     </div>
                                 )}
                                 {tipAmount > 0 && (
@@ -157,7 +198,7 @@ export function PaymentModal({ isOpen, onClose, total, onSubmit }: PaymentModalP
                                             autoFocus
                                             value={receivedAmount}
                                             onChange={(e) => setReceivedAmount(e.target.value)}
-                                            className="w-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-3xl font-black text-center font-mono focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all"
+                                            className="w-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-2xl py-4 px-6 text-3xl font-black text-center font-mono focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all text-slate-900 dark:text-white"
                                             placeholder="0.00"
                                         />
                                         {change >= 0 && (
@@ -168,15 +209,36 @@ export function PaymentModal({ isOpen, onClose, total, onSubmit }: PaymentModalP
                                         )}
                                     </div>
                                 )}
+                                
+                                {method === 'CREDIT' && customer && (
+                                    <div className="mt-4 p-4 bg-orange-100 dark:bg-orange-900/20 rounded-2xl">
+                                        <div className="flex justify-between mb-2">
+                                            <span className="text-orange-700 dark:text-orange-300 text-sm">Límite:</span>
+                                            <span className="font-bold text-orange-800 dark:text-orange-200">${Number(customer.creditLimit).toFixed(2)}</span>
+                                        </div>
+                                        <div className="flex justify-between mb-2">
+                                            <span className="text-orange-700 dark:text-orange-300 text-sm">Saldo Actual:</span>
+                                            <span className="font-bold text-orange-800 dark:text-orange-200">${Number(customer.balance).toFixed(2)}</span>
+                                        </div>
+                                        <div className="h-px bg-orange-200 dark:bg-orange-800/50 my-2" />
+                                        <div className="flex justify-between">
+                                            <span className="text-orange-700 dark:text-orange-300 font-bold">Crédito Disponible:</span>
+                                            <span className={`font-bold ${isCreditValid ? 'text-green-600' : 'text-red-600'}`}>${availableCredit.toFixed(2)}</span>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             <button
                                 onClick={handleSubmit}
-                                disabled={isProcessing || (method === 'CASH' && change < 0)}
+                                disabled={isProcessing || (method === 'CASH' && change < 0) || !isCreditValid}
                                 className="w-full mt-8 py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black text-xl shadow-xl shadow-blue-500/25 disabled:opacity-50 transition-all active:scale-[0.98]"
                             >
                                 {isProcessing ? 'Procesando...' : 'Confirmar Pago'}
                             </button>
+                            {method === 'CREDIT' && !isCreditValid && (
+                                <p className="text-red-500 text-sm mt-2 text-center">Crédito insuficiente o no autorizado.</p>
+                            )}
                         </div>
                     </div>
                 </motion.div>

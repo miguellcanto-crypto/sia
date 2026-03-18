@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, UserCircle2, Star, History, CreditCard, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function CustomerDetailPage({ params }: { params: { id: string } }) {
     const router = useRouter();
+    const resolvedParams = useParams<{ id: string }>();
+    const customerId = resolvedParams?.id || params?.id;
     const [customer, setCustomer] = useState<any>(null);
     const [sales, setSales] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -21,21 +23,24 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
     const [isAdjusting, setIsAdjusting] = useState(false);
 
     const fetchCustomer = async () => {
+        if (!customerId) return;
+        
         try {
             const [custRes, salesRes] = await Promise.all([
-                fetch(`/api/customers/${params.id}`),
-                fetch(`/api/customers/${params.id}/sales?limit=20`)
+                fetch(`/api/customers/${customerId}`),
+                fetch(`/api/customers/${customerId}/sales?limit=20`)
             ]);
             
             if (custRes.ok) {
                 setCustomer(await custRes.json());
             } else if (custRes.status === 404) {
                 toast.error('Cliente no encontrado');
-                router.push('/admin/customers');
+                router.push('/customers');
             }
             
             if (salesRes.ok) {
-                setSales(await salesRes.json());
+                const data = await salesRes.json();
+                setSales(data.sales || data);
             }
         } catch (error) {
             toast.error('Error al cargar datos del cliente');
@@ -46,7 +51,7 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
 
     useEffect(() => {
         fetchCustomer();
-    }, [params.id]);
+    }, [customerId]);
 
     const handleAdjustPoints = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -57,7 +62,7 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
 
         setIsAdjusting(true);
         try {
-            const res = await fetch(`/api/customers/${params.id}/points`, {
+            const res = await fetch(`/api/customers/${customerId}/points`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ points: adjustPoints, reason: adjustReason })
@@ -82,7 +87,7 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
     if (isLoading) {
         return (
             <div className="space-y-6">
-                <Button variant="ghost" onClick={() => router.push('/admin/customers')}>
+                <Button variant="ghost" onClick={() => router.push('/customers')}>
                     <ArrowLeft className="w-4 h-4 mr-2" /> Volver
                 </Button>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -103,7 +108,7 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
 
     return (
         <div className="space-y-6">
-            <Button variant="ghost" onClick={() => router.push('/admin/customers')} className="pl-0 hover:bg-transparent">
+            <Button variant="ghost" onClick={() => router.push('/customers')} className="pl-0 hover:bg-transparent">
                 <ArrowLeft className="w-4 h-4 mr-2" /> Volver al listado
             </Button>
             
@@ -221,6 +226,14 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
                         </div>
                     </div>
 
+                    {/* Notas */}
+                    <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 border-l-4 border-l-blue-500">
+                        <h3 className="font-bold text-sm text-slate-700 dark:text-slate-300 mb-2">Notas del Cliente</h3>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-line">
+                            {customer.notes || 'Sin notas registradas.'}
+                        </p>
+                    </div>
+
                     {/* Historial de Compras */}
                     <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
                         <h3 className="font-bold flex items-center gap-2 mb-6 text-lg">
@@ -249,7 +262,7 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
                                         {sales.map(s => (
                                             <tr key={s.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
                                                 <td className="py-3 font-semibold">{s.saleNumber}</td>
-                                                <td className="py-3 text-slate-500">{formatDate(s.date)}</td>
+                                                <td className="py-3 text-slate-500">{formatDate(s.createdAt || s.date)}</td>
                                                 <td className="py-3 text-slate-500">{s.items?.length || 0} prod.</td>
                                                 <td className="py-3">
                                                     <Badge className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 border-none pointer-events-none">

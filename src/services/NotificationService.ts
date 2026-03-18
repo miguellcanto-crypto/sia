@@ -125,11 +125,19 @@ export class NotificationService {
     static async markAllAsRead(userId?: string) {
         try {
             if (!(prisma as any).notification) return null;
+            
+            const whereFilter: any = { isRead: false };
+            if (userId) {
+                whereFilter.OR = [
+                    { userId: userId },
+                    { userId: null }
+                ];
+            } else {
+                whereFilter.userId = null;
+            }
+
             return await prisma.notification.updateMany({
-                where: {
-                    userId: userId || null,
-                    isRead: false,
-                },
+                where: whereFilter,
                 data: { isRead: true },
             });
         } catch (error) {

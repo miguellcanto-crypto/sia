@@ -38,7 +38,12 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     const fetchNotifications = useCallback(async () => {
         if (!session?.user) return;
         try {
-            const res = await fetch('/api/notifications');
+            const res = await fetch('/api/notifications?t=' + new Date().getTime(), {
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                }
+            });
             if (res.ok) {
                 const data: Notification[] = await res.json();
                 setNotifications(data);
@@ -82,7 +87,12 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         try {
             const res = await fetch('/api/notifications', {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                },
                 body: JSON.stringify({ id }),
             });
             if (res.ok) {
@@ -99,7 +109,12 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         try {
             const res = await fetch('/api/notifications', {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                },
                 body: JSON.stringify({ all: true }),
             });
             if (res.ok) {

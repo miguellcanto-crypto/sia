@@ -6,8 +6,9 @@ import { customerSchema } from '@/lib/validations/customer';
 
 export async function GET(
     request: Request,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
+    const params = await context.params;
     try {
         const session = await getServerSession(authOptions);
         if (!session?.user) {
@@ -49,8 +50,9 @@ export async function GET(
 
 export async function PUT(
     request: Request,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
+    const params = await context.params;
     try {
         const session = await getServerSession(authOptions);
         if (!session?.user) {
@@ -68,7 +70,7 @@ export async function PUT(
         const validationResult = customerSchema.safeParse(body);
         if (!validationResult.success) {
             return NextResponse.json(
-                { error: 'Datos de cliente inválidos', details: validationResult.error.errors },
+                { error: 'Datos de cliente inválidos', details: validationResult.error.flatten().fieldErrors },
                 { status: 400 }
             );
         }
@@ -131,8 +133,9 @@ export async function PUT(
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
+    const params = await context.params;
     try {
         const session = await getServerSession(authOptions);
         if (!session?.user) {
@@ -155,6 +158,13 @@ export async function DELETE(
 
         if (!customer) {
             return NextResponse.json({ error: 'Cliente no encontrado' }, { status: 404 });
+        }
+
+        if (customer.sales && customer.sales.length > 0) {
+            return NextResponse.json(
+                { error: 'No se puede eliminar un cliente que tiene historial de ventas. La integridad de las ventas requiere mantener el registro del cliente.' },
+                { status: 409 }
+            );
         }
 
         // Bloquear desactivación parcial si el cliente tiene saldo pendiente

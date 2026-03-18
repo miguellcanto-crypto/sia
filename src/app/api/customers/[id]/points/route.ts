@@ -13,8 +13,9 @@ function calculateTier(points: number): string {
 
 export async function POST(
     request: Request,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
+    const params = await context.params;
     try {
         const session = await getServerSession(authOptions);
         if (!session?.user || !(session.user as any).id) {

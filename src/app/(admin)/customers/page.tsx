@@ -18,11 +18,14 @@ interface Customer {
     name: string;
     email: string | null;
     phone: string | null;
+    company: string | null;
+    taxId: string | null;
+    creditLimit: number;
+    notes: string | null;
     points: number;
     tier: string;
     isActive: boolean;
     balance: number;
-    taxId: string | null;
 }
 
 export default function CustomersPage() {
@@ -211,10 +214,21 @@ export default function CustomersPage() {
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
-                                                onClick={() => router.push(`/admin/customers/${customer.id}`)}
+                                                onClick={() => router.push(`/customers/${customer.id}`)}
                                                 className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30"
                                             >
                                                 Detalles
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => {
+                                                    setSelectedCustomer(customer);
+                                                    setIsDialogOpen(true);
+                                                }}
+                                                className="text-amber-600 hover:text-amber-800 hover:bg-amber-50 dark:hover:bg-amber-900/30"
+                                            >
+                                                Editar
                                             </Button>
                                             <Button
                                                 variant="ghost"
