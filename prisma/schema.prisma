@@ -45,6 +45,7 @@ model User {
   sessions         Session[]
   stockMovements   StockMovement[]
   pointAdjustments CustomerPointHistory[]
+  customerPayments CustomerPayment[]
   role             Role                   @relation(fields: [roleId], references: [id])
 }
 
@@ -166,8 +167,27 @@ model Customer {
   orders       Order[]
   sales        Sale[]
   pointHistory CustomerPointHistory[]
+  payments     CustomerPayment[]
 
   @@index([code])
+}
+
+model CustomerPayment {
+  id            String        @id @default(cuid())
+  customerId    String
+  amount        Decimal       @db.Decimal(10, 2)
+  paymentMethod PaymentMethod @default(CASH)
+  notes         String?
+  date          DateTime      @default(now())
+  userId        String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@index([customerId])
+  @@index([date])
 }
 
 model CustomerPointHistory {
@@ -581,6 +601,7 @@ enum PaymentMethod {
   CASH
   CARD
   TRANSFER
+  CREDIT
   OTHER
 }
 

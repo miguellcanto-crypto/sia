@@ -23,8 +23,10 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Sesión no encontrada o ya cerrada' }, { status: 404 });
         }
 
-        // Calculate expected amount
-        const totalSales = currentSession.sales.reduce((acc, sale) => acc + Number(sale.total), 0);
+        // Calculate expected amount (only liquid sales, excluding CREDIT)
+        const totalSales = currentSession.sales
+            .filter(sale => sale.paymentMethod !== 'CREDIT')
+            .reduce((acc, sale) => acc + Number(sale.total), 0);
         const totalMovements = currentSession.movements.reduce((acc, mov) => {
             if (mov.type === 'CASH_IN' || mov.type === 'INITIAL') return acc + Number(mov.amount);
             if (mov.type === 'CASH_OUT') return acc - Number(mov.amount);

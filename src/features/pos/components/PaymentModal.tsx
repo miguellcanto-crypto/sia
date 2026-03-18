@@ -102,7 +102,7 @@ export function PaymentModal({ isOpen, onClose, total, onSubmit }: PaymentModalP
                                         { id: 'CASH', label: 'Efectivo', icon: Banknote, color: 'emerald' },
                                         { id: 'CARD', label: 'Tarjeta', icon: CreditCard, color: 'blue' },
                                         { id: 'TRANSFER', label: 'Transferencia', icon: Landmark, color: 'indigo' },
-                                        ...(customer ? [{ id: 'CREDIT', label: 'Crédito', icon: Landmark, color: 'orange' }] : [])
+                                        { id: 'CREDIT', label: 'Crédito', icon: Landmark, color: 'orange' }
                                     ].map((m) => (
                                         <button
                                             key={m.id}
@@ -210,21 +210,38 @@ export function PaymentModal({ isOpen, onClose, total, onSubmit }: PaymentModalP
                                     </div>
                                 )}
                                 
-                                {method === 'CREDIT' && customer && (
-                                    <div className="mt-4 p-4 bg-orange-100 dark:bg-orange-900/20 rounded-2xl">
-                                        <div className="flex justify-between mb-2">
-                                            <span className="text-orange-700 dark:text-orange-300 text-sm">Límite:</span>
-                                            <span className="font-bold text-orange-800 dark:text-orange-200">${Number(customer.creditLimit).toFixed(2)}</span>
+                                {method === 'CREDIT' && (
+                                    <div className={`mt-4 p-4 rounded-2xl ${
+                                        !customer ? 'bg-amber-100 dark:bg-amber-900/20 text-amber-800 dark:text-amber-200' :
+                                        !isCreditValid ? 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-200' :
+                                        'bg-orange-100 dark:bg-orange-900/20 text-orange-800 dark:text-orange-200'
+                                    }`}>
+                                        <div className="flex items-center gap-2 mb-2 font-bold text-sm">
+                                            <Landmark className="w-4 h-4" />
+                                            <span>Estado del Crédito</span>
                                         </div>
-                                        <div className="flex justify-between mb-2">
-                                            <span className="text-orange-700 dark:text-orange-300 text-sm">Saldo Actual:</span>
-                                            <span className="font-bold text-orange-800 dark:text-orange-200">${Number(customer.balance).toFixed(2)}</span>
-                                        </div>
-                                        <div className="h-px bg-orange-200 dark:bg-orange-800/50 my-2" />
-                                        <div className="flex justify-between">
-                                            <span className="text-orange-700 dark:text-orange-300 font-bold">Crédito Disponible:</span>
-                                            <span className={`font-bold ${isCreditValid ? 'text-green-600' : 'text-red-600'}`}>${availableCredit.toFixed(2)}</span>
-                                        </div>
+                                        
+                                        {!customer ? (
+                                            <p className="text-xs">Debe seleccionar un cliente antes de procesar una venta a crédito.</p>
+                                        ) : (
+                                            <>
+                                                <div className="flex justify-between text-xs mb-1">
+                                                    <span>Disponible:</span>
+                                                    <span className={`font-bold ${isCreditValid ? 'text-green-600' : 'text-red-600'}`}>
+                                                        ${availableCredit.toFixed(2)}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between text-xs">
+                                                    <span>Límite:</span>
+                                                    <span className="font-semibold">${Number(customer.creditLimit).toFixed(2)}</span>
+                                                </div>
+                                                {!isCreditValid && (
+                                                    <p className="text-[10px] mt-2 font-bold text-red-600 uppercase animate-pulse italic">
+                                                        Límite excedido o no disponible
+                                                    </p>
+                                                )}
+                                            </>
+                                        )}
                                     </div>
                                 )}
                             </div>

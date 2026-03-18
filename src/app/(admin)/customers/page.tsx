@@ -38,13 +38,15 @@ export default function CustomersPage() {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     
+    const [onlyWithBalance, setOnlyWithBalance] = useState(false);
+    
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedCustomer, setSelectedCustomer] = useState<Customer | undefined>();
 
     const fetchCustomers = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch(`/api/customers?search=${encodeURIComponent(searchTerm)}&page=${page}&limit=10`);
+            const res = await fetch(`/api/customers?search=${encodeURIComponent(searchTerm)}&page=${page}&limit=10&onlyWithBalance=${onlyWithBalance}`);
             if (res.ok) {
                 const data = await res.json();
                 setCustomers(data.customers);
@@ -64,7 +66,7 @@ export default function CustomersPage() {
             fetchCustomers();
         }, 300); // debounce
         return () => clearTimeout(timeoutId);
-    }, [searchTerm, page]);
+    }, [searchTerm, page, onlyWithBalance]);
 
     const handleToggleStatus = async (id: string, currentBalance: number) => {
         if (currentBalance > 0) {
@@ -125,17 +127,33 @@ export default function CustomersPage() {
 
             <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
                 <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                    <div className="relative w-full max-w-sm">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                        <Input
-                            placeholder="Buscar por nombre, código, email o teléfono..."
-                            value={searchTerm}
-                            onChange={(e) => {
-                                setSearchTerm(e.target.value);
-                                setPage(1); // Reset page on search
-                            }}
-                            className="pl-9 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700"
-                        />
+                    <div className="flex items-center gap-4 w-full">
+                        <div className="relative w-full max-w-sm">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                            <Input
+                                placeholder="Buscar por nombre, código, email o teléfono..."
+                                value={searchTerm}
+                                onChange={(e) => {
+                                    setSearchTerm(e.target.value);
+                                    setPage(1); // Reset page on search
+                                }}
+                                className="pl-9 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700"
+                            />
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <label className="text-xs font-semibold text-slate-500 whitespace-nowrap">Filtrar:</label>
+                            <Button 
+                                variant={onlyWithBalance ? "default" : "outline"} 
+                                size="sm" 
+                                onClick={() => {
+                                    setOnlyWithBalance(!onlyWithBalance);
+                                    setPage(1);
+                                }}
+                                className={`text-xs h-8 ${onlyWithBalance ? 'bg-orange-600 hover:bg-orange-700 text-white' : ''}`}
+                            >
+                                Con Saldo
+                            </Button>
+                        </div>
                     </div>
                 </div>
 
@@ -195,9 +213,16 @@ export default function CustomersPage() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <span className={`font-mono font-bold ${Number(customer.balance) > 0 ? 'text-red-500' : 'text-slate-500'}`}>
-                                                {formatCurrency(Number(customer.balance))}
-                                            </span>
+                                            <div className="flex flex-col items-end">
+                                                <span className={`font-mono font-bold ${Number(customer.balance) > 0 ? 'text-red-500' : 'text-slate-500'}`}>
+                                                    {formatCurrency(Number(customer.balance))}
+                                                </span>
+                                                {Number(customer.creditLimit) > 0 && Number(customer.balance) / Number(customer.creditLimit) >= 0.8 && (
+                                                    <span className="text-[10px] font-bold text-red-600 bg-red-50 px-1.5 py-0.5 rounded uppercase tracking-tighter mt-1 animate-pulse">
+                                                        Límite Crítico
+                                                    </span>
+                                                )}
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4 text-center">
                                             {customer.taxId && customer.email ? (

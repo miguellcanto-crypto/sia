@@ -10,6 +10,7 @@ import {
     AlertTriangle, 
     PiggyBank, 
     CreditCard, 
+    Landmark,
     PackageSearch,
     Fish,
     ArrowRight
@@ -20,7 +21,9 @@ import Link from 'next/link';
 interface SummaryData {
     sales: {
         todayRevenue: number;
+        todayReceivable: number;
         todaySalesCount: number;
+        totalPendingCredit: number;
     };
     cash: {
         activeSessionsCount: number;
@@ -77,14 +80,14 @@ export default function ReportsDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <Card className="bg-slate-900 border-slate-800">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-400">Ventas de Hoy</CardTitle>
+                        <CardTitle className="text-sm font-medium text-slate-400">Hoy en Caja</CardTitle>
                         <DollarSign className="h-4 w-4 text-emerald-500" />
                     </CardHeader>
                     <CardContent>
                         {loading ? <Skeleton className="h-8 w-1/2 bg-slate-800" /> : (
                             <>
                                 <div className="text-3xl font-bold text-emerald-400">{formatMoney(data?.sales.todayRevenue || 0)}</div>
-                                <p className="text-xs text-slate-500 mt-1">{data?.sales.todaySalesCount} tickets procesados</p>
+                                <p className="text-xs text-slate-500 mt-1">Ingreso líquido real</p>
                             </>
                         )}
                     </CardContent>
@@ -92,40 +95,39 @@ export default function ReportsDashboard() {
 
                 <Card className="bg-slate-900 border-slate-800">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-400">Ticket Promedio</CardTitle>
-                        <CreditCard className="h-4 w-4 text-blue-500" />
+                        <CardTitle className="text-sm font-medium text-slate-400">Venta a Crédito</CardTitle>
+                        <Landmark className="h-4 w-4 text-orange-500" />
                     </CardHeader>
                     <CardContent>
                         {loading ? <Skeleton className="h-8 w-1/2 bg-slate-800" /> : (
-                            <div className="text-3xl font-bold text-blue-400">
-                                {data?.sales.todaySalesCount 
-                                    ? formatMoney((data?.sales.todayRevenue || 0) / data.sales.todaySalesCount) 
-                                    : '$0.00'}
-                            </div>
+                            <>
+                                <div className="text-3xl font-bold text-orange-400">{formatMoney(data?.sales.todayReceivable || 0)}</div>
+                                <p className="text-xs text-slate-500 mt-1">Pendiente por cobrar</p>
+                            </>
                         )}
                     </CardContent>
                 </Card>
 
                 <Card className="bg-slate-900 border-slate-800">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-400">Cajas Activas</CardTitle>
+                        <CardTitle className="text-sm font-medium text-slate-400">Total por Cobrar</CardTitle>
                         <PiggyBank className="h-4 w-4 text-amber-500" />
                     </CardHeader>
                     <CardContent>
                         {loading ? <Skeleton className="h-8 w-1/2 bg-slate-800" /> : (
-                            <div className="text-3xl font-bold text-amber-400">{data?.cash.activeSessionsCount || 0}</div>
+                            <div className="text-3xl font-bold text-amber-400">{formatMoney(data?.sales.totalPendingCredit || 0)}</div>
                         )}
                     </CardContent>
                 </Card>
 
                 <Card className="bg-slate-900 border-slate-800">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-400">Alertas de Stock</CardTitle>
-                        <AlertTriangle className="h-4 w-4 text-red-500" />
+                        <CardTitle className="text-sm font-medium text-slate-400">Tickets del Día</CardTitle>
+                        <ShoppingCart className="h-4 w-4 text-blue-500" />
                     </CardHeader>
                     <CardContent>
                         {loading ? <Skeleton className="h-8 w-1/2 bg-slate-800" /> : (
-                            <div className="text-3xl font-bold text-red-400">{data?.inventory.lowStockAlertsCount || 0}</div>
+                            <div className="text-3xl font-bold text-blue-400">{data?.sales.todaySalesCount || 0}</div>
                         )}
                     </CardContent>
                 </Card>
@@ -204,6 +206,26 @@ export default function ReportsDashboard() {
                         <CardContent className="mt-auto flex justify-end">
                             <Button variant="ghost" className="text-indigo-400 p-0 hover:bg-transparent hover:text-indigo-300">
                                 Analizar Rotación <ArrowRight className="ml-2 w-4 h-4" />
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </Link>
+
+                {/* Cartera Vencida (Cuentas por Cobrar) */}
+                <Link href="/admin/reports/receivables" className="group">
+                    <Card className="bg-slate-900 border-slate-800 hover:border-orange-500/50 transition-colors h-full flex flex-col cursor-pointer">
+                        <CardHeader>
+                            <div className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center mb-2">
+                                <PiggyBank className="w-5 h-5 text-orange-400" />
+                            </div>
+                            <CardTitle className="text-lg text-white group-hover:text-orange-400 transition-colors">Cartera Vencida (Cxc)</CardTitle>
+                            <CardDescription className="text-slate-400">
+                                Monitorea saldos pendientes de clientes, límites de crédito y antigüedad de deudas.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="mt-auto flex justify-end">
+                            <Button variant="ghost" className="text-orange-400 p-0 hover:bg-transparent hover:text-orange-300">
+                                Gestionar Cartera <ArrowRight className="ml-2 w-4 h-4" />
                             </Button>
                         </CardContent>
                     </Card>

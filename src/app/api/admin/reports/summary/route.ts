@@ -67,16 +67,50 @@ export async function GET(request: Request) {
             `
         ]);
 
-        // Manejo seguro de nulos y formato numérico
-        const todayRevenue = salesTodayResult._sum.total ? Number(salesTodayResult._sum.total) : 0;
-        const todaySalesCount = salesTodayResult._count.id || 0;
         const lowStockCount = lowStockProductsCount.length > 0 ? Number(lowStockProductsCount[0].count) : 0;
+
+        // 1. Calcular ingresos del día (Ventas + Abonos)
+        const [todayPaymentsResult, totalPendingCredit] = await Promise.all([
+            prisma.customerPayment.aggregate({
+                where: {
+                    date: { gte: today, lt: tomorrow }
+                },
+                _sum: { amount: true }
+            }),
+            prisma.customer.aggregate({
+                _sum: { balance: true }
+            })
+        ]);
+
+        const totalSalesToday = await prisma.sale.findMany({
+            where: {
+                date: { gte: today, lt: tomorrow },
+                status: 'COMPLETED'
+            },
+            select: { total: true, paymentMethod: true }
+        });
+
+        let liquidSalesToday = 0;
+        let creditSalesToday = 0;
+        totalSalesToday.forEach(sale => {
+            if (sale.paymentMethod === 'CREDIT') {
+                creditSalesToday += Number(sale.total);
+            } else {
+                liquidSalesToday += Number(sale.total);
+            }
+        });
+
+        const todayPayments = todayPaymentsResult._sum.amount ? Number(todayPaymentsResult._sum.amount) : 0;
+        const liquidRevenue = liquidSalesToday + todayPayments;
+        const totalPending = totalPendingCredit._sum.balance ? Number(totalPendingCredit._sum.balance) : 0;
 
         // Estructura garantizada (cero nulos)
         return NextResponse.json({
             sales: {
-                todayRevenue: todayRevenue,
-                todaySalesCount: todaySalesCount
+                todayRevenue: liquidRevenue, // Real cash flow
+                todayReceivable: creditSalesToday, // New debt today
+                todaySalesCount: totalSalesToday.length,
+                totalPendingCredit: totalPending
             },
             cash: {
                 activeSessionsCount: activeCashSessions || 0

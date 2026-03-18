@@ -128,11 +128,14 @@ export async function POST(request: Request) {
 
                 // 1. Validate and apply CREDIT sale
                 if (paymentMethod === 'CREDIT') {
+                    if (!customerId) {
+                        throw new Error('Venta a crédito requiere asignar un cliente.');
+                    }
                     newBalance += total; // Add to debt
                     const availableCredit = Number(customer.creditLimit) - Number(customer.balance);
                     // Add buffer to allow frontend-backend math differences (e.g. 0.01)
                     if (total > availableCredit + 0.1) {
-                        throw new Error('Límite de crédito excedido para este cliente.');
+                        throw new Error(`Límite de crédito excedido. Disponible: $${availableCredit.toFixed(2)}`);
                     }
                 }
 

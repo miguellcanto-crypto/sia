@@ -237,6 +237,18 @@ exports.Prisma.CustomerScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CustomerPaymentScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  amount: 'amount',
+  paymentMethod: 'paymentMethod',
+  notes: 'notes',
+  date: 'date',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.CustomerPointHistoryScalarFieldEnum = {
   id: 'id',
   customerId: 'customerId',
@@ -575,6 +587,14 @@ exports.AccountStatus = exports.$Enums.AccountStatus = {
   PENDING: 'PENDING'
 };
 
+exports.PaymentMethod = exports.$Enums.PaymentMethod = {
+  CASH: 'CASH',
+  CARD: 'CARD',
+  TRANSFER: 'TRANSFER',
+  CREDIT: 'CREDIT',
+  OTHER: 'OTHER'
+};
+
 exports.PointMovementType = exports.$Enums.PointMovementType = {
   EARNED: 'EARNED',
   REDEEMED: 'REDEEMED',
@@ -586,13 +606,6 @@ exports.SaleStatus = exports.$Enums.SaleStatus = {
   PENDING: 'PENDING',
   CANCELLED: 'CANCELLED',
   REFUNDED: 'REFUNDED'
-};
-
-exports.PaymentMethod = exports.$Enums.PaymentMethod = {
-  CASH: 'CASH',
-  CARD: 'CARD',
-  TRANSFER: 'TRANSFER',
-  OTHER: 'OTHER'
 };
 
 exports.PromotionType = exports.$Enums.PromotionType = {
@@ -710,6 +723,7 @@ exports.Prisma.ModelName = {
   Category: 'Category',
   Product: 'Product',
   Customer: 'Customer',
+  CustomerPayment: 'CustomerPayment',
   CustomerPointHistory: 'CustomerPointHistory',
   Sale: 'Sale',
   SaleItem: 'SaleItem',

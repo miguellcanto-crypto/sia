@@ -64,7 +64,11 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
                     }
 
                     if (newToasts.length > 0) {
-                        setToasts(prev => [...newToasts.reverse(), ...prev].slice(0, 5));
+                        setToasts(prev => {
+                            const combined = [...newToasts.reverse(), ...prev];
+                            const unique = Array.from(new Map(combined.map(t => [t.id, t])).values());
+                            return unique.slice(0, 5);
+                        });
                         setLastNotifiedId(data[0].id);
 
                         // Auto-hide each new toast after 5 seconds
