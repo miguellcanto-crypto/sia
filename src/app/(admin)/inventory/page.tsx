@@ -12,6 +12,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -55,6 +56,7 @@ export default function InventoryPage() {
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isBulkOpen, setIsBulkOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState('catalog');
 
 
     // History & Edit State
@@ -195,46 +197,57 @@ export default function InventoryPage() {
 
             {/* Inventory Table Container */}
             <Card className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-slate-200/60 dark:border-slate-800/60 shadow-xl">
-                <CardHeader>
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="relative w-full md:w-96">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                            <Input
-                                placeholder="Buscar por nombre o SKU..."
-                                className="pl-10 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
-                        </div>
+                <Tabs value={activeTab} onValueChange={setActiveTab}>
+                    <CardHeader>
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <TabsList className="bg-slate-100 dark:bg-slate-800 h-11 p-1">
+                                <TabsTrigger value="catalog" className="px-6 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-950">Catálogo Comercial</TabsTrigger>
+                                <TabsTrigger value="stock" className="px-6 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-950">Control de Stock</TabsTrigger>
+                            </TabsList>
 
-                        {selectedIds.length > 0 && (
-                            <div className="flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
-                                <span className="text-sm font-medium text-slate-500">{selectedIds.length} seleccionados</span>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline" size="sm" className="bg-blue-50 text-blue-700 border-blue-200">
-                                            Acciones Masivas
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                        <DropdownMenuItem onClick={() => handleBulkAction('activate', { isActive: true })}>
-                                            Activar Seleccionados
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => handleBulkAction('deactivate', { isActive: false })}>
-                                            Desactivar Seleccionados
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setIsBulkOpen(true)}>
-                                            Editar Selección...
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                            <div className="flex items-center gap-4 flex-1 justify-end">
+                                <div className="relative w-full md:w-80">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                    <Input
+                                        placeholder="Buscar por nombre o SKU..."
+                                        className="pl-10 bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700"
+                                        value={search}
+                                        onChange={(e) => setSearch(e.target.value)}
+                                    />
+                                </div>
+
+                                {selectedIds.length > 0 && (
+                                    <div className="flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+                                        <span className="text-sm font-medium text-slate-500">{selectedIds.length} seleccionados</span>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="outline" size="sm" className="bg-blue-50 text-blue-700 border-blue-200">
+                                                    Acciones Masivas
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent>
+                                                <DropdownMenuItem onClick={() => handleBulkAction('activate', { isActive: true })}>
+                                                    Activar Seleccionados
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleBulkAction('deactivate', { isActive: false })}>
+                                                    Desactivar Seleccionados
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => setIsBulkOpen(true)}>
+                                                    Editar Selección...
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <div className="rounded-md border border-slate-200/60 dark:border-slate-800/60 overflow-hidden">
-                        <Table>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="rounded-md border border-slate-200/60 dark:border-slate-800/60 overflow-hidden">
+                            
+                            {/* CATÁLOGO TAB */}
+                            <TabsContent value="catalog" className="m-0 border-none p-0 outline-none">
+                                <Table>
                             <TableHeader className="bg-slate-50/50 dark:bg-slate-800/50">
                                 <TableRow>
                                     <TableHead className="w-12">
@@ -246,8 +259,9 @@ export default function InventoryPage() {
                                     <TableHead className="font-bold">SKU</TableHead>
                                     <TableHead className="font-bold">Producto</TableHead>
                                     <TableHead className="font-bold">Categoría</TableHead>
-                                    <TableHead className="font-bold text-right">Precio/Costo</TableHead>
-                                    <TableHead className="font-bold text-center">Stock Actual</TableHead>
+                                    <TableHead className="font-bold text-center">Costo</TableHead>
+                                    <TableHead className="font-bold text-center">Precio Venta</TableHead>
+                                    <TableHead className="font-bold text-center">Margen</TableHead>
                                     <TableHead className="font-bold">Estado</TableHead>
                                     <TableHead className="text-right">Acciones</TableHead>
                                 </TableRow>
@@ -292,24 +306,20 @@ export default function InventoryPage() {
                                                         {p.category?.name || 'Varios'}
                                                     </Badge>
                                                 </TableCell>
-                                                <TableCell className="text-right">
-                                                    <div className="flex flex-col">
-                                                        <span className="font-bold text-blue-600">${Number(p.price).toFixed(2)}</span>
-                                                        <span className="text-xs text-slate-400">Costo: ${Number(p.cost).toFixed(2)}</span>
-                                                    </div>
-                                                </TableCell>
                                                 <TableCell className="text-center font-bold">
-                                                    {Number(p.stock).toFixed(3)} {p.unit}
+                                                    ${Number(p.cost).toFixed(2)}
+                                                </TableCell>
+                                                <TableCell className="text-center font-bold text-emerald-600 dark:text-emerald-400">
+                                                    ${Number(p.price).toFixed(2)}
+                                                </TableCell>
+                                                <TableCell className="text-center font-medium text-slate-500">
+                                                    {Number(p.cost) > 0 ? (((Number(p.price) - Number(p.cost)) / Number(p.cost)) * 100).toFixed(1) : '100'}%
                                                 </TableCell>
                                                 <TableCell>
                                                     {!p.isActive ? (
                                                         <Badge variant="secondary" className="bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">INACTIVO</Badge>
-                                                    ) : isCritical ? (
-                                                        <Badge className="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">CRÍTICO</Badge>
-                                                    ) : isLow ? (
-                                                        <Badge className="bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">BAJO</Badge>
                                                     ) : (
-                                                        <Badge className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">OK</Badge>
+                                                        <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">ACTIVO</Badge>
                                                     )}
                                                 </TableCell>
                                                 <TableCell className="text-right">
@@ -404,7 +414,97 @@ export default function InventoryPage() {
                                 )}
                             </TableBody>
                         </Table>
-                    </div>
+                            </TabsContent>
+
+                            {/* CONTROL DE STOCK TAB */}
+                            <TabsContent value="stock" className="m-0 border-none p-0 outline-none">
+                                <Table>
+                                    <TableHeader className="bg-slate-50/50 dark:bg-slate-800/50">
+                                        <TableRow>
+                                            <TableHead className="w-12">
+                                                <Checkbox
+                                                    checked={selectedIds.length === products.length && products.length > 0}
+                                                    onCheckedChange={toggleSelectAll}
+                                                />
+                                            </TableHead>
+                                            <TableHead className="font-bold">SKU</TableHead>
+                                            <TableHead className="font-bold">Producto</TableHead>
+                                            <TableHead className="font-bold text-center">Unidad</TableHead>
+                                            <TableHead className="font-bold text-center">Stock Actual</TableHead>
+                                            <TableHead className="font-bold text-center">Mín/Crít</TableHead>
+                                            <TableHead className="font-bold text-center">Estado Logístico</TableHead>
+                                            <TableHead className="text-right">Ajustes</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {loading ? (
+                                            <TableRow><TableCell colSpan={8} className="h-24 text-center">Cargando...</TableCell></TableRow>
+                                        ) : products.length === 0 ? (
+                                            <TableRow><TableCell colSpan={8} className="h-24 text-center">No se encontraron productos.</TableCell></TableRow>
+                                        ) : (
+                                            products.map((p) => {
+                                                const isCritical = Number(p.stock) <= Number(p.criticalStock);
+                                                const isLow = Number(p.stock) <= Number(p.minStock);
+
+                                                return (
+                                                    <TableRow key={p.id} className={cn(
+                                                        "hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors",
+                                                        selectedIds.includes(p.id) && "bg-blue-50/50 dark:bg-blue-900/10",
+                                                        !p.isActive && "opacity-50 grayscale-[0.5]"
+                                                    )}>
+                                                        <TableCell>
+                                                            <Checkbox
+                                                                checked={selectedIds.includes(p.id)}
+                                                                onCheckedChange={() => toggleSelect(p.id)}
+                                                            />
+                                                        </TableCell>
+                                                        <TableCell className="font-mono text-xs text-slate-500">{p.code}</TableCell>
+                                                        <TableCell className="font-medium">
+                                                            {p.name}
+                                                        </TableCell>
+                                                        <TableCell className="text-center font-medium text-slate-600 dark:text-slate-400">
+                                                            {p.unit || 'UND'}
+                                                        </TableCell>
+                                                        <TableCell className="text-center">
+                                                            <span className={cn("font-bold text-lg", isCritical && "text-red-500", isLow && !isCritical && "text-orange-500")}>
+                                                                {Number(p.stock).toFixed(3)}
+                                                            </span>
+                                                        </TableCell>
+                                                        <TableCell className="text-center text-xs text-slate-400">
+                                                            {Number(p.minStock).toFixed(1)} / <span className="text-red-400">{Number(p.criticalStock).toFixed(1)}</span>
+                                                        </TableCell>
+                                                        <TableCell className="text-center">
+                                                            {isCritical ? (
+                                                                <Badge variant="outline" className="border-red-200 text-red-700 bg-red-50 dark:bg-red-900/10 dark:border-red-800 dark:text-red-400">CRÍTICO</Badge>
+                                                            ) : isLow ? (
+                                                                <Badge variant="outline" className="border-orange-200 text-orange-700 bg-orange-50 dark:bg-orange-900/10 dark:border-orange-800 dark:text-orange-400">BAJO</Badge>
+                                                            ) : (
+                                                                <Badge variant="outline" className="border-emerald-200 text-emerald-700 bg-emerald-50 dark:bg-emerald-900/10 dark:border-emerald-800 dark:text-emerald-400">SALUDABLE</Badge>
+                                                            )}
+                                                        </TableCell>
+                                                        <TableCell className="text-right">
+                                                            <div className="flex items-center justify-end gap-2">
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="icon"
+                                                                    title="Historial de Movimientos"
+                                                                    onClick={() => {
+                                                                        setSelectedProduct({ id: p.id, name: p.name });
+                                                                        setIsHistoryOpen(true);
+                                                                    }}
+                                                                >
+                                                                    <History className="w-4 h-4 text-blue-500" />
+                                                                </Button>
+                                                            </div>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )
+                                            })
+                                        )}
+                                    </TableBody>
+                                </Table>
+                            </TabsContent>
+                        </div>
 
                     {/* Pagination */}
                     <div className="flex items-center justify-between space-x-2 py-4">
@@ -432,6 +532,7 @@ export default function InventoryPage() {
                         </div>
                     </div>
                 </CardContent>
+                </Tabs>
             </Card>
 
             {/* Robustness Add-ons */}

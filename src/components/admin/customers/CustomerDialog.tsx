@@ -75,12 +75,22 @@ export function CustomerDialog({ isOpen, onClose, customer, onSuccess }: Custome
                     creditLimit: Number(customer.creditLimit) || 0,
                 });
             } else {
-                reset({});
+                reset({
+                    name: '',
+                    code: '',
+                    email: '',
+                    phone: '',
+                    company: '',
+                    taxId: '',
+                    notes: '',
+                    creditLimit: 0,
+                });
             }
         }
     }, [isOpen, customer, reset]);
 
     const onSubmit = async (data: CustomerFormValues) => {
+        setIsSubmitting(true);
         const processedData = {
             ...data,
             phone: data.phone || null,

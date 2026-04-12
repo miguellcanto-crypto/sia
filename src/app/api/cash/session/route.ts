@@ -13,11 +13,35 @@ export async function GET() {
             status: 'OPEN'
         },
         include: {
-            register: true
+            register: true,
+            sales: true,
+            movements: true
         }
     });
 
-    return NextResponse.json(currentSession);
+    if (!currentSession) {
+        return NextResponse.json(null);
+    }
+
+    const totalSales = currentSession.sales
+        .filter(sale => sale.paymentMethod !== 'CREDIT')
+        .reduce((acc, sale) => acc + Number(sale.total), 0);
+    
+    const totalMovements = currentSession.movements.reduce((acc, mov) => {
+        if (mov.type === 'CASH_IN' || mov.type === 'INITIAL') return acc + Number(mov.amount);
+        if (mov.type === 'CASH_OUT') return acc - Number(mov.amount);
+        return acc;
+    }, 0);
+
+    const expectedAmount = Number(currentSession.openingAmount) + totalSales + totalMovements;
+
+    // Quitar movements y sales para no sobrecargar el payload
+    const { sales, movements, ...sessionData } = currentSession;
+
+    return NextResponse.json({
+        ...sessionData,
+        expectedAmount
+    });
 }
 
 export async function POST(request: Request) {

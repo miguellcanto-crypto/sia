@@ -41,12 +41,19 @@ export default function POSPage() {
         handleResumeSale,
         handleCloseSession,
         refreshSession,
-        refreshParkedSales
+        refreshParkedSales,
+        posConfig
     } = useEnterprisePOS();
+
+    const taxRate = posConfig && posConfig.TAX_RATE ? Number(posConfig.TAX_RATE) : 16;
+    // Asumiendo que el precio ya incluye IVA (práctica común en sistemas simples que no suman el tax al final)
+    const subtotalBruto = cart.total() / (1 + (taxRate / 100));
+    const taxAmount = cart.total() - subtotalBruto;
 
     const [isParkedModalOpen, setIsParkedModalOpen] = useState(false);
     const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
     const [selectedWeighableProduct, setSelectedWeighableProduct] = useState<any>(null);
+    const [selectedCategory, setSelectedCategory] = useState('Todos');
 
     const handleAddToCart = (product: any) => {
         console.log('Adding to cart:', product.name, 'isWeighable:', product.isWeighable);
@@ -129,7 +136,10 @@ export default function POSPage() {
                         </div>
                         <div className="flex gap-2">
                             {['Todos', 'Pescados', 'Mariscos', 'Bebidas'].map((cat) => (
-                                <button key={cat} className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${cat === 'Todos' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
+                                <button 
+                                    key={cat} 
+                                    onClick={() => setSelectedCategory(cat)}
+                                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${selectedCategory === cat ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
                                     }`}>
                                     {cat}
                                 </button>
@@ -140,7 +150,16 @@ export default function POSPage() {
                     <div className="flex-1 overflow-y-auto p-8 pt-4 custom-scrollbar">
                         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                             {products.length > 0 ? (
-                                products.map(product => (
+                                products
+                                    .filter(p => {
+                                        if (selectedCategory === 'Todos') return true;
+                                        const catName = p.category?.name?.toLowerCase() || '';
+                                        if (selectedCategory === 'Pescados') return catName.includes('pescado');
+                                        if (selectedCategory === 'Mariscos') return catName.includes('marisco');
+                                        if (selectedCategory === 'Bebidas') return catName.includes('bebida');
+                                        return catName === selectedCategory.toLowerCase();
+                                    })
+                                    .map(product => (
                                     <ProductCard
                                         key={product.id}
                                         product={product}
@@ -183,12 +202,12 @@ export default function POSPage() {
                     <div className="p-8 mt-auto bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800">
                         <div className="space-y-4 mb-8">
                             <div className="flex justify-between text-slate-500 uppercase text-[10px] font-black tracking-widest">
-                                <span>Subtotal</span>
-                                <span>${cart.total().toFixed(2)}</span>
+                                <span>Subtotal (Sin IVA)</span>
+                                <span>${subtotalBruto.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between text-slate-500 uppercase text-[10px] font-black tracking-widest">
-                                <span>IVA (16%)</span>
-                                <span>$0.00</span>
+                                <span>IVA ({taxRate}%)</span>
+                                <span>${taxAmount.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between items-end border-t border-slate-200 dark:border-slate-700 pt-4">
                                 <span className="text-sm font-bold">TOTAL</span>

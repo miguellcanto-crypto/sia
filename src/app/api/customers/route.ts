@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { customerSchema } from '@/lib/validations/customer';
+import { ConfigService } from '@/services/ConfigService';
 
 export async function GET(request: Request) {
     try {
@@ -142,6 +143,8 @@ export async function POST(request: Request) {
             }
         }
 
+        const defaultCreditLimit = await ConfigService.getParsedValue('DEFAULT_CREDIT_LIMIT', 'number') || 0;
+
         // Crear al nuevo cliente
         const newCustomer = await prisma.customer.create({
             data: {
@@ -152,7 +155,7 @@ export async function POST(request: Request) {
                 company: data.company || null,
                 taxId: data.taxId || null,
                 notes: data.notes || null,
-                creditLimit: data.creditLimit || 0,
+                creditLimit: data.creditLimit !== undefined ? data.creditLimit : defaultCreditLimit,
                 tier: 'BRONZE', // Tier inicial por defecto
                 points: 0,
                 balance: 0,

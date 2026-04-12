@@ -10,6 +10,26 @@ export function useEnterprisePOS() {
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [parkedSales, setParkedSales] = useState<any[]>([]);
     const [products, setProducts] = useState<any[]>([]);
+    const [posConfig, setPosConfig] = useState<any>(null);
+
+    const fetchConfig = useCallback(async () => {
+        try {
+            const res = await fetch('/api/settings');
+            const data = await res.json();
+            if (data.configs) {
+                // Flatten
+                const flat: any = {};
+                for (const cat in data.configs) {
+                    data.configs[cat].forEach((c: any) => {
+                        flat[c.key] = c.value;
+                    });
+                }
+                setPosConfig(flat);
+            }
+        } catch (e) {
+            console.error('Error fetching POS config', e);
+        }
+    }, []);
 
     const fetchProducts = useCallback(async () => {
         try {
@@ -51,7 +71,8 @@ export function useEnterprisePOS() {
         fetchCurrentSession();
         fetchParkedSales();
         fetchProducts();
-    }, [fetchCurrentSession, fetchParkedSales, fetchProducts]);
+        fetchConfig();
+    }, [fetchCurrentSession, fetchParkedSales, fetchProducts, fetchConfig]);
 
     const handleParkSale = async (name: string) => {
         if (cart.items.length === 0) return { error: 'Cart is empty' };
@@ -118,6 +139,7 @@ export function useEnterprisePOS() {
             const result = await res.json();
             if (res.ok) {
                 cart.clearCart();
+                fetchCurrentSession();
                 return { success: true, sale: result };
             } else {
                 return { error: result.error };
@@ -163,6 +185,7 @@ export function useEnterprisePOS() {
         handleResumeSale,
         handleCloseSession,
         refreshSession: fetchCurrentSession,
-        refreshParkedSales: fetchParkedSales
+        refreshParkedSales: fetchParkedSales,
+        posConfig
     };
 }

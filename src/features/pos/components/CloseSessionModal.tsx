@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Calculator, AlertCircle, CheckCircle2, X } from 'lucide-react';
 
@@ -25,11 +25,18 @@ export function CloseSessionModal({ isOpen, onClose, expectedAmount, onConfirm }
         onClose();
     };
 
-    if (!isOpen) return null;
+    useEffect(() => {
+        if (isOpen) {
+            setActualAmount('');
+            setNotes('');
+            setIsProcessing(false);
+        }
+    }, [isOpen]);
 
     return (
         <AnimatePresence>
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+            {isOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -111,6 +118,7 @@ export function CloseSessionModal({ isOpen, onClose, expectedAmount, onConfirm }
                     </div>
                 </motion.div>
             </div>
+            )}
         </AnimatePresence>
     );
 }

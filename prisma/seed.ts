@@ -40,6 +40,10 @@ async function main() {
         await prisma.product.deleteMany()
         await prisma.promotion.deleteMany()
         await prisma.category.deleteMany()
+        await prisma.systemConfig.deleteMany()
+
+        await prisma.customerPayment.deleteMany()
+        await prisma.customerPointHistory.deleteMany()
 
         await prisma.account.deleteMany()
         await prisma.session.deleteMany()
@@ -175,6 +179,34 @@ async function main() {
                     reason: 'Carga inicial de sistema',
                     userId: adminUser.id
                 }
+            })
+        }
+
+        // 6. System Configurations
+        console.log('Creating Default System Configurations...')
+        const defaultConfigs = [
+            // General
+            { key: "STORE_NAME", value: "Marisquería POS", category: "GENERAL" },
+            { key: "STORE_ADDRESS", value: "", category: "GENERAL" },
+            { key: "STORE_PHONE", value: "", category: "GENERAL" },
+            { key: "STORE_RFC", value: "", category: "GENERAL" },
+            // Ventas y POS
+            { key: "TAX_RATE", value: "16", category: "SALES" },
+            { key: "TICKET_FOOTER_MESSAGE", value: "¡Gracias por su preferencia!", category: "SALES" },
+            { key: "PRINT_RFC_ON_TICKET", value: "false", category: "SALES" },
+            // Inventario
+            { key: "LOW_STOCK_ALERT_THRESHOLD", value: "10", category: "INVENTORY" },
+            { key: "ALLOW_NEGATIVE_STOCK", value: "false", category: "INVENTORY" },
+            // Crédito
+            { key: "DEFAULT_CREDIT_LIMIT", value: "1000", category: "CREDIT" },
+            { key: "CREDIT_DUE_DAYS", value: "30", category: "CREDIT" },
+        ]
+
+        for (const config of defaultConfigs) {
+            await prisma.systemConfig.upsert({
+                where: { key: config.key },
+                update: {}, // No actualizar si ya existe en un re-seed
+                create: { ...config }
             })
         }
 

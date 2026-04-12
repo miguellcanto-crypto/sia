@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/auth';
 import { NotificationService } from '@/services/NotificationService';
 import { NotificationType, Prisma } from '@/generated/client';
 import { AuditService } from '@/services/AuditService';
+import { ConfigService } from '@/services/ConfigService';
 
 export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
@@ -20,6 +21,11 @@ export async function POST(request: Request) {
         if (!items || items.length === 0) {
             return NextResponse.json({ error: 'La venta debe contener al menos un producto' }, { status: 400 });
         }
+
+        // Fetch configs
+        const allowNegativeStock = await ConfigService.getParsedValue('ALLOW_NEGATIVE_STOCK', 'boolean');
+        const defaultThresholdRaw = await ConfigService.getParsedValue('LOW_STOCK_ALERT_THRESHOLD', 'number');
+        const defaultThreshold = defaultThresholdRaw !== null ? defaultThresholdRaw : 10;
 
         // Execute all operations in a single transaction
         const result = await prisma.$transaction(async (tx) => {
@@ -39,7 +45,7 @@ export async function POST(request: Request) {
                 const itemSubtotal = itemPrice * itemQuantity;
 
                 // Check stock (unless product allows negative stock - though we'll stick to rules)
-                if (Number(product.stock) < itemQuantity) {
+                if (!allowNegativeStock && Number(product.stock) < itemQuantity) {
                     throw new Error(`Stock insuficiente para ${product.name}. Disponible: ${product.stock}`);
                 }
 
@@ -74,7 +80,10 @@ export async function POST(request: Request) {
                 });
 
                 // Check critical stock
-                const criticalStock = product.criticalStock ? new Prisma.Decimal(product.criticalStock) : new Prisma.Decimal(0);
+                const criticalStock = product.criticalStock && Number(product.criticalStock) > 0 
+                    ? new Prisma.Decimal(product.criticalStock) 
+                    : new Prisma.Decimal(defaultThreshold);
+                    
                 if (new Prisma.Decimal(newStock).lte(criticalStock)) {
                     await NotificationService.notify({
                         type: NotificationType.WARNING,
@@ -200,10 +209,14 @@ export async function POST(request: Request) {
                 metadata: {
                     userId: (session.user as any).id,
                     ipAddress: request.headers.get('x-forwarded-for') || 'unknown'
-                }
+                },
+                tx
             });
 
             return sale;
+        }, {
+            maxWait: 10000,
+            timeout: 30000
         });
 
         return NextResponse.json(result, { status: 201 });

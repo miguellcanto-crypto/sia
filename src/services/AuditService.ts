@@ -25,10 +25,12 @@ export class AuditService {
             newValues?: any;
             entityName?: string;
             metadata?: AuditMetadata;
+            tx?: any;
         } = {}
     ) {
         try {
-            await prisma.auditLog.create({
+            const db = options.tx || prisma;
+            await db.auditLog.create({
                 data: {
                     action,
                     entityType,

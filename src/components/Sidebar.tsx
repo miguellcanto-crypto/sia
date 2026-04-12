@@ -18,8 +18,7 @@ import { NotificationBell } from './notifications/NotificationBell';
 
 const navItems = [
     { name: 'Terminal POS', icon: ShoppingCart, href: '/pos' },
-    { name: 'Inventario', icon: Package, href: '/inventory' },
-    { name: 'Productos', icon: Fish, href: '/products' },
+    { name: 'Catálogo e Inventario', icon: Package, href: '/inventory' },
     { name: 'Clientes', icon: Users, href: '/customers' },
     { name: 'Reportes', icon: BarChart3, href: '/admin/reports' },
     { name: 'Auditoría', icon: HistoryIcon, href: '/admin/audit' },
@@ -38,7 +37,7 @@ export function Sidebar() {
     const filteredNavItems = navItems.filter(item => {
         if (item.name === 'Reportes') return hasReportAccess;
         if (item.name === 'Auditoría') return userRole === 'ADMIN';
-        if (item.name === 'Configuración') return userRole === 'ADMIN';
+        if (item.name === 'Configuración') return Array.isArray(userPermissions) ? userPermissions.includes('MANAGE_SETTINGS') : false;
         return true;
     });
 

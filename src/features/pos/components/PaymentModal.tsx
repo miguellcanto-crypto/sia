@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CreditCard, Banknote, Landmark, Tags, X, CheckCircle2 } from 'lucide-react';
 import { TipCalculator } from './TipCalculator';
@@ -60,11 +60,23 @@ export function PaymentModal({ isOpen, onClose, total, onSubmit }: PaymentModalP
         setIsProcessing(false);
     };
 
-    if (!isOpen) return null;
+    useEffect(() => {
+        if (isOpen) {
+            setMethod('CASH');
+            setManualDiscount('0');
+            setPointsToUse(0);
+            setReceivedAmount('');
+            setTipAmount(0);
+            setTipPercent(0);
+            setIsProcessing(false);
+            setSuccess(false);
+        }
+    }, [isOpen]);
 
     return (
         <AnimatePresence>
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+            {isOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -260,6 +272,7 @@ export function PaymentModal({ isOpen, onClose, total, onSubmit }: PaymentModalP
                     </div>
                 </motion.div>
             </div>
+            )}
         </AnimatePresence>
     );
 }
