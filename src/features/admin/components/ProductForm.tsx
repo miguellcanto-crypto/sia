@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useEffect, useState } from 'react';
+import { playStockAlertSound } from '@/lib/audio-alerts';
 
 const productSchema = z.object({
     code: z.string().min(3),
@@ -82,6 +83,7 @@ export function ProductForm({
             });
 
             if (res.ok) {
+                playStockAlertSound();
                 onSuccess();
                 form.reset();
             } else {

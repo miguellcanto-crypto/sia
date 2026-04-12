@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { exportToCsv } from '@/lib/exportUtils';
+import { playStockAlertSound } from '@/lib/audio-alerts';
 
 
 import {
@@ -88,6 +89,7 @@ export default function InventoryPage() {
                 body: JSON.stringify({ ids: selectedIds, data })
             });
             if (res.ok) {
+                playStockAlertSound();
                 setSelectedIds([]);
                 fetchProducts();
             }

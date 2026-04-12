@@ -13,6 +13,7 @@ interface PaymentModalProps {
 }
 
 import { useCartStore } from '@/store/cartStore';
+import { playSaleSound } from '@/lib/audio-alerts';
 
 export function PaymentModal({ isOpen, onClose, total, onSubmit }: PaymentModalProps) {
     const { customer } = useCartStore();
@@ -47,6 +48,7 @@ export function PaymentModal({ isOpen, onClose, total, onSubmit }: PaymentModalP
 
         if (result.success) {
             setSuccess(true);
+            playSaleSound();
             setTimeout(() => {
                 setSuccess(false);
                 setPointsToUse(0);
