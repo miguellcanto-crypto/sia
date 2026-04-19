@@ -71,14 +71,14 @@ export function SearchProducts({ onSelect }: SearchProductsProps) {
         <div ref={containerRef} className="relative w-full">
             <div className="relative group">
                 <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
-                    <Search className={`h-5 w-5 transition-colors ${isLoading ? 'text-blue-500 animate-pulse' : 'text-slate-400 group-focus-within:text-blue-500'}`} />
+                    <Search className={`h-5 w-5 transition-colors ${isLoading ? 'text-accent animate-pulse' : 'text-slate-400 group-focus-within:text-accent'}`} />
                 </div>
                 <input
                     ref={inputRef}
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    className="w-full pl-14 pr-14 py-5 bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-[1.5rem] focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-medium text-lg placeholder:text-slate-400"
+                    className="w-full pl-14 pr-14 py-5 bg-card dark:bg-slate-900 border-2 border-border-subtle dark:border-slate-800 rounded-2xl focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all font-medium text-lg placeholder:text-muted"
                     placeholder="Buscar producto por nombre o código (F3)..."
                     onFocus={() => query.length >= 2 && results.length > 0 && setIsOpen(true)}
                 />
@@ -106,11 +106,11 @@ export function SearchProducts({ onSelect }: SearchProductsProps) {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
-                        className="absolute z-50 w-full mt-3 bg-white dark:bg-slate-900 rounded-[1.5rem] shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden max-h-[400px] overflow-y-auto"
+                        className="absolute z-50 w-full mt-3 bg-card dark:bg-slate-900 rounded-2xl shadow-2xl border border-border-subtle dark:border-slate-800 overflow-hidden max-h-[400px] overflow-y-auto"
                     >
                         {isLoading && results.length === 0 ? (
-                            <div className="p-8 text-center text-slate-400 flex flex-col items-center gap-2">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                            <div className="p-8 text-center text-muted flex flex-col items-center gap-2">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
                                 <span className="text-sm font-medium">Buscando productos...</span>
                             </div>
                         ) : results.length > 0 ? (
@@ -123,20 +123,20 @@ export function SearchProducts({ onSelect }: SearchProductsProps) {
                                         setResults([]);
                                         setIsOpen(false);
                                     }}
-                                    className="w-full flex items-center p-4 hover:bg-blue-50 dark:hover:bg-blue-900/10 text-left transition-colors border-b border-slate-50 dark:border-slate-800 last:border-0"
+                                    className="w-full flex items-center p-4 hover:bg-accent/5 dark:hover:bg-accent/10 text-left transition-colors border-b border-border-subtle/50 dark:border-slate-800 last:border-0"
                                 >
                                     <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mr-4">
                                         <Package className="w-6 h-6 text-slate-500" />
                                     </div>
                                     <div className="flex-1">
-                                        <div className="font-bold text-slate-900 dark:text-white">{product.name}</div>
-                                        <div className="text-xs text-slate-500 uppercase flex items-center gap-2 mt-1">
-                                            <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-600 dark:text-slate-400">{product.code}</span>
+                                        <div className="font-bold text-foreground dark:text-white">{product.name}</div>
+                                        <div className="text-xs text-muted uppercase flex items-center gap-2 mt-1">
+                                            <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-muted dark:text-slate-400">{product.code}</span>
                                             <span>•</span>
-                                            <span className="text-blue-600 dark:text-blue-400 font-semibold">{product.stock} {product.unit} disponible</span>
+                                            <span className="text-accent dark:text-blue-400 font-semibold">{product.stock} {product.unit} disponible</span>
                                         </div>
                                     </div>
-                                    <div className="text-xl font-mono font-black text-slate-900 dark:text-white ml-4">
+                                    <div className="text-xl font-mono font-black text-accent dark:text-white ml-4">
                                         ${Number(product.price).toFixed(2)}
                                     </div>
                                 </button>

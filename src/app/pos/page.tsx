@@ -86,20 +86,20 @@ export default function POSPage() {
     }
 
     return (
-        <div className="flex flex-col h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden font-sans">
+        <div className="flex flex-col h-screen bg-background dark:bg-slate-950 overflow-hidden font-sans">
             {/* Header / Top Bar */}
-            <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 shrink-0">
+            <header className="h-20 bg-sidebar flex items-center justify-between px-8 shrink-0">
                 <div className="flex items-center gap-6">
-                    <div className="bg-blue-600 p-2.5 rounded-2xl shadow-lg shadow-blue-500/20">
-                        <Landmark className="text-white w-6 h-6" />
+                    <div className="flex items-center justify-center w-12 h-12 shrink-0">
+                        <img src="/Logo_Marisqueria.png" alt="Logo" className="w-full h-full object-contain drop-shadow-md" />
                     </div>
                     <div>
-                        <h1 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+                        <h1 className="text-xl font-black text-white flex items-center gap-2">
                             Punto de Venta
                             <span className="text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/20">SIA v2.0</span>
                         </h1>
-                        <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
-                            <Clock className="w-3 h-3" />
+                        <p className="text-xs text-slate-300 flex items-center gap-1.5 mt-0.5">
+                            <Clock className="w-3 h-3 text-slate-400" />
                             {cashSession?.register?.name || 'Caja No Asignada'} • Terminal: {cashSession?.register?.code || '---'}
                         </p>
                     </div>
@@ -111,14 +111,14 @@ export default function POSPage() {
 
                 <div className="flex items-center gap-4">
                     <RevenueTicker />
-                    <div className="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-2" />
+                    <div className="h-8 w-px bg-white/10 mx-2" />
                     <div className="flex items-center gap-3 pl-2">
                         <div className="text-right">
-                            <p className="text-sm font-bold text-slate-900 dark:text-white">Marisquería Admin</p>
-                            <p className="text-xs text-slate-500">Cajero Principal</p>
+                            <p className="text-sm font-bold text-white">Marisquería Admin</p>
+                            <p className="text-xs text-slate-300">Cajero Principal</p>
                         </div>
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-slate-800 dark:to-slate-700 rounded-2xl flex items-center justify-center border border-white dark:border-slate-700 shadow-sm overflow-hidden">
-                            <User className="text-blue-600 dark:text-blue-400" />
+                        <div className="w-12 h-12 bg-accent/20 rounded-2xl flex items-center justify-center border border-accent/30 shadow-sm overflow-hidden">
+                            <User className="text-white" />
                         </div>
                     </div>
                 </div>
@@ -126,11 +126,11 @@ export default function POSPage() {
 
             <main className="flex-1 flex overflow-hidden p-6 gap-6">
                 {/* Product Section */}
-                <section className="flex-1 flex flex-col min-w-0 bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+                <section className="flex-1 flex flex-col min-w-0 bg-card dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
                     <div className="p-8 pb-4 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
-                                <Package className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                            <div className="p-2 bg-accent/10 dark:bg-accent/20 rounded-2xl">
+                                <Package className="w-5 h-5 text-accent dark:text-accent" />
                             </div>
                             <h2 className="text-xl font-bold">Catálogo de Productos</h2>
                         </div>
@@ -139,7 +139,7 @@ export default function POSPage() {
                                 <button 
                                     key={cat} 
                                     onClick={() => setSelectedCategory(cat)}
-                                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${selectedCategory === cat ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
+                                    className={`px-4 py-2 rounded-2xl text-sm font-bold transition-all ${selectedCategory === cat ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
                                     }`}>
                                     {cat}
                                 </button>
@@ -180,7 +180,7 @@ export default function POSPage() {
                 </section>
 
                 {/* Sidebar Cart Section */}
-                <aside className="w-[450px] flex flex-col bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+                <aside className="w-[450px] flex flex-col bg-card dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden ml-4">
                     <div className="p-8 pb-4 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-xl">
@@ -211,7 +211,7 @@ export default function POSPage() {
                             </div>
                             <div className="flex justify-between items-end border-t border-slate-200 dark:border-slate-700 pt-4">
                                 <span className="text-sm font-bold">TOTAL</span>
-                                <span className="text-4xl font-black text-blue-600 dark:text-blue-400 font-mono tracking-tighter">
+                                <span className="text-4xl font-black text-accent dark:text-blue-400 font-mono tracking-tighter">
                                     ${cart.total().toFixed(2)}
                                 </span>
                             </div>
@@ -220,7 +220,7 @@ export default function POSPage() {
                         <button
                             onClick={() => setIsPaymentModalOpen(true)}
                             disabled={cart.items.length === 0}
-                            className="w-full py-6 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black text-xl shadow-2xl shadow-blue-500/30 flex items-center justify-center gap-3 transition-all active:scale-[0.98] disabled:opacity-50 disabled:grayscale"
+                            className="w-full py-6 bg-accent hover:bg-accent/90 text-white rounded-2xl font-black text-xl shadow-2xl shadow-accent/30 flex items-center justify-center gap-3 transition-all active:scale-[0.98] disabled:opacity-50 disabled:grayscale"
                         >
                             Procesar Pago (F12)
                             <ChevronRight className="w-6 h-6" />
